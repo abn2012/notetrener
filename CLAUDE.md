@@ -20,3 +20,7 @@ Notetrener er en app for å lære å lese noter. Det er **Astrid sin første app
 ## Testing
 
 Åpne `index.html` i en nettleser og prøv endringen. Det finnes ingen automatiske tester.
+
+## Commit og push
+
+Etter hver endring skal du committe og pushe til `main` uten å spørre først. Det betyr at endringen havner på nettsiden med en gang, så test i nettleseren før du committer. Skriv commit-meldingen på norsk, og forklar hva som er endret.
