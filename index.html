@@ -121,6 +121,7 @@ svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
 .btn.go{display:flex;flex-direction:column;align-items:center;gap:2px;padding:16px;margin:12px 0 4px;font-size:17px;border-bottom:5px solid rgba(0,0,0,.25);animation:gop 2s ease-in-out infinite}
 .btn.go small{font-size:13px;font-weight:700;opacity:.9}
 @keyframes gop{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--pri) 30%,transparent)}}
+.flow{display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0 0}.flow>div{flex:1;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:13px}.flow>span{font-size:26px;font-weight:900;color:var(--pri)}
 .steps{display:grid;gap:8px;margin-top:8px}.steps>div{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:14px;line-height:1.35}
 .steps i{flex:none;width:24px;height:24px;border-radius:50%;background:var(--pri);color:#fff;font-style:normal;font-weight:900;display:grid;place-items:center;font-size:13px}
 </style></head><body><div id="app"></div>
@@ -373,7 +374,7 @@ function setHP(k){HP=k;home();window.scrollTo(0,0)}
 // Stor start-knapp øverst på forsiden, og en kort veiledning for dem som er nye
 function startCard(){const nx=PATH.findIndex((_,i)=>!S.path[i]),done=PATH.length-(nx<0?0:PATH.length-nx),first=nx===0&&!S.path[0];
 const btn=nx>=0?`<button id="go" class="btn go" onclick="intro(${nx})"><span style="font-size:22px">${first?'Start her':'Spill nå'}</span><small>${first?'Første leksjon: lær de første notene':'Neste leksjon: '+PATH[nx].n}</small></button>`:`<button id="go" class="btn go" onclick="setHP(1)"><span style="font-size:22px">Spill nå</span><small>Du har klart hele løypa. Øv fritt!</small></button>`;
-const guide=done<3?`<div class="card" style="margin-top:10px"><b>Slik kommer du i gang</b><div class="steps"><div><i>1</i><span>Trykk på den store knappen og spill en leksjon. Du ser en note og trykker på bokstaven som passer.</span></div><div><i>2</i><span>Riktige svar gir XP. Fullfør én runde hver dag for å bygge opp en streak.</span></div><div><i>3</i><span>Bruk XP-en i fanen <b>Egg og dyr</b> til å klekke dyr og samle dem alle.</span></div></div></div>`:'';
+const guide=done<3?`<div class="flow"><div>${ic('note',34)}<b>Spill</b></div><span>›</span><div>${ic('star',34)}<b>Få XP</b></div><span>›</span><div>${ic('egg',34)}<b>Klekk dyr</b></div></div>`:'';
 return btn+guide}
 function home(){RUN=null;M=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
