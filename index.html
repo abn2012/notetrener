@@ -376,6 +376,11 @@ function setHP(k){HP=k;home();window.scrollTo(0,0)}
 // Stor start-knapp øverst på forsiden. Favorittdyret (eller en note) hopper ved siden av.
 function startCard(){const nx=PATH.findIndex((_,i)=>!S.path[i]),k=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||[])[0],mascot=k?pet(k,64):ic('note',56);
 return`<button id="go" class="btn go" onclick="${nx>=0?`intro(${nx})`:'setHP(1)'}"><span class="bnc">${mascot}</span><span style="font-size:30px">Spill!</span></button>`}
+// Første gang man har nok XP til et egg, kommer det opp en melding med knapp til eggene.
+function eggHint(){if(S.eggHint||document.querySelector('.tut')||!EGGS.some(e=>!e.ch&&e.c&&unlocked(e)&&S.xp>=e.c))return;S.eggHint=1;save();
+const o=document.createElement('div');o.className='tut';o.onclick=e=>{if(e.target===o)o.remove()};
+o.innerHTML=`<div class="tbox"><div class="pop" style="margin:0 0 6px">${ic('egg',96)}</div><h2>Du har nok XP til et egg!</h2><button class="btn" onclick="this.closest('.tut').remove();HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til eggene</button><button class="btn g" onclick="this.closest('.tut').remove()">Senere</button></div>`;
+document.body.appendChild(o);fan()}
 function home(){RUN=null;M=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
 ${[`${startCard()}
@@ -602,11 +607,11 @@ setTimeout(()=>{(G.hp<=0||G.q>=G.Q)?end():next()},ok?650:(G.p||pm?2200:1300))}
 function end(){window.scrollTo(0,0);const win=G.p?G.ok>=Math.ceil(G.Q/2):G.hp>0,st=!win?0:G.ok>=G.Q?3:G.ok>=G.Q*.8?2:1;
 if(G.ok>=5||win)tick();addXp(st*5);if(win){dqAdd('rounds',1);if(!G.p&&G.hp===3)dqAdd('perfect',1)}const PM=[];if(G.p&&win){S.path[G.i]=Math.max(S.path[G.i]||0,st);G.bn=BONUS.filter(b=>!S.bn[b.k]&&b.L.every(k=>S.path[k]));G.bn.forEach(b=>{S.bn[b.k]=1;S.xp+=b.xp;S.tot+=b.xp;G.xp+=b.xp;PM.push(b.t+' +'+b.xp+' XP')});
 if(!S.pathDone&&PATH.every((_,k)=>S.path[k])){S.pathDone=true;S.pets.ele=(S.pets.ele||0)+1;S.xp+=2000;S.tot+=2000;G.xp+=2000;G.done=1;PM.push('Hele løypa er klar! +2000 XP','')}}
-PM.forEach((m,j)=>setTimeout(()=>{party(0,m);fan()},400+j*2200));save();
+PM.forEach((m,j)=>setTimeout(()=>{party(0,m);fan()},400+j*2200));setTimeout(eggHint,1500+PM.length*2200);save();
 $('#app').innerHTML=`<div class="rowi">${win?ic('star',64).repeat(st):ic(G.p?'note':'heartO',64)}</div><h1 class="center">${win?'Runden er klar!':'Prøv igjen!'}</h1>
 ${(G.bn||[]).map(b=>`<div class="msg" style="font-size:18px;color:var(--ok)">${b.t} +${b.xp} XP</div>`).join('')}${G.done?`<div class="msg" style="font-size:18px;color:var(--ok)">Du klarte hele løypa! +2000 XP</div><div class="pop" style="margin:0">${pet('ele',120)}</div><div class="msg">Du fikk en studentelefant!</div>`:''}<div class="top"><div class="pill">${G.ok}/${G.q}<small>riktige</small></div><div class="pill">${ic('flame',18)} ${G.max}<small>beste kombo</small></div><div class="pill">+${G.xp}<small>XP · ${G.l.m}x</small></div></div>
 <div class="note">${goal().txt}</div>
 ${G.p&&win&&PATH[G.i+1]?`<button class="btn" onclick="intro(${G.i+1})">Neste leksjon</button>`:''}<button class="btn${G.p&&win&&PATH[G.i+1]?' g':''}" onclick="start(${G.i},${G.mode})">Spill igjen</button><button class="btn g" onclick="${G.p?'path()':'home()'}">${G.p?'Til løypa':'Til forsiden'}</button>`}
-new MutationObserver(updWheel).observe($('#app'),{childList:true});
+new MutationObserver(()=>{updWheel();if(document.querySelector('.nav'))setTimeout(eggHint,600)}).observe($('#app'),{childList:true});
 home();
 </script></body></html>
