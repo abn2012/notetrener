@@ -118,8 +118,10 @@ svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
 .wheel{position:fixed;right:12px;bottom:92px;width:64px;height:64px;border-radius:50%;background:var(--card);border:0;padding:0;box-shadow:0 2px 10px rgba(0,0,0,.25);z-index:9;cursor:pointer;color:var(--ink)}
 .wl{position:absolute;top:-6px;left:-6px;min-width:24px;height:24px;border-radius:12px;background:#ffc93c;color:#2b2140;font-size:13px;font-weight:900;display:grid;place-items:center;padding:0 5px;border:2px solid var(--card)}
 .wheel svg{position:absolute;inset:0;transform:rotate(-90deg)}.wheel b{position:absolute;inset:0;display:grid;place-content:center;font-weight:900;line-height:1}.wheel small{font-size:9px;color:var(--mut);font-weight:800;text-align:center}
-.btn.go{display:flex;flex-direction:column;align-items:center;gap:2px;padding:16px;margin:12px 0 4px;font-size:17px;border-bottom:5px solid rgba(0,0,0,.25);animation:gop 2s ease-in-out infinite}
+.btn.go{display:flex;flex-direction:row;justify-content:center;align-items:center;gap:14px;padding:14px;margin:12px 0 4px;font-size:17px;border-bottom:5px solid rgba(0,0,0,.25);animation:gop 2s ease-in-out infinite}
 .btn.go small{font-size:13px;font-weight:700;opacity:.9}
+@keyframes bnc{0%,100%{transform:translateY(0)}40%{transform:translateY(-10px) rotate(-6deg)}}
+.bnc{display:flex;animation:bnc 1.2s ease-in-out infinite}.bnc svg{filter:drop-shadow(0 2px 3px rgba(0,0,0,.25))}.btn.go .ic{color:#fff}
 @keyframes gop{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--pri) 30%,transparent)}}
 .flow{display:flex;align-items:center;justify-content:center;gap:6px;margin:10px 0 0}.flow>div{flex:1;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:10px 4px;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:13px}.flow>span{font-size:26px;font-weight:900;color:var(--pri)}
 .steps{display:grid;gap:8px;margin-top:8px}.steps>div{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:14px;line-height:1.35}
@@ -371,15 +373,12 @@ w.innerHTML=`<svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy=
 // Rød prikk bare på Egg og dyr, når du har nok XP til å kjøpe noe eller har et egg som venter: [Hjem, Øv, Melodier, Dyr]
 const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||(e.c&&unlocked(e)&&S.xp>=e.c))];
 function setHP(k){HP=k;home();window.scrollTo(0,0)}
-// Stor start-knapp øverst på forsiden, og en kort veiledning for dem som er nye
-function startCard(){const nx=PATH.findIndex((_,i)=>!S.path[i]),done=PATH.length-(nx<0?0:PATH.length-nx),first=nx===0&&!S.path[0];
-const btn=nx>=0?`<button id="go" class="btn go" onclick="intro(${nx})"><span style="font-size:22px">${first?'Start her':'Spill nå'}</span><small>${first?'Første leksjon: lær de første notene':'Neste leksjon: '+PATH[nx].n}</small></button>`:`<button id="go" class="btn go" onclick="setHP(1)"><span style="font-size:22px">Spill nå</span><small>Du har klart hele løypa. Øv fritt!</small></button>`;
-const guide=done<3?`<div class="flow"><div>${ic('note',34)}<b>Spill</b></div><span>›</span><div>${ic('star',34)}<b>Få XP</b></div><span>›</span><div>${ic('egg',34)}<b>Klekk dyr</b></div></div>`:'';
-return btn+guide}
+// Stor start-knapp øverst på forsiden. Favorittdyret (eller en note) hopper ved siden av.
+function startCard(){const nx=PATH.findIndex((_,i)=>!S.path[i]),k=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||[])[0],mascot=k?pet(k,64):ic('note',56);
+return`<button id="go" class="btn go" onclick="${nx>=0?`intro(${nx})`:'setHP(1)'}"><span class="bnc">${mascot}</span><span style="font-size:30px">Spill!</span></button>`}
 function home(){RUN=null;M=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
 ${[`${startCard()}<div class="hero">${ic('flame',68)}<div><div class="hn">${ls}</div><div class="hs">${ls===1?'dag':'dager'} på rad</div><div class="rec">${ic('trophy',16)} ${S.best}</div></div><div class="fav" id="fav">${favHTML()}</div></div>
-<div class="note">${done?'Dagens mål er nådd – streaken er trygg!':'Fullfør en runde i dag for å holde streaken i live'}</div>
 ${fixCard()}
 ${dqCard()}
 ${goalCard()}
@@ -608,5 +607,4 @@ ${(G.bn||[]).map(b=>`<div class="msg" style="font-size:18px;color:var(--ok)">${b
 ${G.p&&win&&PATH[G.i+1]?`<button class="btn" onclick="intro(${G.i+1})">Neste leksjon</button>`:''}<button class="btn${G.p&&win&&PATH[G.i+1]?' g':''}" onclick="start(${G.i},${G.mode})">Spill igjen</button><button class="btn g" onclick="${G.p?'path()':'home()'}">${G.p?'Til løypa':'Til forsiden'}</button>`}
 new MutationObserver(updWheel).observe($('#app'),{childList:true});
 home();
-if(!S.tut)tutor(0);
 </script></body></html>
