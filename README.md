@@ -15,6 +15,8 @@ Du ser en note på notelinjene og trykker på bokstaven som passer: C, D, E, F, 
 
 ## Slik starter du appen
 
-Åpne `Notetrener.html` i en nettleser. Det er alt. Du trenger ikke installere noe, og appen virker både på mobil og på PC.
+Spill den på nett: **https://abn2012.github.io/notetrener/**
+
+Du kan også åpne `index.html` rett i en nettleser. Du trenger ikke installere noe, og appen virker både på mobil og på PC.
 
 Framgangen din lagres i nettleseren, så den blir værende til neste gang du åpner appen i den samme nettleseren.
