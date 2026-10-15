@@ -306,8 +306,8 @@ let HP=0;
 // XP-hjulet nede i hjørnet: ringen fylles mot neste mål. Trykk for å gå til Egg og dyr.
 function wheel(){const a=goal().a,pc=a?Math.min(S.xp/a.c,1):1,C=2*Math.PI*27,n=String(S.xp);
 return`<button class="wheel" onclick="setHP(3)" aria-label="Du har ${S.xp} XP"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="27" fill="none" stroke="var(--pri)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C*pc).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span style="font-size:${n.length>4?11:n.length>3?14:17}px">${n}</span><small>XP</small></b></button>`}
-// Røde prikker på fanene når det er noe å gjøre: [Hjem, Øv, Melodier, Dyr]
-const dots=()=>[!dq().done,false,!!S.path[3]&&TUNES.some((_,i)=>!S.tunes[i]),EGGS.some(e=>S[e.k]>0||S.xp>=e.c)];
+// Rød prikk bare på Egg og dyr, når du har nok XP til å kjøpe noe eller har et egg som venter: [Hjem, Øv, Melodier, Dyr]
+const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||S.xp>=e.c)];
 function setHP(k){HP=k;home();window.scrollTo(0,0)}
 function home(){RUN=null;M=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${Math.floor(S.tot/100)+1}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
