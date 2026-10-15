@@ -268,15 +268,19 @@ function goal(){const a=EGGS.filter(e=>!S[e.k]&&e.c>S.xp).sort((x,y)=>x.c-y.c)[0
 return{a,txt:(ok?'Du har nok XP til å kjøpe noe! ':'')+(a?(a.c-S.xp)+' XP til '+a.n:'Du har råd til alt!')}}
 function goalCard(){const g=goal();return`<div class="card"><b>Neste mål</b><div style="margin:4px 0">${g.txt}</div>${g.a?`<div class="bar"><i style="width:${S.xp*100/g.a.c}%"></i></div>`:''}</div>`}
 // Melodier: trykk på riktig bokstav for hver note. Åpnes etter leksjon 4 i løypa.
-const TUNES=[{n:'Bæ, bæ, lille lam',s:[30,29,28,29,30,30,30,29,29,29,30,32,32,30,29,28,29,30,30,30,30,29,29,30,29,28]},
-{n:'Fader Jakob',s:[28,29,30,28,28,29,30,28,30,31,32,30,31,32,32,33,32,31,30,28,32,33,32,31,30,28,28,25,28,28,25,28]},
-{n:'Gledessangen',s:[30,30,31,32,32,31,30,29,28,28,29,30,30,29,29,30,30,31,32,32,31,30,29,28,28,29,30,29,28,28]}];
+// s = tonene, d = hvor mange slag hver tone varer (1 = en fjerdedel, 2 = en halv, 4 = en hel).
+const TUNES=[{n:'Bæ, bæ, lille lam',s:[30,29,28,29,30,30,30,29,29,29,30,32,32,30,29,28,29,30,30,30,30,29,29,30,29,28],
+d:[1,1,1,1,1,1,2,1,1,2,1,1,2,1,1,1,1,1,1,1,1,1,1,1,1,4]},
+{n:'Fader Jakob',s:[28,29,30,28,28,29,30,28,30,31,32,30,31,32,32,33,32,31,30,28,32,33,32,31,30,28,28,25,28,28,25,28],
+d:[1,1,1,1,1,1,1,1,1,1,2,1,1,2,.5,.5,.5,.5,1,1,.5,.5,.5,.5,1,1,1,1,2,1,1,2]},
+{n:'Gledessangen',s:[30,30,31,32,32,31,30,29,28,28,29,30,30,29,29,30,30,31,32,32,31,30,29,28,28,29,30,29,28,28],
+d:[1,1,1,1,1,1,1,1,1,1,1,1,1.5,.5,2,1,1,1,1,1,1,1,1,1,1,1,1,1.5,.5,2]}];
 let M=null;
 function tune(i){if(!S.path[3])return;HP=2;M={i,p:0,busy:0};tdraw()}
 function tdraw(){const t=TUNES[M.i],n=t.s[M.p];M.busy=0;$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="home()">‹ Tilbake</button></span><span><b>${t.n}</b></span><span></span><span>${M.p}/${t.s.length}</span></div><div class="bar"><i style="width:${M.p*100/t.s.length}%"></i></div><div class="card" id="st">${staff(n,'t')}</div><div class="msg" id="msg">Hvilken note er dette?</div><div class="keys">${R(0,6).map(i=>`<button onclick="tans(${i},this)">${N[i]}</button>`).join('')}</div>`}
 function tans(i,b){if(M.busy)return;const t=TUNES[M.i],n=t.s[M.p];if(i!==n%7){b.classList.add('bad');$('#msg').textContent='Prøv igjen!';beep(n,false);return}
 M.busy=1;tone(n);M.p++;if(M.p<t.s.length)setTimeout(tdraw,350);else tend()}
-function hear(){TUNES[M.i].s.forEach((n,j)=>setTimeout(()=>tone(n),j*380))}
+function hear(){const t=TUNES[M.i],id=M.h=(M.h||0)+1;let at=0;t.s.forEach((n,j)=>{setTimeout(()=>{if(M&&M.h===id)tone(n)},at*430);at+=t.d[j]})}
 function tend(){const first=!S.tunes[M.i];if(first){S.tunes[M.i]=1;S.xp+=100;S.tot+=100}save();window.scrollTo(0,0);hear();
 $('#app').innerHTML=`<div class="rowi">${ic('star',64)}</div><h1 class="center">Du spilte melodien!</h1><div class="msg">${TUNES[M.i].n}</div>${first?'<div class="msg" style="color:var(--ok)">+100 XP for første gang</div>':''}<button class="btn" onclick="hear()">Hør melodien igjen</button><button class="btn g" onclick="tune(${M.i})">Spill igjen</button><button class="btn g" onclick="home()">Til forsiden</button>`}
 // Dyr som heier: favorittdyret står nederst i runden, og et tilfeldig dyr titter innom.
@@ -286,7 +290,7 @@ d.className='vis';d.innerHTML=`<div class="fbub">${t}</div>${petA(k,70)}`;docume
 // Forsiden har fire sider med faner nederst: 0 Hjem, 1 Øv, 2 Melodier, 3 Dyr.
 let HP=0;
 function setHP(k){HP=k;home();window.scrollTo(0,0)}
-function home(){RUN=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
+function home(){RUN=null;M=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${Math.floor(S.tot/100)+1}</div><button class="x" onclick="tutor(0)" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
 ${[`<div class="hero">${ic('flame',68)}<div><div class="hn">${ls}</div><div class="hs">${ls===1?'dag':'dager'} på rad</div><div class="rec">${ic('trophy',16)} ${S.best}</div></div><div class="fav" id="fav">${favHTML()}</div></div>
 <div class="note">${done?'Dagens mål er nådd – streaken er trygg!':'Fullfør en runde i dag for å holde streaken i live'}</div>
