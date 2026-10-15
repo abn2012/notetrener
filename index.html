@@ -288,8 +288,8 @@ w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVE');w(12,'fmt ');v.setUint32(16,16,
 for(let i=0;i<n;i++)v.setUint8(44+i,128);return URL.createObjectURL(new Blob([b],{type:'audio/wav'}))}
 let SIL=null;
 // Lydmotoren kan bli satt på pause (for eksempel etter at appen har vært i bakgrunnen). Vekk den ved hvert trykk.
-function unlock(){try{pf()}catch(e){}if(!navigator.audioSession&&!SIL){try{SIL=new Audio(silent());SIL.loop=true;SIL.play().catch(()=>{SIL=null})}catch(e){SIL=null}}}
-['touchend','click'].forEach(t=>document.addEventListener(t,unlock,true));
+function unlock(){try{const c=pf(),o=c.createBufferSource();o.buffer=c.createBuffer(1,1,22050);o.connect(c.destination);o.start(0)}catch(e){}if(!navigator.audioSession&&!SIL){try{SIL=new Audio(silent());SIL.loop=true;SIL.play().catch(()=>{SIL=null})}catch(e){SIL=null}}}
+['pointerdown','touchstart','touchend','click'].forEach(t=>document.addEventListener(t,unlock,true));
 document.addEventListener('visibilitychange',()=>{if(!SIL)return;if(document.hidden)SIL.pause();else SIL.play().catch(()=>{})});
 // Daglig utfordring: ny hver dag, gir XP når den er klar.
 const DQS=[{t:'Få 15 riktige svar',s:'ok',n:15},{t:'Få 8 riktige på rad',s:'combo',n:8},{t:'Fullfør 3 runder',s:'rounds',n:3},{t:'Fullfør en runde uten å miste hjerter',s:'perfect',n:1},{t:'Få 25 riktige svar',s:'ok',n:25}],DQXP=200;
