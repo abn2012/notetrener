@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="nb"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notetrener</title>
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fff8ee;--card:#fff;--ink:#2b2140;--mut:#7a6f8f;--pri:#7c4dff;--ok:#1fb86a;--bad:#ef4565;--hot:#ff8a1f;--line:#e8dff5}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171226;--card:#241c3a;--ink:#f3eefc;--mut:#a99fc4;--pri:#9b7bff;--ok:#2ed585;--bad:#ff5d7a;--hot:#ffa043;--line:#3a2f5a}}
+:root[data-theme="dark"]{--bg:#171226;--card:#241c3a;--ink:#f3eefc;--mut:#a99fc4;--pri:#9b7bff;--ok:#2ed585;--bad:#ff5d7a;--hot:#ffa043;--line:#3a2f5a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
+#app{max-width:480px;margin:0 auto;padding:16px}
+h1{margin:0;font-size:26px}h3{margin:18px 0 8px}
+.ic{vertical-align:middle;flex:none}
+.hd{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.srow{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}.x.on{background:var(--ok);color:#fff;border-color:var(--ok)}
+.logo{display:flex;gap:8px;align-items:center}
+.lvb{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:5px 12px;font-weight:800;font-size:14px}
+.hero{display:flex;align-items:center;gap:14px;margin:14px 0 8px;padding:18px;border-radius:24px;color:#fff;background:linear-gradient(135deg,var(--pri),color-mix(in srgb,var(--pri) 55%,#ff5cd6));position:relative}
+.hn{font-size:48px;font-weight:900;line-height:1}.hs{font-weight:700;opacity:.9}
+.rec{display:inline-block;margin-top:6px;background:rgba(255,255,255,.2);border-radius:14px;padding:3px 10px;font-weight:800;font-size:13px}
+.fav{margin-left:auto;background:rgba(255,255,255,.22);border-radius:50%;width:88px;height:88px;display:grid;place-items:center}.fav:empty{display:none}
+.pb{font:inherit;color:var(--ink);cursor:pointer;position:relative}.nt{animation:bob 1.1s ease-in-out infinite alternate}@keyframes bob{to{transform:translateY(-4px)}}
+#st{position:relative}.bub{position:absolute;top:8px;right:8px;background:var(--pri);color:#fff;font-weight:800;font-size:11px;padding:3px 10px;border-radius:14px 14px 3px 14px;animation:pop .3s both}.bub:empty{display:none}
+.pn{display:flex;flex-direction:column;align-items:center;transform:translateX(var(--x));margin:10px 0;text-align:center}
+.nd{width:68px;height:68px;border-radius:50%;border:0;border-bottom:6px solid rgba(0,0,0,.25);font:inherit;font-weight:900;font-size:24px;color:#fff;background:var(--pri);cursor:pointer;display:grid;place-items:center;margin-bottom:4px}
+.nd.dn{background:var(--ok)}.nd.lk{background:var(--line);color:var(--mut);cursor:default}.nd.cur{animation:pls 1.3s ease-in-out infinite}
+@keyframes pls{50%{transform:scale(1.1)}}
+.nov{position:fixed;inset:0;background:var(--bg);overflow:auto;z-index:98;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}.nbox{max-width:480px;margin:0 auto;padding:16px}
+.lv .cnt{text-align:center;font-weight:800;min-width:60px;font-size:15px;color:var(--mut)}.lv .cnt b{font-size:28px;color:var(--ok);line-height:1}.lv .cnt small{font-size:10px;font-weight:600}
+.mv{transform-origin:50% 95%}.mv.wig{animation:wig 1.2s ease-in-out infinite}.mv.hop{animation:hop .8s ease-in-out infinite}.mv.sway{animation:sway 2s ease-in-out infinite}
+@keyframes wig{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}@keyframes hop{0%,100%{transform:translateY(0)}40%{transform:translateY(-10%)}}@keyframes sway{0%,100%{transform:rotate(-3deg) scaleY(1)}50%{transform:rotate(3deg) scaleY(1.04)}}
+.mv.dance{animation:dance 3.2s ease-in-out infinite;transform-origin:50% 60%}
+@keyframes dance{0%,100%{transform:translateY(0) rotate(0) scaleX(1)}10%{transform:translateY(0) rotate(-8deg) scaleX(1)}20%{transform:translateY(-5%) rotate(8deg) scaleX(1)}30%{transform:translateY(0) rotate(-8deg) scaleX(1)}40%{transform:translateY(-5%) rotate(8deg) scaleX(1)}50%{transform:translateY(-10%) rotate(0) scaleX(1)}60%{transform:translateY(-12%) rotate(0) scaleX(0)}70%{transform:translateY(-12%) rotate(0) scaleX(-1)}80%{transform:translateY(-10%) rotate(0) scaleX(0)}90%{transform:translateY(0) rotate(0) scaleX(1)}}
+.tut{position:fixed;inset:0;background:rgba(20,10,40,.6);z-index:100;display:grid;place-items:center;padding:16px;overflow:auto}
+.tbox{background:var(--card);border-radius:24px;padding:22px;max-width:400px;width:100%;text-align:center}.tbox h2{margin:8px 0}.tbox p{color:var(--mut);line-height:1.45;margin:0 0 12px}.tic{display:flex;justify-content:center}
+.dots{display:flex;gap:6px;justify-content:center;margin:8px 0}.dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.dots i.on{background:var(--pri)}
+.stk{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:6px 0;z-index:5}.nov .stk{top:0}
+.pt.sel{border-color:var(--pri)}.fv{position:absolute;top:2px;right:4px}
+.note{text-align:center;color:var(--mut);font-weight:600;font-size:14px;margin-bottom:10px}
+.card{background:var(--card);border:2px solid var(--line);border-radius:20px;padding:12px;margin:10px 0}
+.eggc{display:flex;gap:12px;align-items:center}.eggc>div{flex:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.lv{display:flex;flex-direction:column;gap:6px;align-items:flex-start;background:var(--card);color:var(--ink);border:2px solid var(--line);border-bottom:5px solid var(--c);border-radius:18px;padding:12px;font:inherit;text-align:left;cursor:pointer}
+.lv:active{transform:translateY(2px)}.lv b{font-size:17px}.lv small{color:var(--mut)}
+.ib{width:48px;height:48px;border-radius:14px;background:color-mix(in srgb,var(--c) 18%,transparent);display:grid;place-items:center}
+.pets{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.pt{background:var(--card);border:2px solid var(--line);border-radius:14px;padding:6px 2px;text-align:center;font-size:10px;font-weight:700;display:flex;flex-direction:column;align-items:center}
+.pt.no{opacity:.5}.q{font-size:34px;font-weight:900;color:var(--mut);height:52px;line-height:52px}
+.top{display:flex;gap:8px;margin:12px 0}
+.pill{flex:1;background:var(--card);border:2px solid var(--line);border-radius:16px;padding:8px;text-align:center;font-weight:700}
+.pill small{display:block;color:var(--mut);font-weight:500;font-size:11px}
+.hud{display:flex;justify-content:space-between;align-items:center;font-weight:800;gap:8px}
+.x{background:var(--card);color:var(--ink);border:2px solid var(--line);border-radius:14px;padding:10px 14px;min-height:44px;font:inherit;font-weight:800;font-size:15px;cursor:pointer}
+.bar{height:8px;background:var(--line);border-radius:8px;overflow:hidden;margin:8px 0}
+.bar i{display:block;height:100%;background:var(--pri);width:0}
+svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
+.keys{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.keys button{padding:16px 0;font-size:20px;font-weight:800;border:0;border-radius:14px;background:var(--pri);color:#fff;border-bottom:4px solid rgba(0,0,0,.25);cursor:pointer}
+.keys button:active{transform:translateY(2px)}.keys button.ok{background:var(--ok)}.keys button.bad{background:var(--bad)}
+.btn{display:block;width:100%;padding:14px;margin-top:10px;font:inherit;font-weight:800;font-size:17px;border:0;border-radius:16px;background:var(--pri);color:#fff;cursor:pointer}
+.btn.g{background:var(--card);color:var(--ink);border:2px solid var(--line)}.btn:disabled{opacity:.45}
+.msg{text-align:center;font-weight:800;min-height:26px;margin:6px 0}
+.center{text-align:center}.rowi{display:flex;justify-content:center;gap:4px;margin:12px 0}
+.flash{animation:f .4s}@keyframes f{50%{transform:scale(1.04)}}
+.egg{display:flex;justify-content:center;margin:20px 0;cursor:pointer}
+.mx{background:color-mix(in srgb,var(--c) 20%,transparent);border-radius:10px;padding:2px 8px;font-size:12px;font-weight:800}
+.sw{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;padding:6px 0 24px}
+.swb{width:44px;height:44px;border-radius:50%;border:3px solid var(--card);box-shadow:0 0 0 2px var(--line);cursor:pointer}
+.swb.on{box-shadow:0 0 0 4px var(--ink)}
+.tabs{display:flex;gap:3px;background:var(--bg);border-radius:12px;padding:3px;margin-bottom:8px}
+.tabs button{flex:1;border:0;background:none;color:var(--mut);font:inherit;font-weight:800;font-size:12.5px;padding:5px 0;border-radius:10px;cursor:pointer}
+.tabs button.on{background:var(--pri);color:#fff}
+.eggs2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.eg1{background:var(--bg);border-radius:14px;padding:10px 8px;display:flex;flex-direction:column;justify-content:space-between;text-align:center}
+.eggr{display:flex;flex-direction:column;align-items:center;gap:6px;font-size:13px}.eggr>div{width:100%}
+.eggr .note{text-align:center!important}.eg1 .btn{margin:8px 0 0!important;font-size:14px}
+.pets.big{grid-template-columns:repeat(3,1fr);gap:6px}.pets.big .pt{font-size:11px;padding:6px 2px}.pets.big .q{height:56px;line-height:56px}
+.shk{animation:shk .5s}@keyframes shk{20%{transform:rotate(-12deg)}40%{transform:rotate(12deg)}60%{transform:rotate(-8deg)}80%{transform:rotate(6deg)}}
+.pop{display:flex;justify-content:center;margin:16px 0;animation:pop .7s both}
+.ov{--w:min(90vw,520px);position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:99}
+.cf{position:absolute;top:-20px;width:10px;height:14px;animation:fall linear forwards}
+.st{position:absolute;top:-40px;animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(115vh) rotate(720deg)}}
+.ban{position:absolute;top:20%;left:0;right:0;text-align:center;font-size:34px;font-weight:900;color:var(--pri);text-shadow:0 2px 0 var(--card),0 0 18px var(--card);animation:pop .6s both}
+.rb{position:absolute;left:50%;bottom:0;width:var(--w);height:calc(var(--w)/2);margin-left:calc(var(--w)/-2);transform-origin:50% 100%;animation:pop .9s both}
+@keyframes pop{from{transform:scale(.3);opacity:0}to{transform:scale(1);opacity:1}}
+</style></head><body><div id="app"></div>
+<script>
+const N=['C','D','E','F','G','A','H'],OFF=[0,2,4,5,7,9,11];
+const S0='stroke="#f0a500" stroke-width="1.2" stroke-linejoin="round"';
+const I={
+flame:'<path d="M12 2c1 4.5 6 6.5 6 12.5a6 6 0 0 1-12 0c0-3 1.500-4.500 3-7 .6 1.500 1.500 2.500 2.500 3 .5-3 .5-5.500.5-8.500z" fill="#ff7a1a"/><path d="M12 22a3.500 3.500 0 0 1-3.500-3.500c0-2 1.500-3 2.500-4.500 1 1 1.500 1.500 2 2.500.5-.5 1-1 1-2 1 1 1.500 2 1.500 4A3.500 3.500 0 0 1 12 22z" fill="#ffd23f"/>',
+star:`<path d="M12 2l3 6.500 7 .8-5.200 4.800 1.500 7L12 17.500 5.700 21l1.500-7L2 9.300l7-.8z" fill="#ffc93c" ${S0}/>`,
+sparkle:'<path d="M12 1c1 6 5 10 11 11-6 1-10 5-11 11-1-6-5-10-11-11 6-1 10-5 11-11z" fill="#ffd23f"/>',
+trophy:'<path d="M7 3h10v6a5 5 0 0 1-10 0z" fill="#ffc93c"/><path d="M7 5H3c0 4 1.500 6 4 6M17 5h4c0 4-1.500 6-4 6" fill="none" stroke="#f0a500" stroke-width="2"/><rect x="11" y="13" width="2" height="4" fill="#f0a500"/><rect x="8" y="17" width="8" height="3" rx="1" fill="#ffc93c"/>',
+heart:'<path d="M12 21s-8-5-8-11a4.500 4.500 0 0 1 8-2.500A4.500 4.500 0 0 1 20 10c0 6-8 11-8 11z" fill="#ef4565"/>',
+heartO:'<path d="M12 21s-8-5-8-11a4.500 4.500 0 0 1 8-2.500A4.500 4.500 0 0 1 20 10c0 6-8 11-8 11z" fill="#b9acd3" opacity=".45"/>',
+leaf:'<path d="M12 22V11" stroke="#2a9d5c" stroke-width="2.500" stroke-linecap="round"/><path d="M12 12C12 6 7 4 3 5c0 5 4 8 9 7z" fill="#2ed585"/><path d="M12 10c0-4 3-6 8-6 0 4-3 7-8 6z" fill="#5be39a"/>',
+note:'<path d="M12 17V4l8 2v11" fill="none" stroke="#4dabf7" stroke-width="2.500" stroke-linejoin="round"/><ellipse cx="8" cy="18" rx="4" ry="3" fill="#4dabf7"/><ellipse cx="16" cy="17" rx="4" ry="3" fill="#4dabf7"/>',
+bolt:'<path d="M13 2L4 14h6l-1 8 9-12h-6z" fill="#a77bff" stroke="#7c4dff" stroke-width="1.500" stroke-linejoin="round"/>',
+bass:'<circle cx="8" cy="12" r="3.500" fill="#ff8a1f"/><path d="M5 12c0-5 4-8 8-8s7 3 6 8c-1 5-5 8-10 9" fill="none" stroke="#ff8a1f" stroke-width="3" stroke-linecap="round"/><circle cx="20" cy="8" r="1.500" fill="#ff8a1f"/><circle cx="20" cy="14" r="1.500" fill="#ff8a1f"/>',
+rainbow:'<path d="M2 20a10 10 0 0 1 20 0" fill="none" stroke="#ef4565" stroke-width="2.500"/><path d="M5 20a7 7 0 0 1 14 0" fill="none" stroke="#ffc93c" stroke-width="2.500"/><path d="M8 20a4 4 0 0 1 8 0" fill="none" stroke="#4dabf7" stroke-width="2.500"/>',
+x:'<path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>',
+egg:'<path d="M12 2C7 2 4 10 4 14a8 8 0 0 0 16 0c0-4-3-12-8-12z" fill="#fff4dc" stroke="#e5c98f" stroke-width="1.500"/><circle cx="9" cy="12" r="1.500" fill="#ff9ab0"/><circle cx="14.500" cy="15" r="1.800" fill="#8fd3ff"/><circle cx="12" cy="7.500" r="1.200" fill="#ffd23f"/>',degg:'<path d="M12 2C7 2 4 10 4 14a8 8 0 0 0 16 0c0-4-3-12-8-12z" fill="#cfe9c0" stroke="#7fb069" stroke-width="1.500"/><circle cx="9" cy="12" r="1.800" fill="#5e9c4a"/><circle cx="14.500" cy="15" r="2.200" fill="#5e9c4a"/><circle cx="12" cy="7.500" r="1.400" fill="#5e9c4a"/><circle cx="8" cy="17" r="1.200" fill="#5e9c4a"/>',chest:'<rect x="3" y="10" width="18" height="11" rx="2" fill="#b9793a" stroke="#7a4a1c" stroke-width="1.500"/><path d="M3 12V9a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v3z" fill="#d79a4e" stroke="#7a4a1c" stroke-width="1.500"/><path d="M7 4v17M17 4v17" stroke="#7a4a1c" stroke-width="1.200"/><rect x="10" y="10" width="4" height="5" rx="1" fill="#ffc93c" stroke="#b88400" stroke-width="1"/>',chest2:'<rect x="3" y="10" width="18" height="11" rx="2" fill="#2f8f8a" stroke="#14504d" stroke-width="1.500"/><path d="M3 12V9a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v3z" fill="#4fc1b9" stroke="#14504d" stroke-width="1.500"/><path d="M7 4v17M17 4v17" stroke="#14504d" stroke-width="1.200"/><rect x="10" y="10" width="4" height="5" rx="1" fill="#ffc93c" stroke="#b88400" stroke-width="1"/><circle cx="12" cy="7" r="1.200" fill="#ffc93c"/>',spk:'<path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9a4 4 0 0 1 0 6M18.500 6.500a8 8 0 0 1 0 11" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',spkx:'<path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16 9l6 6M22 9l-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',lock:'<rect x="5" y="10" width="14" height="11" rx="2" fill="currentColor"/><path d="M8 10V7a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="2.500"/>',map:'<circle cx="6" cy="18" r="3" fill="#2ed585"/><circle cx="18" cy="6" r="3" fill="#ffc93c"/><path d="M6 15c0-6 12-3 12-6" fill="none" stroke="#7c4dff" stroke-width="2.500" stroke-linecap="round" stroke-dasharray="1 4"/>',gear:'<g fill="currentColor"><rect x="10.500" y="1.500" width="3" height="21" rx="1.200"/><rect x="10.500" y="1.500" width="3" height="21" rx="1.200" transform="rotate(45 12 12)"/><rect x="10.500" y="1.500" width="3" height="21" rx="1.200" transform="rotate(90 12 12)"/><rect x="10.500" y="1.500" width="3" height="21" rx="1.200" transform="rotate(135 12 12)"/><circle cx="12" cy="12" r="7.500"/></g><circle cx="12" cy="12" r="3" style="fill:var(--card)"/>'};
+const ic=(n,s=20)=>`<svg class="ic" width="${s}" height="${s}" viewBox="0 0 24 24">${I[n]}</svg>`;
+const E='#2b2140';
+const A={
+cat:`<path d="M76 74q16-2 12-20" fill="none" stroke="#f4a64a" stroke-width="7" stroke-linecap="round"/><rect x="31" y="78" width="13" height="18" rx="6.500" fill="#e8923a"/><rect x="56" y="78" width="13" height="18" rx="6.500" fill="#e8923a"/><ellipse cx="50" cy="72" rx="27" ry="20" fill="#f4a64a"/><ellipse cx="50" cy="77" rx="14" ry="12" fill="#fff1de"/><ellipse cx="37.500" cy="95" rx="8.500" ry="4.500" fill="#fff1de"/><ellipse cx="62.500" cy="95" rx="8.500" ry="4.500" fill="#fff1de"/><g transform="translate(15 4) scale(.7)"><path d="M14 46L18 6l28 18zM86 46L82 6 54 24z" fill="#f4a64a"/><path d="M23 34l1-17 13 10zM77 34l-1-17-13 10z" fill="#ffb3c1"/><ellipse cx="50" cy="58" rx="40" ry="34" fill="#f4a64a"/><path d="M44 25h12M40 31l5 4M60 31l-5 4" stroke="#d9822b" stroke-width="3" stroke-linecap="round"/><ellipse cx="50" cy="70" rx="15" ry="11" fill="#fff1de"/><circle cx="21" cy="68" r="6.500" fill="#ff9ab0" opacity=".55"/><circle cx="79" cy="68" r="6.500" fill="#ff9ab0" opacity=".55"/><ellipse cx="34" cy="55" rx="8" ry="9.500" fill="${E}"/><ellipse cx="66" cy="55" rx="8" ry="9.500" fill="${E}"/><circle cx="31.500" cy="51" r="3.500" fill="#fff"/><circle cx="63.500" cy="51" r="3.500" fill="#fff"/><circle cx="37" cy="60" r="1.800" fill="#fff"/><circle cx="69" cy="60" r="1.800" fill="#fff"/><path d="M46 65h8l-4 4z" fill="#ff7b9c"/><path d="M50 69q-4 6-9 2M50 69q4 6 9 2" fill="none" stroke="${E}" stroke-width="2.200" stroke-linecap="round"/><path d="M8 62l14 2M8 71l14-2M92 62L78 64M92 71L78 69" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g>`,
+dog:`<path d="M74 70q16-8 14-24" fill="none" stroke="#e8b88a" stroke-width="8" stroke-linecap="round"/><rect x="31" y="78" width="13" height="18" rx="6.500" fill="#d9a06f"/><rect x="56" y="78" width="13" height="18" rx="6.500" fill="#d9a06f"/><ellipse cx="50" cy="72" rx="28" ry="20" fill="#e8b88a"/><ellipse cx="50" cy="77" rx="14" ry="12" fill="#fff1de"/><ellipse cx="37.500" cy="95" rx="8.500" ry="4.500" fill="#fff1de"/><ellipse cx="62.500" cy="95" rx="8.500" ry="4.500" fill="#fff1de"/><g transform="translate(15 4) scale(.7)"><ellipse cx="18" cy="52" rx="13" ry="26" fill="#8a5a3c" transform="rotate(12 18 52)"/><ellipse cx="82" cy="52" rx="13" ry="26" fill="#8a5a3c" transform="rotate(-12 82 52)"/><ellipse cx="50" cy="52" rx="33" ry="34" fill="#e8b88a"/><ellipse cx="50" cy="66" rx="18" ry="14" fill="#fff1de"/><circle cx="38" cy="46" r="5.500" fill="${E}"/><circle cx="62" cy="46" r="5.500" fill="${E}"/><circle cx="39.500" cy="44" r="2" fill="#fff"/><circle cx="63.500" cy="44" r="2" fill="#fff"/><path d="M45 72q5 14 10 0z" fill="#ff7b9c"/><ellipse cx="50" cy="60" rx="7" ry="5" fill="${E}"/><path d="M50 65v5M50 70q-6 5-11 0M50 70q6 5 11 0" fill="none" stroke="${E}" stroke-width="2.500" stroke-linecap="round"/></g>`,
+calf:`<path d="M80 62q12 0 10 16" fill="none" stroke="#3a2f4d" stroke-width="3.500" stroke-linecap="round"/><circle cx="90" cy="80" r="4" fill="#3a2f4d"/><g fill="#fff" stroke="#e6e0f0" stroke-width="2"><rect x="32" y="76" width="11" height="20" rx="5"/><rect x="57" y="76" width="11" height="20" rx="5"/><ellipse cx="50" cy="66" rx="33" ry="21"/></g><g fill="${E}"><rect x="32" y="90" width="11" height="6" rx="3"/><rect x="57" y="90" width="11" height="6" rx="3"/></g><g fill="#3a2f4d"><path d="M60 52q12-4 16 7q2 11-9 14q-9-5-7-21z"/><ellipse cx="32" cy="71" rx="8" ry="6"/></g><path d="M32 18L25 6M68 18l7-12" stroke="#f1e3c0" stroke-width="5" stroke-linecap="round"/><g fill="#fff" stroke="#e6e0f0" stroke-width="2"><ellipse cx="25" cy="34" rx="11" ry="6" transform="rotate(20 25 34)"/><ellipse cx="75" cy="34" rx="11" ry="6" transform="rotate(-20 75 34)"/><ellipse cx="50" cy="38" rx="24" ry="26"/></g><path d="M29 26a17 15 0 0 1 17-9l-3 17a19 17 0 0 1-14-8z" fill="#3a2f4d"/><ellipse cx="50" cy="51" rx="15" ry="11" fill="#ffb3c1"/><ellipse cx="44.500" cy="52" rx="2.800" ry="4" fill="#d9617d"/><ellipse cx="55.500" cy="52" rx="2.800" ry="4" fill="#d9617d"/><circle cx="40" cy="36" r="4.500" fill="${E}"/><circle cx="60" cy="36" r="4.500" fill="${E}"/><circle cx="41.500" cy="34" r="1.800" fill="#fff"/><circle cx="61.500" cy="34" r="1.800" fill="#fff"/>`,
+lamb:`<rect x="36" y="80" width="9" height="16" rx="4.500" fill="#5b4a6b"/><rect x="55" y="80" width="9" height="16" rx="4.500" fill="#5b4a6b"/><g fill="#fff" stroke="#e6e0f0" stroke-width="2"><circle cx="28" cy="68" r="11"/><circle cx="72" cy="68" r="11"/><circle cx="36" cy="82" r="10"/><circle cx="64" cy="82" r="10"/><ellipse cx="50" cy="72" rx="26" ry="18"/></g><g transform="translate(15 2) scale(.7)"><g fill="#fff" stroke="#e6e0f0" stroke-width="2"><circle cx="24" cy="30" r="14"/><circle cx="44" cy="20" r="14"/><circle cx="64" cy="20" r="14"/><circle cx="80" cy="32" r="14"/><circle cx="20" cy="52" r="13"/><circle cx="82" cy="54" r="13"/></g><ellipse cx="14" cy="62" rx="11" ry="6" fill="#5b4a6b" transform="rotate(25 14 62)"/><ellipse cx="86" cy="62" rx="11" ry="6" fill="#5b4a6b" transform="rotate(-25 86 62)"/><ellipse cx="50" cy="60" rx="26" ry="30" fill="#5b4a6b"/><circle cx="50" cy="33" r="14" fill="#fff" stroke="#e6e0f0" stroke-width="2"/><circle cx="40" cy="54" r="4.500" fill="#fff"/><circle cx="60" cy="54" r="4.500" fill="#fff"/><circle cx="40" cy="54" r="2.500" fill="${E}"/><circle cx="60" cy="54" r="2.500" fill="${E}"/><ellipse cx="50" cy="68" rx="4" ry="3" fill="#ffb3c1"/><path d="M50 71q-4 5-8 2M50 71q4 5 8 2" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/></g>`,
+chick:`<path d="M40 70v22M60 70v22M33 93h14M53 93h14" fill="none" stroke="#ff8a1f" stroke-width="4.500" stroke-linecap="round"/><g transform="translate(9 0) scale(.82)"><ellipse cx="50" cy="58" rx="36" ry="34" fill="#ffd93d"/><path d="M44 24q-2-12 6-14M52 24q2-12 12-10" fill="none" stroke="#ffd93d" stroke-width="5" stroke-linecap="round"/><ellipse cx="17" cy="62" rx="9" ry="14" fill="#ffc414" transform="rotate(18 17 62)"/><ellipse cx="83" cy="62" rx="9" ry="14" fill="#ffc414" transform="rotate(-18 83 62)"/><circle cx="36" cy="52" r="5" fill="${E}"/><circle cx="64" cy="52" r="5" fill="${E}"/><circle cx="37.500" cy="50" r="1.800" fill="#fff"/><circle cx="65.500" cy="50" r="1.800" fill="#fff"/><path d="M42 62h16l-8 12z" fill="#ff8a1f"/><circle cx="28" cy="64" r="5" fill="#ff9ab0" opacity=".6"/><circle cx="72" cy="64" r="5" fill="#ff9ab0" opacity=".6"/></g>`,
+rex:`<path d="M4 66Q20 52 36 62L42 76 18 82z" fill="#4caf50"/><rect x="36" y="76" width="10" height="17" rx="5" fill="#3d9142"/><rect x="54" y="76" width="10" height="17" rx="5" fill="#3d9142"/><ellipse cx="48" cy="64" rx="27" ry="23" fill="#4caf50"/><ellipse cx="52" cy="72" rx="16" ry="12" fill="#b7e4b9"/><path d="M52 24h34q9 0 9 11v14q0 9-9 9H58q-12 0-12-14V36q0-12 6-12z" fill="#4caf50"/><path d="M60 50h34v3q0 5-6 5H66q-6 0-6-5z" fill="#fff"/><circle cx="74" cy="36" r="6" fill="#fff"/><circle cx="76" cy="36" r="3" fill="${E}"/><circle cx="88" cy="30" r="2" fill="#3d9142"/><path d="M66 70l9 5" stroke="#3d9142" stroke-width="5" stroke-linecap="round"/><path d="M30 46l4-9 5 8 5-9 5 9" fill="#3d9142"/>`,
+tri:`<path d="M6 70Q14 62 24 68l4 8-20 2z" fill="#6c8fd6"/><rect x="26" y="76" width="11" height="16" rx="5" fill="#5878bd"/><rect x="52" y="76" width="11" height="16" rx="5" fill="#5878bd"/><ellipse cx="44" cy="66" rx="28" ry="22" fill="#6c8fd6"/><ellipse cx="46" cy="74" rx="16" ry="10" fill="#c3d4f5"/><ellipse cx="60" cy="44" rx="22" ry="26" fill="#e07a5f"/><circle cx="48" cy="34" r="3" fill="#f2a488"/><circle cx="46" cy="48" r="3" fill="#f2a488"/><circle cx="54" cy="24" r="3" fill="#f2a488"/><ellipse cx="72" cy="56" rx="18" ry="15" fill="#6c8fd6"/><path d="M70 46L66 22l10 16zM80 48l6-20 2 22z" fill="#fff7e0"/><path d="M86 58l9 4-10 3z" fill="#fff7e0"/><circle cx="73" cy="55" r="5" fill="#fff"/><circle cx="74.500" cy="55" r="2.500" fill="${E}"/>`,
+rap:`<path d="M2 50Q22 40 34 58L30 66 4 58z" fill="#d98a3d"/><path d="M36 70l-6 22M54 70l8 22" stroke="#b86f2a" stroke-width="9" stroke-linecap="round"/><ellipse cx="46" cy="60" rx="22" ry="16" fill="#d98a3d" transform="rotate(-15 46 60)"/><path d="M52 52Q58 30 70 24h16q8 0 8 8t-8 12H74q-8 2-10 14z" fill="#d98a3d"/><path d="M30 52l4 12M40 48l4 12M50 46l3 12" stroke="#a5611f" stroke-width="3" stroke-linecap="round"/><circle cx="76" cy="31" r="5" fill="#fff"/><circle cx="78" cy="31" r="2.500" fill="${E}"/><path d="M76 42h16l-3 4-3-3-3 3-3-3z" fill="#fff"/><path d="M28 88l-8 4M64 88l8 4" stroke="#fff" stroke-width="3" stroke-linecap="round"/>`,
+bra:`<path d="M2 80Q10 66 22 70l2 10z" fill="#8bc34a"/><rect x="14" y="78" width="10" height="15" rx="5" fill="#6fa334"/><rect x="48" y="78" width="10" height="15" rx="5" fill="#6fa334"/><ellipse cx="38" cy="68" rx="28" ry="18" fill="#8bc34a"/><ellipse cx="40" cy="74" rx="16" ry="8" fill="#d4ecb0"/><path d="M58 60Q70 44 66 20" fill="none" stroke="#8bc34a" stroke-width="14" stroke-linecap="round"/><ellipse cx="72" cy="14" rx="14" ry="10" fill="#8bc34a"/><circle cx="76" cy="12" r="4" fill="#fff"/><circle cx="77" cy="12" r="2" fill="${E}"/><circle cx="82" cy="18" r="1.500" fill="#6fa334"/><circle cx="28" cy="62" r="4" fill="#6fa334"/><circle cx="42" cy="60" r="3" fill="#6fa334"/>`,
+piano:`<rect x="8" y="22" width="84" height="10" rx="4" fill="#7c4dff"/><rect x="8" y="30" width="84" height="46" rx="6" fill="${E}"/><rect x="12" y="34" width="76" height="38" rx="3" fill="#fff"/><path d="M21.500 34v38M31 34v38M40.500 34v38M50 34v38M59.500 34v38M69 34v38M78.500 34v38" stroke="#cfc6e0" stroke-width="1"/><g fill="${E}"><rect x="18" y="34" width="7" height="22" rx="1.500"/><rect x="27.500" y="34" width="7" height="22" rx="1.500"/><rect x="46.500" y="34" width="7" height="22" rx="1.500"/><rect x="56" y="34" width="7" height="22" rx="1.500"/><rect x="65.500" y="34" width="7" height="22" rx="1.500"/></g>`,
+gui:`<g transform="rotate(40 50 50)"><rect x="46" y="4" width="8" height="46" rx="3" fill="#8a5a3c"/><rect x="43" y="0" width="14" height="12" rx="3" fill="#5b3a24"/><ellipse cx="50" cy="68" rx="22" ry="20" fill="#e8a24a"/><ellipse cx="50" cy="50" rx="15" ry="14" fill="#e8a24a"/><circle cx="50" cy="60" r="7" fill="${E}"/><rect x="42" y="76" width="16" height="4" rx="2" fill="#8a5a3c"/><path d="M48 12v64M52 12v64" stroke="#fff" stroke-width=".8"/></g>`,
+cla:`<g><rect x="44" y="2" width="12" height="11" rx="3" fill="#6b5a82" stroke="#8c7fa8" stroke-width="1.500"/><rect x="41" y="11" width="18" height="6" rx="2" fill="#cfd8e3"/><rect x="43" y="16" width="14" height="62" rx="3" fill="#2b2140" stroke="#8c7fa8" stroke-width="1.500"/><path d="M43 76h14l6 16H37z" fill="#2b2140" stroke="#8c7fa8" stroke-width="1.500" stroke-linejoin="round"/><g fill="#cfd8e3"><circle cx="50" cy="26" r="3.500"/><circle cx="50" cy="38" r="3.500"/><circle cx="50" cy="50" r="3.500"/><circle cx="50" cy="62" r="3.500"/></g><path d="M43 30h-5M57 44h5M43 56h-5" stroke="#cfd8e3" stroke-width="2.500" stroke-linecap="round"/></g>`,
+tru:`<g fill="none" stroke="#ffc93c" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 46h62"/><rect x="26" y="34" width="36" height="24" rx="12"/></g><path d="M74 46l16-16v32z" fill="#ffc93c" stroke="#e0a800" stroke-width="2" stroke-linejoin="round"/><g fill="#e0a800"><rect x="34" y="22" width="4" height="12" rx="2"/><rect x="44" y="22" width="4" height="12" rx="2"/><rect x="54" y="22" width="4" height="12" rx="2"/></g><rect x="6" y="42" width="10" height="8" rx="3" fill="#e0a800"/>`,
+dru:`<path d="M12 14l24 20M88 14L64 34" stroke="#8a5a3c" stroke-width="5" stroke-linecap="round"/><path d="M16 40v30q0 14 34 14t34-14V40q0 12-34 12T16 40z" fill="#ef4565"/><ellipse cx="50" cy="40" rx="34" ry="12" fill="#f3efe6" stroke="#cfc6b0" stroke-width="2"/><path d="M26 52l12 30M50 54v32M74 52L62 82" stroke="#fff" stroke-width="2" fill="none" opacity=".8"/>`,
+acc:`<rect x="8" y="22" width="22" height="56" rx="6" fill="#ef4565"/><rect x="70" y="22" width="22" height="56" rx="6" fill="#ef4565"/><path d="M30 26h40v48H30z" fill="#5b4a6b"/><path d="M35 26v48M41 26v48M47 26v48M53 26v48M59 26v48M65 26v48" stroke="#b9acd3" stroke-width="2"/><g fill="#fff"><circle cx="19" cy="36" r="3.500"/><circle cx="19" cy="50" r="3.500"/><circle cx="19" cy="64" r="3.500"/><rect x="74" y="30" width="14" height="40" rx="2"/></g><path d="M74 40h14M74 50h14M74 60h14" stroke="#cfc6e0" stroke-width="1"/>`,
+fid:`<g transform="rotate(40 50 50)"><rect x="47" y="8" width="6" height="42" rx="2" fill="#5b3a24"/><circle cx="50" cy="7" r="6" fill="#8a5a3c"/><path d="M38 50Q32 42 42 40H58Q68 42 62 50Q58 56 62 62Q70 72 60 82Q50 90 40 82Q30 72 38 62Q42 56 38 50z" fill="#c4753a" stroke="#7a4a1c" stroke-width="2"/><path d="M43 60v12M57 60v12" stroke="${E}" stroke-width="2" stroke-linecap="round"/><path d="M42 50h16M44 46h12" stroke="#fff3e0" stroke-width="1.500" stroke-dasharray="2 2"/><rect x="44" y="82" width="12" height="4" rx="2" fill="${E}"/><path d="M49 14v66M51 14v66" stroke="#fff" stroke-width=".8"/></g>`,
+sel:`<rect x="6" y="42" width="88" height="14" rx="6" fill="#c98a4b" stroke="#8a5a3c" stroke-width="2"/><rect x="6" y="42" width="16" height="14" rx="6" fill="#a46a32"/><rect x="22" y="42" width="8" height="4" fill="#f4d9a8"/><g fill="${E}"><circle cx="42" cy="49" r="3"/><circle cx="54" cy="49" r="3"/><circle cx="66" cy="49" r="3"/><circle cx="78" cy="49" r="3"/></g>`,
+mun:`<path d="M80 38H30A12 12 0 0 0 30 62H80" fill="none" stroke="#9aa6b8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><path d="M80 38H30A12 12 0 0 0 30 62H80" fill="none" stroke="#cfd8e3" stroke-width="3" stroke-linecap="round"/><path d="M30 50H88l8-8" fill="none" stroke="#5b4a6b" stroke-width="3.500" stroke-linecap="round" stroke-linejoin="round"/><circle cx="96" cy="42" r="2.500" fill="#5b4a6b"/>`,
+lur:`<path d="M8 36Q50 28 70 52Q84 68 88 80" fill="none" stroke="#c98a4b" stroke-width="8" stroke-linecap="round"/><path d="M80 72q16-6 20 12-12 6-20-12z" fill="#8a5a3c"/><g fill="#8a5a3c"><rect x="26" y="29" width="4" height="12" rx="1" transform="rotate(-10 28 35)"/><rect x="50" y="36" width="4" height="12" rx="1" transform="rotate(30 52 42)"/></g>`,
+lan:`<path d="M6 38h88l-8 24H14z" fill="#c98a4b" stroke="#8a5a3c" stroke-width="2" stroke-linejoin="round"/><path d="M12 44h76M14 50h72M16 56h68" stroke="#fff3e0" stroke-width="1.200"/><path d="M30 40v20M42 40v20M54 40v20M66 40v20" stroke="#8a5a3c" stroke-width="1.500"/><circle cx="80" cy="52" r="3" fill="${E}"/>`,
+tam:`<circle cx="50" cy="50" r="38" fill="#e8b88a" stroke="#8a5a3c" stroke-width="5"/><circle cx="50" cy="50" r="30" fill="#fff1de"/><path d="M50 28l5 14 15 1-12 9 4 15-12-8-12 8 4-15-12-9 15-1z" fill="#ef4565"/><g fill="#ffc93c" stroke="#e0a800" stroke-width="1.500"><circle cx="50" cy="12" r="5"/><circle cx="88" cy="50" r="5"/><circle cx="50" cy="88" r="5"/><circle cx="12" cy="50" r="5"/></g>`};
+const R0={cla:'rotate(35 50 50)'},base=k=>R0[k]?`<g transform="${R0[k]}">${A[k]}</g>`:A[k];
+const PW='fill="#fff3e0" stroke="#c9a97c" stroke-width="1.500"';
+const PLAY={cla:['translate(50 69) rotate(-50) scale(.4) translate(-50 -2)',[[59,77],[68.5,84]]],gui:['translate(46 46) scale(.5)',[[66,80],[78,64]]],tru:['translate(45.5 48.3) scale(.45)',[[66,62],[58,74]]],dru:['translate(25 48) scale(.5)',[[31,55],[69,55]]],piano:['translate(22 46) scale(.55)',[[38,66],[60,66]]],acc:['translate(22 44) scale(.55)',[[30,70],[70,66]]],fid:['translate(46 46) scale(.5)',[]],sel:['translate(50 69) rotate(35) scale(.5) translate(-6 -49)',[]],mun:['translate(50 69) scale(.4) translate(-50 -50)',[]],lur:['translate(50 69) scale(.45) translate(-8 -36)',[]],lan:['translate(14 48) scale(.7)',[]],tam:['translate(40 42) scale(.5)',[]]};
+const PLAYB={cla:['translate(83 17) rotate(-20) scale(.4) translate(-50 -2)',[[87,28],[91,40]]],tru:['translate(83 17) rotate(50) scale(.27) translate(-10 -46)',[[92,23],[87,25]]],gui:['translate(14 40) scale(.5)',[[36,76],[48,58]]],dru:['translate(14 44) scale(.5)',[[20,51],[58,51]]],piano:['translate(10 48) scale(.55)',[[26,62],[46,62]]],acc:['translate(10 46) scale(.55)',[[18,66],[56,62]]],fid:['translate(14 40) scale(.5)',[]],sel:['translate(83 17) rotate(50) scale(.3) translate(-6 -49)',[]],mun:['translate(83 17) scale(.3) translate(-50 -50)',[]],lur:['translate(83 17) rotate(40) scale(.25) translate(-8 -36)',[]],lan:['translate(8 52) scale(.65)',[]],tam:['translate(12 46) scale(.45)',[]]};
+const MOUTH={cat:[50,52],dog:[50,52],lamb:[50,53],chick:[50,56],calf:[50,54],rex:[90,55],tri:[86,66],rap:[92,43]};
+const PLAYD={gui:'translate(30 42) scale(.5)',fid:'translate(30 42) scale(.5)',dru:'translate(22 46) scale(.5)',piano:'translate(18 48) scale(.55)',acc:'translate(18 46) scale(.55)',lan:'translate(8 52) scale(.65)',tam:'translate(28 40) scale(.5)'};
+function plc(k,a){if(k==='bra')return PLAYB[a];const m=MOUTH[k];if(!m)return PLAY[a];const x=m[0],y=m[1],t=`translate(${x} ${y})`;
+const W={cla:`${t} rotate(10) scale(.36) translate(-50 -2)`,tru:`${t} rotate(75) scale(.28) translate(-10 -46)`,sel:`${t} rotate(75) scale(.3) translate(-6 -49)`,mun:`translate(${x-12} ${y}) scale(.3) translate(-50 -50)`,lur:`${t} rotate(60) scale(.22) translate(-8 -36)`};
+return[W[a]||PLAYD[a]]}
+const NOTE='<ellipse rx="4" ry="3" transform="rotate(-20)" fill="#7c4dff"/><path d="M3.500-1V-12q2 3 6 3" stroke="#7c4dff" stroke-width="2" fill="none"/>';
+const pet=(k,s=64)=>`<svg width="${s}" height="${s}" viewBox="0 0 100 100">${base(k)}</svg>`;
+const petA=(k,s=64)=>{const a=S.acc&&S.acc[k],p=a&&plc(k,a),nq=['calf','cat','dog','lamb','chick'].includes(k)?[[84,18],[94,32]]:k==='bra'?[[38,12],[26,24]]:MOUTH[k]?[[24,14],[12,28]]:[[80,16],[91,28]];return`<svg ${mv(k)} width="${s}" height="${s}" viewBox="0 0 100 100">${base(k)}${p?`<g transform="${p[0]}">${A[a]}</g><g transform="translate(${nq[0][0]} ${nq[0][1]})"><g class="nt">${NOTE}</g></g><g transform="translate(${nq[1][0]} ${nq[1][1]}) scale(.8)"><g class="nt" style="animation-delay:.5s">${NOTE}</g></g>`:''}</svg>`};
+const MV={cat:'wig',dog:'hop',calf:'dance',lamb:'hop',chick:'hop',rex:'sway',tri:'sway',rap:'hop',bra:'sway'},mv=k=>S.anim&&S.anim[k]&&(S.pets[k]||0)>=3&&MV[k]?`class="mv ${MV[k]}"`:'';
+const favHTML=()=>S.fav&&S.pets[S.fav]?petA(S.fav,68):'';
+const PETS=[['cat','Kattunge','en'],['dog','Valp','en'],['calf','Kalv','en'],['lamb','Lam','et'],['chick','Kylling','en']];
+const DINOS=[['rex','T-rex','en'],['tri','Triceratops','en'],['rap','Velociraptor','en'],['bra','Brachiosaurus','en']];
+const INSTR=[['piano','Piano','et'],['gui','Gitar','en'],['cla','Klarinett','en'],['tru','Trompet','en'],['dru','Tromme','en'],['acc','Trekkspill','et']];
+const INSTR2=[['fid','Hardingfele','en'],['sel','Seljefløyte','en'],['mun','Munnharpe','en'],['lur','Lur','en'],['lan','Langeleik','en'],['tam','Tamburin','en']],ALLI=INSTR.concat(INSTR2);
+const LV=[
+{n:'Lett',ic:'leaf',col:'#2ed585',d:'Diskant, enkle noter',c:['t'],lo:30,hi:39,t:0,m:1},
+{n:'Middels',ic:'note',col:'#4dabf7',d:'Diskant, hjelpelinjer',c:['t'],lo:26,hi:42,t:0,m:1.25},
+{n:'Vanskelig',ic:'bass',col:'#ff8a1f',d:'Bassnøkkel',c:['b'],lo:16,hi:30,t:0,m:1.5},
+{n:'Ekspert',ic:'bolt',col:'#a77bff',d:'Begge nøkler, 8 sek',c:['t','b'],lo:16,hi:42,t:8,m:2}];
+const $=s=>document.querySelector(s);
+let S={streak:0,last:'',best:0,xp:0,tot:null,eggs:0,pets:{}},G=null,AC=null,RUN=null,HT=0;
+try{Object.assign(S,JSON.parse(localStorage.getItem('nt1')||'{}'))}catch(e){}
+if(S.tot==null)S.tot=S.xp;if(!S.pets)S.pets={};
+const THEMES=['#7c4dff','#2f80ed','#1fb86a','#ff4d8d','#ff8a1f','#14b8c4'];
+if(!S.theme)S.theme=THEMES[0];if(!S.acc)S.acc={};if(!S.path)S.path={};if(!S.anim)S.anim={};if(!S.pv){S.path={};S.pv=2}if(S.pv===2){const o=S.path,n={};Object.keys(o).forEach(k=>{k=+k;if(k<4)n[k]=o[k];else if(k===4){n[4]=o[4];n[5]=o[4]}else n[k+1]=o[k]});S.path=n;S.pv=3}if(S.pv===3){const o=S.path,n={};Object.keys(o).forEach(k=>{k=+k;n[k<3?k:k+1]=o[k]});S.path=n;S.pv=4}if(S.pets.flu){S.pets.cla=(S.pets.cla||0)+S.pets.flu;delete S.pets.flu}for(const k in S.acc)if(S.acc[k]==='flu')S.acc[k]='cla';
+function applyTheme(){document.documentElement.style.setProperty('--pri',S.theme)}
+function setTheme(c,b){S.theme=c;save();applyTheme();document.querySelectorAll('.swb').forEach(x=>x.classList.toggle('on',x===b))}
+applyTheme();
+const save=()=>{try{localStorage.setItem('nt1',JSON.stringify(S))}catch(e){}};
+const addXp=n=>{n=Math.round(n*(G?G.l.m:1));S.xp+=n;S.tot+=n;if(G)G.xp+=n};
+const day=(d=new Date())=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+function liveStreak(){const y=new Date();y.setDate(y.getDate()-1);return(S.last===day()||S.last===day(y))?S.streak:0}
+function tick(){const t=day();if(S.last===t)return;const y=new Date();y.setDate(y.getDate()-1);
+S.streak=(S.last===day(y)?S.streak:0)+1;S.last=t;S.best=Math.max(S.best,S.streak);save()}
+function beep(n,ok){try{AC=AC||new(window.AudioContext||window.webkitAudioContext)();
+const o=AC.createOscillator(),g=AC.createGain();const m=12*(Math.floor(n/7)+1)+OFF[n%7];
+o.frequency.value=ok?440*Math.pow(2,(m-69)/12):110;o.type=ok?'triangle':'sawtooth';
+g.gain.setValueAtTime(.25,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.6);
+o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+.6)}catch(e){}}
+function home(){RUN=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
+$('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${Math.floor(S.tot/100)+1}</div><button class="x" onclick="tutor(0)" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
+<div class="hero">${ic('flame',68)}<div><div class="hn">${ls}</div><div class="hs">${ls===1?'dag':'dager'} på rad</div><div class="rec">${ic('trophy',16)} ${S.best}</div></div><div class="fav" id="fav">${favHTML()}</div></div>
+<div class="note">${done?'Dagens mål er nådd – streaken er trygg!':'Fullfør en runde i dag for å holde streaken i live'}</div>
+<div class="card" id="zoo">${zoo()}</div>
+<button class="lv" style="--c:var(--pri);flex-direction:row;align-items:center;width:100%;margin:10px 0" onclick="path()"><span class="ib">${ic('map',30)}</span><div style="flex:1"><b>Læringsløype</b><div class="bar" style="margin:8px 0 0"><i style="width:${PATH.filter((_,i)=>S.path[i]).length*100/PATH.length}%;background:var(--ok)"></i></div></div><div class="cnt"><b>${PATH.filter((_,i)=>S.path[i]).length}</b>/${PATH.length}<small>leksjoner</small></div></button>
+<h3>Velg nivå</h3><div class="grid">${LV.map((l,i)=>`<button class="lv" style="--c:${l.col}" onclick="start(${i})"><span class="ib">${ic(l.ic,30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
+`}
+let TAB=1,HK=0,SEL=null;
+function upd(){$('#zoo').innerHTML=zoo();const f=$('#fav');if(f)f.innerHTML=favHTML()}
+function pick(k){SEL=k;upd()}
+function setAnim(k){S.anim[k]=!S.anim[k];save();upd()}
+function setFav(k){S.fav=S.fav===k?null:k;save();upd()}
+function setAcc(k,a){if(a)S.acc[k]=a;else delete S.acc[k];save();upd()}
+function mine(){const an=PETS.concat(DINOS).filter(([k])=>S.pets[k]),ins=ALLI.some(([k])=>S.pets[k]);
+if(!an.length&&!ins)return'<div class="note">Ingenting ennå. Samle XP og åpne ditt første egg eller kiste!</div>';
+return(an.length?`<div class="pets big">${an.map(([k,nm])=>`<button class="pt pb" onclick="pick('${k}')">${k===S.fav?'<span class="fv">'+ic('star',16)+'</span>':''}${petA(k,56)}<b>${nm}${S.pets[k]>1?' ×'+S.pets[k]:''}</b></button>`).join('')}</div><div class="note">Trykk på et dyr for å velge favoritt eller gi det tilbehør</div>`:'<div class="note">Ingen dyr ennå – klekk et egg!</div>')+(ins?'<div class="msg" style="margin-top:8px">Instrumenter</div>'+grid(ALLI):'')}
+function detail(){const k=SEL,nm=PETS.concat(DINOS).find(x=>x[0]===k)[1],ins=ALLI.filter(([i])=>S.pets[i]);
+return`<button class="x" onclick="SEL=null;upd()">‹ Tilbake</button><div class="center"><div class="pop" style="margin:6px 0">${petA(k,140)}</div><b>${nm}</b></div><button class="btn" style="padding:10px" onclick="setFav('${k}')">${S.fav===k?'Favoritt':'Gjør til favoritt'}</button>${S.pets[k]>=3?`<button class="btn g" style="padding:10px" onclick="setAnim('${k}')">${S.anim[k]?'Stopp bevegelse':'Få dyret til å bevege seg'}</button>`:`<div class="note">Få 3 av dette dyret for å låse opp bevegelse (${S.pets[k]}/3)</div>`}<div class="msg" style="margin-top:10px">Tilbehør</div>${ins.length?`<div class="pets big" style="grid-template-columns:repeat(4,1fr)"><button class="pt pb${S.acc[k]?'':' sel'}" onclick="setAcc('${k}','')"><span class="q" style="height:44px;line-height:44px">–</span><b>Ingen</b></button>${ins.map(([i,n])=>`<button class="pt pb${S.acc[k]===i?' sel':''}" onclick="setAcc('${k}','${i}')">${pet(i,44)}<b>${n}</b></button>`).join('')}</div>`:'<div class="note">Du har ingen instrumenter ennå. Åpne en kiste i Kiste-fanen!</div>'}`}
+const EGGS=[{k:'eggs',c:500,n:'Gårdsdyr egg',i:'egg',pool:PETS},{k:'deggs',c:750,n:'Dinoegg',i:'degg',pool:DINOS},{k:'chests',c:250,n:'Instrumentkiste',i:'chest',pool:INSTR},{k:'chests2',c:300,n:'Folkemusikk-kiste',i:'chest2',pool:INSTR2}];
+function grid(list,miss){const o=list.filter(([k])=>miss||S.pets[k]);return`<div class="pets big">${o.map(([k,nm])=>{const c=S.pets[k]||0;return c?`<div class="pt">${petA(k,56)}<b>${nm}${c>1?' ×'+c:''}</b></div>`:'<div class="pt no"><span class="q">?</span><b>Mangler</b></div>'}).join('')}</div>`}
+function row(i){const e=EGGS[i],has=S[e.k]||0,p=Math.min(S.xp/e.c,1)*100,ch=i>1;return`<div class="eg1"><div class="eggr">${ic(e.i,52)}<div><b>${e.n}${has>1?' ×'+has:''} · ${e.c} XP</b>${has?'<div class="note" style="text-align:left;margin:4px 0">Klar!</div>':`<div class="bar"><i style="width:${p}%"></i></div><div class="note" style="text-align:left;margin:0">${S.xp>=e.c?'Du har nok XP!':(e.c-S.xp)+' XP igjen'}</div>`}</div></div><button class="btn" style="margin:4px 0 12px;padding:10px" ${has||S.xp>=e.c?'':'disabled'} onclick="${has?'hatch':'buy'}(${i})">${has?(ch?'Åpne kisten':'Klekk egget'):(ch?'Kjøp kiste':'Kjøp egg')}</button></div>`}
+function sec(t,L){const n=L.filter(([k])=>S.pets[k]).length;return`<div class="msg" style="margin-top:10px">${t}: ${n} av ${L.length}</div><div class="bar"><i style="width:${n*100/L.length}%"></i></div>${grid(L,1)}`}
+function zoo(){const all=PETS.concat(DINOS,INSTR);let b;
+if(TAB===0)b=SEL&&S.pets[SEL]?detail():mine();
+else if(TAB===1)b=`<div class="msg">Du har ${S.xp} XP</div>`+`<div class="eggs2">${row(0)}${row(1)}</div>`;
+else if(TAB===2)b=`<div class="msg">Du har ${S.xp} XP</div>`+`<div class="eggs2">${row(2)}${row(3)}</div>`;
+else b=sec('Husdyr',PETS)+sec('Dinosaurer',DINOS)+sec('Instrumenter',INSTR)+sec('Folkeinstrumenter',INSTR2);
+return`<div class="tabs">${['Mine','Egg','Kiste','Samling'].map((t,i)=>`<button class="${i===TAB?'on':''}" onclick="TAB=${i};SEL=null;upd()">${t}</button>`).join('')}</div>${b}`}
+function buy(i){const e=EGGS[i];if(S.xp<e.c)return;S.xp-=e.c;S[e.k]=(S[e.k]||0)+1;save();hatch(i)}
+const eggS=(n,i)=>`<svg width="200" height="200" viewBox="0 0 24 24">${I[EGGS[i].i]}${i>1?(n>1?'<g transform="translate(8 0) scale(.35)">'+I.sparkle+'</g><g transform="translate(15 2) scale(.25)">'+I.sparkle+'</g>':''):(n>0?'<path d="M5 12l3 2 2-3 3 3 2-2 4 2" fill="none" stroke="#6b5a3a" stroke-width=".6"/>':'')+(n>1?'<path d="M9 14l-1 4M13 13l1 5M12 5l-1 3" fill="none" stroke="#6b5a3a" stroke-width=".6"/>':'')}</svg>`;
+function hatch(i=0){window.scrollTo(0,0);HK=i;HT=0;const c=i>1;$('#app').innerHTML=`<div class="center"><h1>${c?'Åpne kisten!':i?'Klekk dinoegget!':'Klekk egget!'}</h1><div class="msg" id="hm">Trykk på ${c?'kisten':'egget'} 3 ganger</div><div id="eg" class="egg" onclick="tap()">${eggS(0,HK)}</div></div><button class="btn g" onclick="home()">Senere</button>`}
+function tap(){HT++;const el=$('#eg');el.classList.remove('shk');el.offsetWidth;el.classList.add('shk');el.innerHTML=eggS(HT,HK);beep(28+HT*3,true);
+if(HT<3){$('#hm').textContent=HT===1?(HK>1?'Den knirker!':'Det knaker!'):'Nesten der...';return}
+const e=EGGS[HK],k=e.pool[Math.floor(Math.random()*e.pool.length)];S[e.k]--;S.pets[k[0]]=(S.pets[k[0]]||0)+1;save();
+const nx=S.eggs>0?0:S.deggs>0?1:S.chests>0?2:S.chests2>0?3:-1;
+$('#app').innerHTML=`<div class="center"><h1>Gratulerer!</h1><div class="pop">${pet(k[0],220)}</div><div class="msg">Du fikk ${k[2]} ${k[1].toLowerCase()}!</div>${!ALLI.some(x=>x[0]===k[0])&&S.pets[k[0]]===3?'<div class="note">Du har nå 3! Gå til Mine og få dyret til å bevege seg.</div>':''}</div>${nx>=0?`<button class="btn" onclick="hatch(${nx})">Neste ${nx>1?'kiste':'egg'}</button>`:''}<button class="btn g" onclick="home()">Til forsiden</button>`;
+party(1,'Åpnet!');fan()}
+function pf(){AC=AC||new(window.AudioContext||window.webkitAudioContext)();if(AC.state==='suspended')AC.resume();return AC}
+function piano(f,t,v){const c=pf(),g=c.createGain();g.connect(c.destination);const T=c.currentTime+t;
+g.gain.setValueAtTime(.0001,T);g.gain.exponentialRampToValueAtTime(v,T+.01);g.gain.exponentialRampToValueAtTime(.0001,T+1.8);
+[[1,1],[2,.45],[3,.22],[4,.1],[5,.05]].forEach(([k,a])=>{const o=c.createOscillator(),h=c.createGain();o.type='sine';o.frequency.value=f*k;h.gain.value=a;o.connect(h);h.connect(g);o.start(T);o.stop(T+1.9)})}
+function playNote(){if(!G||S.mute)return;try{const n=G.cur.n,m=12*(Math.floor(n/7)+1)+OFF[n%7],F=x=>440*Math.pow(2,(x-69)/12);piano(F(m),0,.6)}catch(e){}}
+function mute(b){S.mute=!S.mute;save();b.textContent=S.mute?'Av':'På';b.classList.toggle('on',!S.mute)}
+function settings(){let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
+o.onclick=e=>{if(e.target===o)o.remove()};
+o.innerHTML=`<div class="tbox" style="text-align:left"><h2 style="margin:0 0 14px">Innstillinger</h2><div class="srow"><b>Lyd</b><button class="x${S.mute?'':' on'}" style="min-width:70px" onclick="mute(this)">${S.mute?'Av':'På'}</button></div><b>Temafarge</b><div class="sw" style="justify-content:flex-start;padding:10px 0 14px">${THEMES.map(c=>`<button class="swb${c===S.theme?' on':''}" style="background:${c}" onclick="setTheme('${c}',this)" aria-label="Velg farge"></button>`).join('')}</div><button class="btn" onclick="document.querySelector('.tut').remove()">Ferdig</button></div>`}
+const R=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
+const PATH=[
+{n:'Under midtlinja: linjer',c:['t'],pool:{t:[30,32]},nw:[['t',30],['t',32]],tip:'Midtlinja i diskantnøkkelen er den tredje linjen. Vi starter under den! De to linjene under midtlinja heter E (nederst) og G. Diskantnøkkelen krøller seg rundt G.',m:1,t:0},
+{n:'Under midtlinja: rom',c:['t'],pool:{t:[31,33]},nw:[['t',31],['t',33]],tip:'Mellom linjene under midtlinja finner du F og A.',m:1,t:0},
+{n:'Alt under midtlinja',c:['t'],pool:{t:R(30,33)},nw:[],tip:'Nå blander vi E, F, G og A.',m:1,t:0},
+{n:'Under notelinjene: C¹ og D¹',c:['t'],pool:{t:R(28,33)},nw:[['t',28],['t',29]],tip:'Under de fem notelinjene finner du de to nederste notene. D¹ henger rett under nederste linje, og C¹ (midt-C, også kalt enstrøken C) sitter på en liten hjelpelinje under der.',m:1,t:0},
+{n:'Midtlinja',c:['t'],pool:{t:R(30,34)},nw:[['t',34]],tip:'På midtlinja sitter H. Se godt på hvor den ligger i forhold til G.',m:1,t:0},
+{n:'Over midtlinja: C og D',c:['t'],pool:{t:R(34,36)},nw:[['t',35],['t',36]],tip:'Rett over midtlinja finner du C i mellomrommet og D på linjen over. Husk at H sitter på midtlinja!',m:1,t:0},
+{n:'Over midtlinja: E og F',c:['t'],pool:{t:R(34,38)},nw:[['t',37],['t',38]],tip:'Enda høyere kommer E i mellomrommet og F på den øverste linjen.',m:1,t:0},
+{n:'Hele notelinjen',c:['t'],pool:{t:R(30,38)},nw:[],tip:'Nå kommer alle notene på notelinjene om hverandre. Du klarer dette!',m:1,t:0},
+{n:'Hjelpelinjer',c:['t'],pool:{t:R(28,40)},nw:[['t',39],['t',40]],tip:'Over de fem notelinjene finner du G i mellomrommet over øverste linje, og A på en liten hjelpelinje.',m:1.25,t:0},
+{n:'Bassnøkkelen',c:['b'],pool:{b:[18,20,22,24,26]},nw:[['b',24],['b',18],['b',26]],tip:'F-nøkkelen har to prikker rundt F-linjen, den fjerde linjen nedenfra. Linjene er G, H, D, F og A.',m:1.25,t:0},
+{n:'Bass: mellomrom',c:['b'],pool:{b:[19,21,23,25]},nw:[['b',19],['b',21],['b',23],['b',25]],tip:'Mellomrommene i bassnøkkelen er A, C, E og G.',m:1.25,t:0},
+{n:'Hele bassnøkkelen',c:['b'],pool:{b:R(16,30)},nw:[],tip:'Alle notene i bassnøkkelen, også de med hjelpelinjer.',m:1.5,t:0},
+{n:'Begge nøkler',c:['t','b'],pool:{t:R(26,40),b:R(16,30)},nw:[],tip:'Nå kommer begge nøklene om hverandre. Se godt på nøkkelen først!',m:1.5,t:0},
+{n:'Mesterprøven',c:['t','b'],pool:{t:R(26,40),b:R(16,30)},nw:[],tip:'Siste prøve! Du får 8 sekunder per note. Du er klar!',m:2,t:8}];
+(()=>{const acc={t:new Set(),b:new Set()};PATH.forEach(l=>{for(const c in l.pool)l.pool[c].forEach(n=>acc[c].add(n));l.pool=Object.fromEntries(l.c.map(c=>[c,[...acc[c]].sort((a,b)=>a-b)]))})})();
+function pl(c,l){if(l.pool)return l.pool[c];const[a,b]=rng(c,l);return R(a,b)}
+function tone(n){if(S.mute)return;try{const m=12*(Math.floor(n/7)+1)+OFF[n%7];piano(440*Math.pow(2,(m-69)/12),0,.6)}catch(e){}}
+function path(){RUN=null;G=null;window.scrollTo(0,0);const P=S.path,dn=PATH.filter((_,i)=>P[i]).length,off=[0,56,0,-56];
+$('#app').innerHTML=`<div class="hd stk"><button class="x" onclick="home()">‹ Tilbake</button></div><h1 class="center" style="margin:10px 0 4px">Læringsløype</h1><div class="center" style="margin:10px 0 2px;font-weight:800"><span style="font-size:28px;color:var(--ok)">${dn}</span> av ${PATH.length} leksjoner fullført</div><div class="bar"><i style="width:${dn*100/PATH.length}%"></i></div>${dn===PATH.length?'<div class="msg">Du har klart hele løypa!</div>':''}${PATH.map((l,i)=>{const st=P[i]||0,lk=i>0&&!P[i-1];return`<div class="pn" style="--x:${off[i%4]}px"><button class="nd${st?' dn':lk?' lk':' cur'}" ${lk?'disabled':`onclick="intro(${i})"`}>${lk?ic('lock',26):st?ic('star',34):i+1}</button><b>${l.n}</b>${st?`<div>${ic('star',14).repeat(st)}</div>`:l.m>1?`<small>${l.m}x XP</small>`:''}</div>`}).join('')}`}
+function ov(c,arr,nw){const base=c==='t'?30:18,k=arr.length,x0=8,dx=(292-x0)/k;let s='';
+for(let q=0;q<5;q++)s+=`<line x1="4" x2="296" y1="${50+q*10}" y2="${50+q*10}" stroke="currentColor" stroke-width="1.2"/>`;
+arr.forEach((n,i)=>{const y=90-(n-base)*5,x=x0+dx*(i+.5),w=Math.min(8,dx/2);
+for(let ly=100;ly<=y+.1;ly+=10)s+=`<line x1="${x-w}" x2="${x+w}" y1="${ly}" y2="${ly}" stroke="currentColor"/>`;
+for(let ly=40;ly>=y-.1;ly-=10)s+=`<line x1="${x-w}" x2="${x+w}" y1="${ly}" y2="${ly}" stroke="currentColor"/>`;
+const nn=nw.has(n);s+=`<ellipse cx="${x}" cy="${y}" rx="5.500" ry="4" transform="rotate(-20 ${x} ${y})" style="fill:${nn?'var(--pri)':'currentColor'}"/><text x="${x}" y="128" text-anchor="middle" font-size="12" font-weight="800" style="fill:${nn?'var(--pri)':'currentColor'}">${N[n%7]}</text>`});
+return`<svg viewBox="0 25 300 110">${s}</svg>`}
+function info(l){const nm={t:'Diskantnøkkel',b:'Bassnøkkel'};
+return`<div class="note" style="text-align:left">${l.tip}</div>${l.nw.length?`<div class="msg">Nye noter</div><div class="note">Trykk på en note for å høre den</div><div class="grid">${l.nw.map(([c,n])=>`<div class="card center" style="margin:0" onclick="tone(${n})">${staff(n,c)}<b style="font-size:22px">${N[n%7]}${c==='t'&&n<30?'¹':''}</b></div>`).join('')}</div>`:''}
+<div class="msg" style="margin-top:12px">Disse notene kommer</div>${l.c.map(c=>`<div class="note" style="margin:4px 0 0">${nm[c]}</div><div class="card" style="margin:4px 0">${ov(c,l.pool[c],new Set(l.nw.filter(x=>x[0]===c).map(x=>x[1])))}</div>`).join('')}${l.nw.length?'<div class="note">Lilla noter er nye. De andre kjenner du fra før.</div>':''}`}
+function intro(i){const l=PATH[i];window.scrollTo(0,0);
+$('#app').innerHTML=`<div class="stk"><button class="x" onclick="path()">‹ Tilbake</button></div><h1 style="margin:10px 0 4px">${i+1}. ${l.n}</h1>${info(l)}<button class="btn" onclick="start(${i},1)">Start lekse</button>`}
+function showNotes(){const o=document.createElement('div');o.className='nov';o.innerHTML=`<div class="nbox"><div class="stk"><button class="x" onclick="closeNotes()">‹ Tilbake til leksjonen</button></div><h2 style="margin:6px 0">${G.l.n}</h2>${info(G.l)}<button class="btn" onclick="closeNotes()">Tilbake til leksjonen</button></div>`;document.body.appendChild(o)}
+function closeNotes(){const o=document.querySelector('.nov');if(o)o.remove()}
+const TUT=[
+{ic:'note',h:'Velkommen!',t:'Her lærer du å lese noter på en gøy måte. Vil du ha en kjapp omvisning?'},
+{ic:'note',h:'Slik spiller du',t:'Du ser en note på notelinjene. Trykk på bokstaven som passer: C, D, E, F, G, A eller H. Du hører også tonen, og kan trykke på notene for å høre den igjen.'},
+{ic:'map',h:'Læringsløypa',t:'Start her! Leksjonene tar deg steg for steg fra de første notene til begge nøklene. Klarer du en leksjon, åpnes den neste, og du får opptil 3 stjerner.'},
+{ic:'bolt',h:'Fire nivåer',t:'Vil du øve fritt? Velg Lett, Middels, Vanskelig eller Ekspert. Jo vanskeligere nivå, jo mer XP får du, opptil 2x.'},
+{ic:'flame',h:'Streak',t:'Fullfør minst én runde hver dag for å holde streaken i live. Hvor mange dager på rad klarer du?'},
+{ic:'egg',h:'Egg, kister og dyr',t:'XP-en bruker du i Egg- og Kiste-fanen. Klekk gårdsdyr og dinosaurer, åpne kister med instrumenter, og gi dyrene instrumentene sine. Har du 3 av samme dyr, kan det bevege seg!'},
+{ic:'star',h:'Klar?',t:'Det var alt! Du finner omvisningen igjen med ?-knappen, og tannhjulet lar deg bytte farge og skru lyd av og på.'}];
+function tutor(i){let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
+const t=TUT[i],last=i===TUT.length-1;
+o.innerHTML=`<div class="tbox"><div class="tic">${ic(t.ic,64)}</div><h2>${t.h}</h2><p>${t.t}</p>${i>0?`<div class="dots">${TUT.slice(1).map((_,k)=>`<i class="${k+1===i?'on':''}"></i>`).join('')}</div>`:''}<button class="btn" onclick="${last?'tutEnd()':`tutor(${i+1})`}">${i===0?'Vis meg rundt':last?'Kom i gang':'Neste'}</button>${i===0?'<button class="btn g" onclick="tutEnd()">Nei takk</button>':last?'':'<button class="btn g" onclick="tutEnd()">Hopp over</button>'}${i>1?`<button class="x" style="margin-top:10px" onclick="tutor(${i-1})">‹ Tilbake</button>`:''}</div>`}
+function tutEnd(){S.tut=1;save();const o=document.querySelector('.tut');if(o)o.remove()}
+function rng(c,l){return l.c.length>1?(c==='t'?[26,40]:[16,30]):[l.lo,l.hi]}
+function tot(){const l=G.l;return l.c.reduce((s,k)=>s+pl(k,l).length,0)}
+function fan(){[28,32,35,39,42].forEach((n,i)=>setTimeout(()=>beep(n,true),i*120))}
+function party(big,msg){const o=document.createElement('div');o.className='ov';const C=['#ff4d6d','#ffb703','#2ed585','#4dabf7','#9b7bff','#ff8a1f'];let h='';
+for(let i=0;i<(big?90:50);i++)h+=`<i class="cf" style="left:${Math.random()*100}%;background:${C[i%6]};animation-duration:${1.8+Math.random()*1.8}s;animation-delay:${Math.random()*.8}s"></i>`;
+for(let i=0;i<(big?40:16);i++)h+=`<span class="st" style="left:${Math.random()*100}%;animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.8}s">${ic(i%3?'star':'sparkle',18+Math.floor(Math.random()*20))}</span>`;
+if(big){const R=['#ef4565','#ff8a1f','#ffd23f','#2ed585','#4dabf7','#7c4dff','#c64dff'];let g='transparent 0 calc(var(--w)*.2)';R.forEach((c,k)=>{g+=`,${c} calc(var(--w)*${(.2+k*.04).toFixed(2)}) calc(var(--w)*${(.24+k*.04).toFixed(2)})`});g+=',transparent 0';h+=`<div class="rb" style="background:radial-gradient(circle at 50% 100%,${g})"></div>`}
+h+=`<div class="ban">${msg}</div>`;o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),5000)}
+function cheer(){if(!G.p&&RUN.seen.size>=tot()){party(1,'ALLE NOTENE!');fan();RUN.seen.clear()}else if(RUN.combo%10===0){party(0,RUN.combo+' på rad!');fan()}}
+function start(i,p){window.scrollTo(0,0);const l=p?PATH[i]:LV[i],key=(p?'p':'')+i;if(!RUN||RUN.i!==key)RUN={i:key,combo:0,seen:new Set()};G={i,p,l,Q:p?Math.min(10,Math.max(5,l.c.reduce((s,k)=>s+pl(k,l).length,0)*2)):10,q:0,ok:0,hp:3,max:0,xp:0,cur:null,busy:false,tm:null};next()}
+function next(){const l=G.l;if(!RUN.bag||!RUN.bag.length){const a=[];l.c.forEach(c=>pl(c,l).forEach(n=>a.push({n,c})));if(l.nw)l.nw.forEach(([c,n])=>a.push({n,c}));
+for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}
+const t=a[a.length-1];if(G.cur&&a.length>1&&t.n===G.cur.n&&t.c===G.cur.c)a.unshift(a.pop());RUN.bag=a}
+G.cur=RUN.bag.pop();G.busy=false;draw()}
+function staff(n,c){const base=c==='t'?30:18,y=90-(n-base)*5,x=170;let s='';
+for(let k=0;k<5;k++)s+=`<line x1="20" x2="280" y1="${50+k*10}" y2="${50+k*10}" stroke="currentColor" stroke-width="1.6"/>`;
+for(let ly=100;ly<=y+.1;ly+=10)s+=`<line x1="${x-16}" x2="${x+16}" y1="${ly}" y2="${ly}" stroke="currentColor" stroke-width="1.6"/>`;
+for(let ly=40;ly>=y-.1;ly-=10)s+=`<line x1="${x-16}" x2="${x+16}" y1="${ly}" y2="${ly}" stroke="currentColor" stroke-width="1.6"/>`;
+const up=y>70;s+=`<line x1="${up?x+6:x-6}" x2="${up?x+6:x-6}" y1="${y}" y2="${up?y-32:y+32}" stroke="currentColor" stroke-width="2"/>`;
+s+=`<ellipse cx="${x}" cy="${y}" rx="7.5" ry="5.5" transform="rotate(-20 ${x} ${y})" style="fill:var(--pri)" stroke="currentColor" stroke-width="1.2"/>`;
+s+=c==='t'?`<path d="M28 100C28 105 37 106 37 98L40 38C41 28 48 26 48 34C48 44 36 54 30 66C24 78 30 88 40 88C50 88 52 76 44 72C37 69 31 76 35 81" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>`:`<g fill="currentColor"><circle cx="30" cy="60" r="5"/><circle cx="58" cy="55" r="2.800"/><circle cx="58" cy="65" r="2.800"/><path d="M30 55 C48 54 52 70 44 80 C38 87 30 91 22 94" fill="none" stroke="currentColor" stroke-width="3.500" stroke-linecap="round"/></g>`;
+return`<svg viewBox="0 0 300 150" role="img" aria-label="Note"><g transform="translate(0,5)">${s}</g></svg>`}
+function draw(){const{q,hp,cur,l}=G,combo=RUN.combo;
+$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="${G.p?'path()':'home()'}">‹ Tilbake</button>${G.p&&!G.l.t?' <button class="x" onclick="showNotes()">Noter</button>':''}</span><span>${G.p?'<b>Lekse '+(G.i+1)+'</b>':ic('heart',24).repeat(hp)+ic('heartO',24).repeat(3-hp)}</span><span>${combo>1?ic('flame',20)+' x'+combo:''}</span><span>${q}/${G.Q}</span></div>
+<div class="bar"><i style="width:${q*100/G.Q}%"></i></div>${G.p?'':`<div class="center" style="font-size:12px;color:var(--mut)">${ic('rainbow',14)} ${RUN.seen.size}/${tot()} noter på rad</div>`}
+${l.t?'<div class="bar"><i id="tb" style="background:var(--hot);width:100%"></i></div>':''}
+<div class="card" id="st" onclick="playNote()">${staff(cur.n,cur.c)}<div class="bub" id="bub">Trykk for å høre tonen</div></div><div class="msg" id="msg">Hvilken note er dette?</div>
+<div class="keys">${N.map((k,i)=>`<button onclick="ans(${i},this)">${k}</button>`).join('')}</div>`;
+if(l.t){const b=$('#tb');b.style.transition='none';b.offsetWidth;b.style.transition=`width ${l.t}s linear`;b.style.width='0';
+clearTimeout(G.tm);G.tm=setTimeout(()=>ans(-1),l.t*1000)}playNote()}
+function ans(i,btn){if(G.busy)return;G.busy=true;clearTimeout(G.tm);const r=G.cur.n%7,ok=i===r;
+const ks=document.querySelectorAll('.keys button');ks[r].classList.add('ok');if(!ok&&btn)btn.classList.add('bad');
+const m=$('#msg');G.q++;
+if(ok){G.ok++;RUN.combo++;RUN.seen.add(G.cur.c+G.cur.n);G.max=Math.max(G.max,RUN.combo);addXp(10+Math.min(RUN.combo,5));
+m.textContent=['Riktig!','Bra!','Strålende!','Fantastisk!'][Math.min(RUN.combo-1,3)];$('#st').classList.add('flash');cheer()}
+else{if(!G.p)G.hp--;RUN.combo=0;RUN.seen.clear();m.textContent=(i<0?'Tiden gikk ut! ':G.p?'Ikke helt! ':'Oi! ')+'Det var '+N[r];if(G.p){const bb=$('#bub');if(bb)bb.textContent='Riktig svar: '+N[r]}}
+if(!ok){if(G.p)tone(G.cur.n);else beep(G.cur.n,false)}save();
+setTimeout(()=>{(G.hp<=0||G.q>=G.Q)?end():next()},ok?650:(G.p?2200:1300))}
+function end(){window.scrollTo(0,0);const win=G.p?G.ok>=Math.ceil(G.Q/2):G.hp>0,st=!win?0:G.ok>=G.Q?3:G.ok>=G.Q*.8?2:1;
+if(G.ok>=5||win)tick();addXp(st*5);if(G.p&&win)S.path[G.i]=Math.max(S.path[G.i]||0,st);if(G.p&&win&&!S.pathDone&&PATH.every((_,k)=>S.path[k])){S.pathDone=true;S.xp+=2000;S.tot+=2000;G.xp+=2000;G.done=1;setTimeout(()=>{party(0,'Hele løypa er klar! +2000 XP');fan()},400);setTimeout(()=>{party(0,'');fan()},2600)}save();
+$('#app').innerHTML=`<div class="rowi">${win?ic('star',64).repeat(st):ic(G.p?'note':'heartO',64)}</div><h1 class="center">${win?'Runden er klar!':'Prøv igjen!'}</h1>
+${G.done?'<div class="msg" style="font-size:18px;color:var(--ok)">Du klarte hele løypa! +2000 XP</div>':''}<div class="top"><div class="pill">${G.ok}/${G.q}<small>riktige</small></div><div class="pill">${ic('flame',18)} ${G.max}<small>beste kombo</small></div><div class="pill">+${G.xp}<small>XP · ${G.l.m}x</small></div></div>
+<div class="note">${S.xp>=500?'Du har nok XP til et egg!':'XP til neste egg: '+(500-S.xp)}</div>
+${G.p&&win&&PATH[G.i+1]?`<button class="btn" onclick="intro(${G.i+1})">Neste lekse</button>`:''}<button class="btn${G.p&&win&&PATH[G.i+1]?' g':''}" onclick="start(${G.i},${G.p?1:0})">Spill igjen</button><button class="btn g" onclick="${G.p?'path()':'home()'}">${G.p?'Til løypa':'Til forsiden'}</button>`}
+home();
+if(!S.tut)tutor(0);
+</script></body></html>
