@@ -311,9 +311,21 @@ d.className='vis';d.innerHTML=`<div class="fbub">${t}</div>${petA(k,70)}`;docume
 // Forsiden har fire sider med faner nederst: 0 Hjem, 1 Øv, 2 Melodier, 3 Dyr.
 let HP=0;
 // XP-hjulet nede i hjørnet står på alle sider. Ringen fylles mot neste mål. På fanesidene kan man trykke på det for å gå til Egg og dyr.
-function updWheel(){let w=$('#wheel');if(!w){w=document.createElement('button');w.id='wheel';w.className='wheel';w.onclick=()=>{if($('.nav'))setHP(3)};document.body.appendChild(w)}
+// Trykker man på hjulet, kommer det opp en oversikt. (Ikke under oppgaver med tidsfrist, så klokka ikke går mens man leser.)
+function wheelInfo(){let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
+o.onclick=e=>{if(e.target===o)o.remove()};
+const g=goal(),q=dq(),c=DQS[q.g],v=Math.min(q[c.s],c.n),into=S.tot%1000,bar=(w,col)=>`<div class="bar" style="margin:6px 0"><i style="width:${w}%;${col?'background:'+col:''}"></i></div>`,
+row=(t,x)=>`<div style="text-align:left;margin:12px 0 0"><b>${t}</b>${x}</div>`;
+o.innerHTML=`<div class="tbox"><div style="font-size:44px;font-weight:900;line-height:1">${S.xp}</div><div class="note" style="margin:2px 0 4px">XP å bruke</div>
+${row('Nivå '+lvl(),bar(into/10)+`<div class="note" style="text-align:left;margin:0">${1000-into} XP til nivå ${lvl()+1} · ${S.tot} XP tjent totalt</div>`)}
+${row('Neste mål',`<div class="note" style="text-align:left;margin:2px 0">${g.txt}</div>`+(g.a?bar(S.xp*100/g.a.c):''))}
+${row('Dagens utfordring',`<div class="note" style="text-align:left;margin:2px 0">${c.t}: ${q.done?'klart! ✓':v+' av '+c.n}</div>`+bar(v*100/c.n,q.done?'var(--ok)':''))}
+${row('Streak',`<div class="note" style="text-align:left;margin:2px 0">${ic('flame',16)} ${liveStreak()} dager på rad · rekord ${S.best}</div>`)}
+${row('Samling',`<div class="note" style="text-align:left;margin:2px 0">${ANIM.filter(([k])=>S.pets[k]).length} av ${ANIM.length} dyr · ${ALLI.filter(([k])=>S.pets[k]).length} av ${ALLI.length} instrumenter</div>`)}
+${$('.nav')?'<button class="btn" onclick="this.closest(\'.tut\').remove();HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til egg og dyr</button>':''}<button class="btn g" onclick="this.closest('.tut').remove()">Lukk</button></div>`}
+function updWheel(){let w=$('#wheel');if(!w){w=document.createElement('button');w.id='wheel';w.className='wheel';w.onclick=wheelInfo;document.body.appendChild(w)}
 const a=goal().a,pc=a?Math.min(S.xp/a.c,1):1,C=2*Math.PI*27,n=String(S.xp),nav=!!$('.nav');
-w.style.bottom=nav?'92px':'12px';w.style.pointerEvents=nav?'auto':'none';w.setAttribute('aria-label','Du har '+S.xp+' XP');
+w.style.bottom=nav?'92px':'12px';w.style.pointerEvents=G&&G.l&&G.l.t&&!nav?'none':'auto';w.setAttribute('aria-label','Du har '+S.xp+' XP');
 w.innerHTML=`<svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="27" fill="none" stroke="var(--pri)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C*pc).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span style="font-size:${n.length>4?11:n.length>3?14:17}px">${n}</span><small>XP</small></b>`}
 // Rød prikk bare på Egg og dyr, når du har nok XP til å kjøpe noe eller har et egg som venter: [Hjem, Øv, Melodier, Dyr]
 const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||(e.c&&unlocked(e)&&S.xp>=e.c))];
