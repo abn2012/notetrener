@@ -256,7 +256,7 @@ function applyTheme(){const d=document.documentElement;d.style.setProperty('--pr
 function setLook(v){S.look=v;save();applyTheme();document.querySelectorAll('.lk2 .x').forEach(x=>x.classList.toggle('on',x.dataset.v===v))}
 function setTheme(c,b){S.theme=c;save();applyTheme();document.querySelectorAll('.swb').forEach(x=>x.classList.toggle('on',x===b))}
 applyTheme();
-const save=()=>{try{localStorage.setItem('nt1',JSON.stringify(S))}catch(e){}};
+const save=()=>{try{localStorage.setItem('nt1',JSON.stringify(S))}catch(e){}try{updWheel()}catch(e){}};
 const addXp=n=>{n=Math.round(n*(G?G.l.m:1));S.xp+=n;S.tot+=n;if(G)G.xp+=n};
 const day=(d=new Date())=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 function liveStreak(){const y=new Date();y.setDate(y.getDate()-1);return(S.last===day()||S.last===day(y))?S.streak:0}
@@ -310,9 +310,11 @@ function cheerPet(){const o=ANIM.filter(([k])=>S.pets[k]);if(!o.length)return;co
 d.className='vis';d.innerHTML=`<div class="fbub">${t}</div>${petA(k,70)}`;document.body.appendChild(d);setTimeout(()=>d.remove(),2400)}
 // Forsiden har fire sider med faner nederst: 0 Hjem, 1 Øv, 2 Melodier, 3 Dyr.
 let HP=0;
-// XP-hjulet nede i hjørnet: ringen fylles mot neste mål. Trykk for å gå til Egg og dyr.
-function wheel(){const a=goal().a,pc=a?Math.min(S.xp/a.c,1):1,C=2*Math.PI*27,n=String(S.xp);
-return`<button class="wheel" onclick="setHP(3)" aria-label="Du har ${S.xp} XP"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="27" fill="none" stroke="var(--pri)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C*pc).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span style="font-size:${n.length>4?11:n.length>3?14:17}px">${n}</span><small>XP</small></b></button>`}
+// XP-hjulet nede i hjørnet står på alle sider. Ringen fylles mot neste mål. På fanesidene kan man trykke på det for å gå til Egg og dyr.
+function updWheel(){let w=$('#wheel');if(!w){w=document.createElement('button');w.id='wheel';w.className='wheel';w.onclick=()=>{if($('.nav'))setHP(3)};document.body.appendChild(w)}
+const a=goal().a,pc=a?Math.min(S.xp/a.c,1):1,C=2*Math.PI*27,n=String(S.xp),nav=!!$('.nav');
+w.style.bottom=nav?'92px':'12px';w.style.pointerEvents=nav?'auto':'none';w.setAttribute('aria-label','Du har '+S.xp+' XP');
+w.innerHTML=`<svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="27" fill="none" stroke="var(--pri)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C*pc).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span style="font-size:${n.length>4?11:n.length>3?14:17}px">${n}</span><small>XP</small></b>`}
 // Rød prikk bare på Egg og dyr, når du har nok XP til å kjøpe noe eller har et egg som venter: [Hjem, Øv, Melodier, Dyr]
 const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||(e.c&&unlocked(e)&&S.xp>=e.c))];
 function setHP(k){HP=k;home();window.scrollTo(0,0)}
@@ -326,7 +328,7 @@ ${goalCard()}
 <button id="bpath" class="lv" style="--c:var(--pri);flex-direction:row;align-items:center;width:100%;margin:10px 0" onclick="path()"><span class="ib">${ic('map',30)}</span><div style="flex:1"><b>Læringsløype</b><div class="bar" style="margin:8px 0 0"><i style="width:${PATH.filter((_,i)=>S.path[i]).length*100/PATH.length}%;background:var(--ok)"></i></div></div><div class="cnt"><b>${PATH.filter((_,i)=>S.path[i]).length}</b>/${PATH.length}<small>leksjoner</small></div></button>`,`<h3>Velg nivå</h3><div id="lvs" class="grid cmp">${LV.map((l,i)=>`<button class="lv" style="--c:${l.col}" onclick="start(${i})"><span class="ib">${ic(l.ic,30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
 <h3>Akkorder</h3><div class="note" style="text-align:left">Du ser tre toner samtidig. Hvilken akkord er det?</div><div class="grid cmp">${AK.map((l,i)=>`<button class="lv" style="--c:#f0a500" onclick="start(${i},3)"><span class="ib">${ic('sparkle',30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
 <h3 id="plh">Plasser noten</h3><div class="note" style="text-align:left">Du får en bokstav, og så plasserer du noten selv på notelinja.</div><div class="grid cmp">${PL.map((l,i)=>`<button class="lv" style="--c:var(--pri)" onclick="start(${i},2)"><span class="ib">${ic(i?'bass':'note',30)}</span><b>${l.d}</b><span class="mx">${l.m}x XP</span></button>`).join('')}</div>`,`<h3 id="mel">Spill en melodi</h3>${S.path[3]?'<div class="note" style="text-align:left">Trykk på riktig bokstav for hver note, så spiller du melodien.</div>':'<div class="note" style="text-align:left">Klar leksjon 4 i læringsløypa for å åpne melodiene.</div>'}<div class="grid cmp">${TUNES.map((t,i)=>`<button class="lv" style="--c:#2ed585" ${S.path[3]?`onclick="tune(${i})"`:'disabled'}><span class="ib">${ic(S.path[3]?'note':'lock',30)}</span><b>${t.n}</b>${S.tunes[i]?'<span class="mx">Spilt ✓</span>':'<span class="mx">100 XP</span>'}</button>`).join('')}</div>`,`<div class="card" id="zoo">${zoo()}</div>`][HP]}
-<div style="height:96px"></div>${wheel()}<nav class="nav">${[['Hjem','flame'],['Øv fritt','bolt'],['Melodier','note'],['Egg og dyr','egg']].map(([t,i],k)=>`<button class="${k===HP?'on':''}" onclick="setHP(${k})"><span class="ni">${ic(i,28)}${dots()[k]?'<i class="dot"></i>':''}</span><span>${t}</span></button>`).join('')}</nav>
+<div style="height:96px"></div><nav class="nav">${[['Hjem','flame'],['Øv fritt','bolt'],['Melodier','note'],['Egg og dyr','egg']].map(([t,i],k)=>`<button class="${k===HP?'on':''}" onclick="setHP(${k})"><span class="ni">${ic(i,28)}${dots()[k]?'<i class="dot"></i>':''}</span><span>${t}</span></button>`).join('')}</nav>
 `}
 // Streak: kan reddes med XP. Prisen er 200 de to første gangene og dobles deretter.
 const fixCost=()=>{const f=S.fixes||0;return f<2?200:200*2**(f-1)};
@@ -531,6 +533,7 @@ $('#app').innerHTML=`<div class="rowi">${win?ic('star',64).repeat(st):ic(G.p?'no
 ${(G.bn||[]).map(b=>`<div class="msg" style="font-size:18px;color:var(--ok)">${b.t} +${b.xp} XP</div>`).join('')}${G.done?`<div class="msg" style="font-size:18px;color:var(--ok)">Du klarte hele løypa! +2000 XP</div><div class="pop" style="margin:0">${pet('ele',120)}</div><div class="msg">Du fikk en studentelefant!</div>`:''}<div class="top"><div class="pill">${G.ok}/${G.q}<small>riktige</small></div><div class="pill">${ic('flame',18)} ${G.max}<small>beste kombo</small></div><div class="pill">+${G.xp}<small>XP · ${G.l.m}x</small></div></div>
 <div class="note">${goal().txt}</div>
 ${G.p&&win&&PATH[G.i+1]?`<button class="btn" onclick="intro(${G.i+1})">Neste leksjon</button>`:''}<button class="btn${G.p&&win&&PATH[G.i+1]?' g':''}" onclick="start(${G.i},${G.mode})">Spill igjen</button><button class="btn g" onclick="${G.p?'path()':'home()'}">${G.p?'Til løypa':'Til forsiden'}</button>`}
+new MutationObserver(updWheel).observe($('#app'),{childList:true});
 home();
 if(!S.tut)tutor(0);
 </script></body></html>
