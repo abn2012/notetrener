@@ -304,7 +304,7 @@ return{a,txt:(ok?'Du har nok XP til å kjøpe noe! ':'')+(a?(a.c-S.xp)+' XP til 
 function goalCard(){const g=goal();return`<div class="card"><b>Neste mål</b><div style="margin:4px 0">${g.txt}</div>${g.a?`<div class="bar"><i style="width:${S.xp*100/g.a.c}%"></i></div>`:''}</div>`}
 // Melodier: trykk på riktig bokstav for hver note. Åpnes etter leksjon 4 i løypa.
 // s = tonene, d = hvor mange slag hver tone varer (1 = en fjerdedel, 2 = en halv, 4 = en hel).
-const TUNES=[{n:'Blinke, blinke, lille stjerne',s:[28,28,32,32,33,33,32,31,31,30,30,29,29,28,32,32,31,31,30,30,29,32,32,31,31,30,30,29,28,28,32,32,33,33,32,31,31,30,30,29,29,28],
+const TUNES=[{n:'Blinke, blinke, stjernelil',s:[28,28,32,32,33,33,32,31,31,30,30,29,29,28,32,32,31,31,30,30,29,32,32,31,31,30,30,29,28,28,32,32,33,33,32,31,31,30,30,29,29,28],
 d:[1,1,1,1,1,1,2,1,1,1,1,1,1,2,1,1,1,1,1,1,2,1,1,1,1,1,1,2,1,1,1,1,1,1,2,1,1,1,1,1,1,2]},
 {n:'Fader Jakob',s:[28,29,30,28,28,29,30,28,30,31,32,30,31,32,32,33,32,31,30,28,32,33,32,31,30,28,28,25,28,28,25,28],
 d:[1,1,1,1,1,1,1,1,1,1,2,1,1,2,.5,.5,.5,.5,1,1,.5,.5,.5,.5,1,1,1,1,2,1,1,2]},
