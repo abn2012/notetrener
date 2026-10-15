@@ -118,6 +118,11 @@ svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
 .wheel{position:fixed;right:12px;bottom:92px;width:64px;height:64px;border-radius:50%;background:var(--card);border:0;padding:0;box-shadow:0 2px 10px rgba(0,0,0,.25);z-index:9;cursor:pointer;color:var(--ink)}
 .wl{position:absolute;top:-6px;left:-6px;min-width:24px;height:24px;border-radius:12px;background:#ffc93c;color:#2b2140;font-size:13px;font-weight:900;display:grid;place-items:center;padding:0 5px;border:2px solid var(--card)}
 .wheel svg{position:absolute;inset:0;transform:rotate(-90deg)}.wheel b{position:absolute;inset:0;display:grid;place-content:center;font-weight:900;line-height:1}.wheel small{font-size:9px;color:var(--mut);font-weight:800;text-align:center}
+.btn.go{display:flex;flex-direction:column;align-items:center;gap:2px;padding:16px;margin:12px 0 4px;font-size:17px;border-bottom:5px solid rgba(0,0,0,.25);animation:gop 2s ease-in-out infinite}
+.btn.go small{font-size:13px;font-weight:700;opacity:.9}
+@keyframes gop{50%{box-shadow:0 0 0 7px color-mix(in srgb,var(--pri) 30%,transparent)}}
+.steps{display:grid;gap:8px;margin-top:8px}.steps>div{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:14px;line-height:1.35}
+.steps i{flex:none;width:24px;height:24px;border-radius:50%;background:var(--pri);color:#fff;font-style:normal;font-weight:900;display:grid;place-items:center;font-size:13px}
 </style></head><body><div id="app"></div>
 <script>
 const N=['C','D','E','F','G','A','H'],OFF=[0,2,4,5,7,9,11];
@@ -365,9 +370,14 @@ w.innerHTML=`<svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy=
 // Rød prikk bare på Egg og dyr, når du har nok XP til å kjøpe noe eller har et egg som venter: [Hjem, Øv, Melodier, Dyr]
 const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||(e.c&&unlocked(e)&&S.xp>=e.c))];
 function setHP(k){HP=k;home();window.scrollTo(0,0)}
+// Stor start-knapp øverst på forsiden, og en kort veiledning for dem som er nye
+function startCard(){const nx=PATH.findIndex((_,i)=>!S.path[i]),done=PATH.length-(nx<0?0:PATH.length-nx),first=nx===0&&!S.path[0];
+const btn=nx>=0?`<button id="go" class="btn go" onclick="intro(${nx})"><span style="font-size:22px">${first?'Start her':'Spill nå'}</span><small>${first?'Første leksjon: lær de første notene':'Neste leksjon: '+PATH[nx].n}</small></button>`:`<button id="go" class="btn go" onclick="setHP(1)"><span style="font-size:22px">Spill nå</span><small>Du har klart hele løypa. Øv fritt!</small></button>`;
+const guide=done<3?`<div class="card" style="margin-top:10px"><b>Slik kommer du i gang</b><div class="steps"><div><i>1</i><span>Trykk på den store knappen og spill en leksjon. Du ser en note og trykker på bokstaven som passer.</span></div><div><i>2</i><span>Riktige svar gir XP. Fullfør én runde hver dag for å bygge opp en streak.</span></div><div><i>3</i><span>Bruk XP-en i fanen <b>Egg og dyr</b> til å klekke dyr og samle dem alle.</span></div></div></div>`:'';
+return btn+guide}
 function home(){RUN=null;M=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
-${[`<div class="hero">${ic('flame',68)}<div><div class="hn">${ls}</div><div class="hs">${ls===1?'dag':'dager'} på rad</div><div class="rec">${ic('trophy',16)} ${S.best}</div></div><div class="fav" id="fav">${favHTML()}</div></div>
+${[`${startCard()}<div class="hero">${ic('flame',68)}<div><div class="hn">${ls}</div><div class="hs">${ls===1?'dag':'dager'} på rad</div><div class="rec">${ic('trophy',16)} ${S.best}</div></div><div class="fav" id="fav">${favHTML()}</div></div>
 <div class="note">${done?'Dagens mål er nådd – streaken er trygg!':'Fullfør en runde i dag for å holde streaken i live'}</div>
 ${fixCard()}
 ${dqCard()}
