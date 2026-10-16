@@ -436,7 +436,7 @@ document.body.appendChild(o);fan()}
 // t = hvor fort motstanderen svarer (sek), acc = hvor ofte den svarer riktig, lim = din tidsfrist, lv = hvilket nivå (LV) notene hentes fra
 const BOSSES=[{k:'tur',nm:'Kjell Skjell',d:'Sakte og snill',lv:0,t:7,acc:.6,lim:12,xp:150,egg:'beggs',eggn:'Fugleegg'},
 {k:'har',nm:'Harry Hare',d:'Rask, men bommer av og til',lv:1,t:5,acc:.75,lim:10,xp:250,egg:'eggs',eggn:'Gårdsdyregg'},
-{k:'owl',nm:'Albert Uglestein',d:'Begge nøkler, sjelden feil',lv:3,t:4,acc:.85,lim:9,xp:400,egg:'deggs',eggn:'Dinoegg'},
+{k:'owl',nm:'Professor Hoo',d:'Begge nøkler, sjelden feil',lv:3,t:4,acc:.85,lim:9,xp:400,egg:'deggs',eggn:'Dinoegg'},
 {k:'dra',nm:'Dragen Brage',d:'Sjefen! Stokkede bokstaver',lv:4,t:3,acc:.92,lim:8,xp:700,egg:'leggs',eggn:'Legendeegg'}];
 const duelOpen=i=>!!S.path[3]&&(i===0||!!S.duel.beat[i-1]);
 function duelMenu(){return`<h3 id="duh">Dueller</h3><div class="note" style="text-align:left">${S.path[3]?'Slå motstanderne! Riktig svar tar liv fra dem. Du får et gratis egg ved 1., 10., 20. seier og så videre.':'Klar leksjon 4 i læringsløypa for å åpne duellene.'}</div><div class="grid cmp">${BOSSES.map((b,i)=>{const o=duelOpen(i);return`<button class="lv" style="--c:#ef4565" ${o?`onclick="duel(${i})"`:'disabled'}><span class="ib">${o?pet(b.k,42):ic('lock',30)}</span><b>${b.nm}</b><small>${b.d}</small>${S.duel.beat[i]?'<span class="mx">Slått ✓</span>':`<span class="mx">${b.xp} XP + egg</span>`}</button>`}).join('')}</div>`}
