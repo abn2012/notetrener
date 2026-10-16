@@ -141,6 +141,8 @@ svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
 body.qk #app{animation:qk .4s}@keyframes qk{20%{transform:translate(-5px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
 .pk{display:flex;border:3px solid #222;border-radius:0 0 14px 14px;overflow:hidden;background:#fff;margin:6px 0}.pk button{flex:1;height:120px;background:#fff;color:#222;border:0;border-right:3px solid #222;font:900 22px system-ui;display:flex;align-items:flex-end;justify-content:center;padding:0 0 10px;cursor:pointer;transition:background .15s}.pk button:last-child{border-right:0}.pk button:active{background:#ddd}.pk button.ok{background:#22b866;color:#fff}.pk button.bad{background:#ef4565;color:#fff}
 .fgt.me{flex-direction:row}
+.arena{background:linear-gradient(#9fdcff,#dff4ff 55%,#c8ecb0 55%,#a5dc84);border-radius:20px;padding:6px 0 14px;margin:6px 0;color:#222;overflow:hidden}.arena .fgt{padding-left:24px}.arena .hpb{background:#fff8}.arena .msg{color:#222}
+.stand{position:relative;z-index:0;display:inline-block;padding-bottom:6px}.stand::after{content:'';position:absolute;left:-16px;right:-16px;bottom:-4px;height:26px;border-radius:50%;background:radial-gradient(#8fe06a 50%,#4fae38);box-shadow:0 3px 0 #3c8a2c;z-index:-1}
 .hpb{height:14px;border-radius:7px;background:var(--line);overflow:hidden;margin:5px 0}.hpb i{display:block;height:100%;background:var(--ok);transition:width .4s,background .4s}
 .atk{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.atk i{display:block;height:100%;width:0;background:var(--hot)}
 .lnk{color:var(--pri);text-decoration:underline;font-weight:900;cursor:pointer}
@@ -431,10 +433,10 @@ function duelMenu(){return`<h3 id="duh">Dueller</h3><div class="note" style="tex
 function duel(i){if(!duelOpen(i))return;const b=BOSSES[i],mk=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||['cat'])[0],mn=nm2(mk,(ANIM.find(x=>x[0]===mk)||[0,'Deg'])[1]);
 DU={i,b,mk,me:6,op:6,hit:0,busy:1,tm:[]};
 $('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="duelQuit()">‹ Gi opp</button></span><span><b>Duell</b></span><span></span><span></span></div>
-<div class="fgt" id="fo"><span class="ft" id="po">${pet(b.k,100)}</span><div><b>${b.nm}</b><div class="hpb"><i id="hpo" style="width:100%"></i></div><div class="atk"><i id="atk"></i></div></div></div>
+<div class="arena"><div class="fgt" id="fo"><span class="stand"><span class="ft" id="po">${pet(b.k,100)}</span></span><div><b>${b.nm}</b><div class="hpb"><i id="hpo" style="width:100%"></i></div><div class="atk"><i id="atk"></i></div></div></div>
 <div class="card" id="st"></div><div class="msg" id="msg"></div>
-<div class="fgt me" id="fm"><span class="ft" id="pm">${petA(mk,100)}</span><div><b>${mn}</b><div class="hpb"><i id="hpm" style="width:100%"></i></div></div></div>
-<div class="pk" id="dk"></div>`;
+<div class="fgt me" id="fm"><span class="stand"><span class="ft" id="pm">${petA(mk,100)}</span></span><div><b>${mn}</b><div class="hpb"><i id="hpm" style="width:100%"></i></div></div></div>
+</div><div class="pk" id="dk"></div>`;
 window.scrollTo(0,0);dnext()}
 function dnext(){const d=DU;if(!d)return;const l=LV[d.b.lv],c=l.c[Math.floor(Math.random()*l.c.length)],[a,z]=rng(c,l),n=a+Math.floor(Math.random()*(z-a+1));
 d.cur={n,c};d.busy=0;d.t0=Date.now();
