@@ -132,6 +132,7 @@ svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
 .fgt{display:flex;gap:10px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:8px 12px;margin:8px 0}.fgt>div:last-child{flex:1}.fgt .pop{margin:0}
 .hpb{height:14px;border-radius:7px;background:var(--line);overflow:hidden;margin:5px 0}.hpb i{display:block;height:100%;background:var(--ok);transition:width .4s,background .4s}
 .atk{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.atk i{display:block;height:100%;width:0;background:var(--hot)}
+.lnk{color:var(--pri);text-decoration:underline;font-weight:900;cursor:pointer}
 </style></head><body><div id="app"></div>
 <script>
 const N=['C','D','E','F','G','A','H'],OFF=[0,2,4,5,7,9,11];
@@ -419,12 +420,12 @@ d.op=Math.max(d.op,0);d.me=Math.max(d.me,0);
 setTimeout(()=>{if(DU!==d)return;d.op<=0||d.me<=0?dend(d):dnext()},kind==='me'?900:1500)}
 function dend(d){const b=d.b,win=d.op<=0,first=win&&!S.duel.beat[d.i],perfect=win&&d.hit===0;let xp=win?(first?b.xp:50):10;if(perfect)xp+=100;
 S.xp+=xp;S.tot+=xp;if(first){S.duel.beat[d.i]=1;S[b.egg]=(S[b.egg]||0)+1}if(win)dqAdd('rounds',1);save();DU=null;window.scrollTo(0,0);if(win){tick();setTimeout(()=>{party(0,'Seier!');fan()},300)}
-const nxt=BOSSES[d.i+1];
+const nxt=BOSSES[d.i+1],EI=EGGS.findIndex(e=>e.k===b.egg);
 $('#app').innerHTML=`<div class="center"><h1>${win?'Du vant!':'Du tapte'}</h1><div class="rowi" style="gap:16px;align-items:flex-end"><div class="${win?'':'shk'}">${petA(d.mk,110)}</div><div style="opacity:${win?.5:1}">${pet(b.k,110)}</div></div>
 <div class="msg">${win?'Du slo '+b.nm+'!':b.nm+' vant denne gangen. Prøv igjen!'}</div>
 <div class="top"><div class="pill">+${xp}<small>XP</small></div><div class="pill">${d.me}<small>liv igjen</small></div></div>
-${first?`<div class="msg" style="color:var(--ok)">Første seier! Du fikk et ${b.eggn.toLowerCase()}${nxt?' og åpnet '+nxt.nm:''}!</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}</div>
-<button class="btn" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=4;home()">Tilbake til duellene</button>`}
+${first?`<div class="msg" style="color:var(--ok)">Første seier! Du fikk et <a class="lnk" onclick="hatch(${EI})">${b.eggn.toLowerCase()}</a>${nxt?' og åpnet '+nxt.nm:''}!</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}</div>
+${first?`<button class="btn" onclick="hatch(${EI})">Klekk ${b.eggn} nå</button>`:''}<button class="btn${first?' g':''}" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=4;home()">Tilbake til duellene</button>`}
 function duelQuit(){if(DU){DU.tm.forEach(clearTimeout);DU=null}HP=4;home()}
 function home(){RUN=null;M=null;if(DU){DU.tm.forEach(clearTimeout);DU=null}G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
