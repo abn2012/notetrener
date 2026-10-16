@@ -129,6 +129,9 @@ svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
 .hg{position:absolute;top:4px;left:4px;width:12px;height:12px;border-radius:50%;background:#ef4565;border:2px solid var(--card)}
 .kmap{display:block;width:100%;height:auto;border-radius:20px;margin-top:8px}
 .mring{transform-box:fill-box;transform-origin:center;animation:mrp 1.2s ease-in-out infinite}@keyframes mrp{0%,100%{transform:scale(.9);opacity:1}50%{transform:scale(1.15);opacity:.5}}
+.fgt{display:flex;gap:10px;align-items:center;background:var(--card);border:2px solid var(--line);border-radius:18px;padding:8px 12px;margin:8px 0}.fgt>div:last-child{flex:1}.fgt .pop{margin:0}
+.hpb{height:14px;border-radius:7px;background:var(--line);overflow:hidden;margin:5px 0}.hpb i{display:block;height:100%;background:var(--ok);transition:width .4s,background .4s}
+.atk{height:6px;border-radius:3px;background:var(--line);overflow:hidden}.atk i{display:block;height:100%;width:0;background:var(--hot)}
 </style></head><body><div id="app"></div>
 <script>
 const N=['C','D','E','F','G','A','H'],OFF=[0,2,4,5,7,9,11];
@@ -267,9 +270,9 @@ const PL=[
 {n:'Plasser noten',d:'Diskantnøkkel',c:['t'],r:{t:[28,40]},t:0,m:1.5,place:1},
 {n:'Plasser noten',d:'Bassnøkkel',c:['b'],r:{b:[16,28]},t:0,m:2,place:1}];
 const $=s=>document.querySelector(s);
-let S={streak:0,last:'',best:0,xp:0,tot:null,eggs:0,pets:{}},G=null,AC=null,RUN=null,HT=0;
+let S={streak:0,last:'',best:0,xp:0,tot:null,eggs:0,pets:{}},G=null,AC=null,RUN=null,HT=0,DU=null;
 try{Object.assign(S,JSON.parse(localStorage.getItem('nt1')||'{}'))}catch(e){}
-if(S.tot==null)S.tot=S.xp;if(!S.pets)S.pets={};if(!S.bn)S.bn={};if(!S.names)S.names={};if(!S.fed)S.fed={};for(const k in S.pets)if(!S.fed[k])S.fed[k]=Date.now();['nis','sjo','fai','mer','kit','jac'].forEach(k=>{delete S.pets[k];if(S.shiny)delete S.shiny[k];if(S.acc)delete S.acc[k];if(S.fav===k)S.fav=null});if(S.pathDone&&!S.pets.ele)S.pets.ele=1;if(!S.shiny)S.shiny={};if(!S.tunes)S.tunes={};
+if(S.tot==null)S.tot=S.xp;if(!S.pets)S.pets={};if(!S.bn)S.bn={};if(!S.duel)S.duel={beat:{}};if(!S.names)S.names={};if(!S.fed)S.fed={};for(const k in S.pets)if(!S.fed[k])S.fed[k]=Date.now();['nis','sjo','fai','mer','kit','jac'].forEach(k=>{delete S.pets[k];if(S.shiny)delete S.shiny[k];if(S.acc)delete S.acc[k];if(S.fav===k)S.fav=null});if(S.pathDone&&!S.pets.ele)S.pets.ele=1;if(!S.shiny)S.shiny={};if(!S.tunes)S.tunes={};
 const THEMES=['#7c4dff','#2f80ed','#1fb86a','#ff4d8d','#ff8a1f','#14b8c4'];
 if(!S.theme)S.theme=THEMES[0];if(!S.acc)S.acc={};if(!S.path)S.path={};if(!S.anim)S.anim={};if(!S.pv){S.path={};S.pv=2}if(S.pv===2){const o=S.path,n={};Object.keys(o).forEach(k=>{k=+k;if(k<4)n[k]=o[k];else if(k===4){n[4]=o[4];n[5]=o[4]}else n[k+1]=o[k]});S.path=n;S.pv=3}if(S.pv===3){const o=S.path,n={};Object.keys(o).forEach(k=>{k=+k;n[k<3?k:k+1]=o[k]});S.path=n;S.pv=4}if(S.pv===4){const o=S.path,n={},g=k=>o[k]||0,both=g(9)&&g(10)?Math.min(g(9),g(10)):0;for(let k=0;k<9;k++)if(o[k])n[k]=o[k];if(g(9))n[10]=n[13]=g(9);if(both)[11,12,14,15].forEach(k=>n[k]=both);if(g(11))n[16]=g(11);if(g(12))n[18]=g(12);if(g(13))n[19]=g(13);S.path=n;S.pv=5}
 for(const k in S.anim)if(S.anim[k]===true)S.anim[k]='own';
@@ -371,7 +374,7 @@ ${row('Samling',`<div class="note" style="text-align:left;margin:2px 0">${ANIM.f
 ${$('.nav')?'<button class="btn" onclick="this.closest(\'.tut\').remove();HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til egg og dyr</button>':''}<button class="btn g" onclick="this.closest('.tut').remove()">Lukk</button></div>`}
 function updWheel(){let w=$('#wheel');if(!w){w=document.createElement('button');w.id='wheel';w.className='wheel';w.onclick=wheelInfo;document.body.appendChild(w)}
 const pc=(S.tot%1000)/1000,C=2*Math.PI*27,n=String(S.xp),nav=!!$('.nav');
-w.style.bottom=nav?'92px':'12px';w.style.pointerEvents=G&&G.l&&G.l.t&&!nav?'none':'auto';w.setAttribute('aria-label','Du har '+S.xp+' XP');
+w.style.bottom=nav?'92px':'12px';w.style.pointerEvents=(G&&G.l&&G.l.t&&!nav)||DU?'none':'auto';w.setAttribute('aria-label','Du har '+S.xp+' XP');
 w.innerHTML=`<svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="27" fill="none" stroke="var(--pri)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C*pc).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span style="font-size:${n.length>4?11:n.length>3?14:17}px">${n}</span><small>XP</small></b><span class="wl">${lvl()}</span>`}
 // Rød prikk bare på Egg og dyr, når du har nok XP til å kjøpe noe eller har et egg som venter: [Hjem, Øv, Melodier, Dyr]
 const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||(e.c&&unlocked(e)&&S.xp>=e.c))];
@@ -384,7 +387,46 @@ function eggHint(){if(S.eggHint||document.querySelector('.tut')||!EGGS.some(e=>!
 const o=document.createElement('div');o.className='tut';o.onclick=e=>{if(e.target===o)o.remove()};
 o.innerHTML=`<div class="tbox"><div class="pop" style="margin:0 0 6px">${ic('egg',96)}</div><h2>Du har nok XP til et egg!</h2><button class="btn" onclick="this.closest('.tut').remove();HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til eggene</button><button class="btn g" onclick="this.closest('.tut').remove()">Senere</button></div>`;
 document.body.appendChild(o);fan()}
-function home(){RUN=null;M=null;G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
+// Dyrekamp: duell mot datamotstandere. Riktig svar tar liv fra motstanderen, feil svar eller tregt svar koster deg liv.
+// t = hvor fort motstanderen svarer (sek), acc = hvor ofte den svarer riktig, lim = din tidsfrist, lv = hvilket nivå (LV) notene hentes fra
+const BOSSES=[{k:'tur',nm:'Skilpadden Sakte',d:'Sakte og snill',lv:0,t:7,acc:.6,lim:12,xp:150,egg:'beggs',eggn:'Fugleegg'},
+{k:'har',nm:'Haren Rask',d:'Rask, men bomme av og til',lv:1,t:5,acc:.75,lim:10,xp:250,egg:'eggs',eggn:'Gårdsdyregg'},
+{k:'owl',nm:'Uglen Visdom',d:'Begge nøkler, sjelden feil',lv:3,t:4,acc:.85,lim:9,xp:400,egg:'deggs',eggn:'Dinoegg'},
+{k:'dra',nm:'Dragen Ild',d:'Sjefen! Stokkede bokstaver',lv:4,t:3,acc:.92,lim:8,xp:700,egg:'leggs',eggn:'Legendeegg'}];
+const duelOpen=i=>!!S.path[3]&&(i===0||!!S.duel.beat[i-1]);
+function duelMenu(){return`<h3>Dyrekamp</h3><div class="note" style="text-align:left">${S.path[3]?'Slå motstanderne! Riktig svar tar liv fra dem. Første seier gir et gratis egg.':'Klar leksjon 4 i læringsløypa for å åpne dyrekampen.'}</div><div class="grid cmp">${BOSSES.map((b,i)=>{const o=duelOpen(i);return`<button class="lv" style="--c:#ef4565" ${o?`onclick="duel(${i})"`:'disabled'}><span class="ib">${o?pet(b.k,42):ic('lock',30)}</span><b>${b.nm}</b><small>${b.d}</small>${S.duel.beat[i]?'<span class="mx">Slått ✓</span>':`<span class="mx">${b.xp} XP + egg</span>`}</button>`}).join('')}</div>`}
+function duel(i){if(!duelOpen(i))return;const b=BOSSES[i],mk=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||['cat'])[0],mn=nm2(mk,(ANIM.find(x=>x[0]===mk)||[0,'Deg'])[1]);
+DU={i,b,mk,me:6,op:6,hit:0,busy:1,tm:[]};
+$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="duelQuit()">‹ Gi opp</button></span><span><b>Dyrekamp</b></span><span></span><span></span></div>
+<div class="fgt" id="fo">${pet(b.k,72)}<div><b>${b.nm}</b><div class="hpb"><i id="hpo" style="width:100%"></i></div><div class="atk"><i id="atk"></i></div></div></div>
+<div class="card" id="st"></div><div class="msg" id="msg"></div><div class="keys" id="dk"></div>
+<div class="fgt" id="fm">${petA(mk,72)}<div><b>${mn}</b><div class="hpb"><i id="hpm" style="width:100%"></i></div></div></div>`;
+window.scrollTo(0,0);dnext()}
+function dnext(){const d=DU;if(!d)return;const l=LV[d.b.lv],c=l.c[Math.floor(Math.random()*l.c.length)],[a,z]=rng(c,l),n=a+Math.floor(Math.random()*(z-a+1));
+d.cur={n,c};d.busy=0;d.t0=Date.now();
+$('#st').innerHTML=staff(n,c);$('#msg').textContent='Hvilken note er dette?';
+$('#dk').innerHTML=(l.sh?shuf(R(0,6)):R(0,6)).map(i=>`<button data-i="${i}" onclick="dans(${i},this)">${N[i]}</button>`).join('');
+const T=d.b.t*(.6+.8*Math.random()),ok=Math.random()<d.b.acc,bar=$('#atk');bar.style.transition='none';bar.style.width='0';bar.offsetWidth;bar.style.transition=`width ${T}s linear`;bar.style.width='100%';
+d.tm=[setTimeout(()=>dopp(d,ok),T*1000),setTimeout(()=>dres(d,'late'),d.b.lim*1000)];tone(n)}
+function dopp(d,ok){if(DU!==d||d.busy)return;if(ok)dres(d,'opp');else{$('#msg').textContent=d.b.nm.split(' ')[0]+' bommet! Nå er det din sjanse';$('#atk').style.transition='none';$('#atk').style.width='0'}}
+function dans(i,btn){const d=DU;if(!d||d.busy)return;if(i===d.cur.n%7)dres(d,'me',Date.now()-d.t0<1500);else dres(d,'wrong',btn)}
+function dres(d,kind,x){if(DU!==d||d.busy)return;d.busy=1;d.tm.forEach(clearTimeout);const r=d.cur.n%7,kb=document.querySelector(`#dk button[data-i="${r}"]`),m=$('#msg'),hit=id=>{const e=$(id);e.classList.remove('shk');e.offsetWidth;e.classList.add('shk')};
+if(kb)kb.classList.add('ok');$('#atk').style.transition='none';
+if(kind==='me'){d.op-=x?2:1;hit('#fo');m.textContent=x?'Kjempetreff!':'Treff!';tone(d.cur.n)}
+else{d.me--;d.hit++;hit('#fm');beep(d.cur.n,false);if(kind==='opp')m.textContent=d.b.nm.split(' ')[0]+' traff deg!';else{if(kind==='wrong'&&x)x.classList.add('bad');m.textContent=(kind==='late'?'Tiden gikk ut! ':'Au! ')+'Det var '+N[r]}}
+d.op=Math.max(d.op,0);d.me=Math.max(d.me,0);
+[['#hpo',d.op],['#hpm',d.me]].forEach(([id,v])=>{const e=$(id);e.style.width=v*100/6+'%';e.style.background=v<=2?'var(--bad)':''});
+setTimeout(()=>{if(DU!==d)return;d.op<=0||d.me<=0?dend(d):dnext()},kind==='me'?900:1500)}
+function dend(d){const b=d.b,win=d.op<=0,first=win&&!S.duel.beat[d.i],perfect=win&&d.hit===0;let xp=win?(first?b.xp:50):10;if(perfect)xp+=100;
+S.xp+=xp;S.tot+=xp;if(first){S.duel.beat[d.i]=1;S[b.egg]=(S[b.egg]||0)+1}if(win)dqAdd('rounds',1);save();DU=null;window.scrollTo(0,0);if(win){tick();setTimeout(()=>{party(0,'Seier!');fan()},300)}
+const nxt=BOSSES[d.i+1];
+$('#app').innerHTML=`<div class="center"><h1>${win?'Du vant!':'Du tapte'}</h1><div class="rowi" style="gap:16px;align-items:flex-end"><div class="${win?'':'shk'}">${petA(d.mk,110)}</div><div style="opacity:${win?.5:1}">${pet(b.k,110)}</div></div>
+<div class="msg">${win?'Du slo '+b.nm+'!':b.nm+' vant denne gangen. Prøv igjen!'}</div>
+<div class="top"><div class="pill">+${xp}<small>XP</small></div><div class="pill">${d.me}<small>liv igjen</small></div></div>
+${first?`<div class="msg" style="color:var(--ok)">Første seier! Du fikk et ${b.eggn.toLowerCase()}${nxt?' og åpnet '+nxt.nm:''}!</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}</div>
+<button class="btn" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=1;home()">Til forsiden</button>`}
+function duelQuit(){if(DU){DU.tm.forEach(clearTimeout);DU=null}HP=1;home()}
+function home(){RUN=null;M=null;if(DU){DU.tm.forEach(clearTimeout);DU=null}G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
 ${[`${startCard()}
 <div class="hero">${ic('flame',68)}<div><div class="hn">${ls}</div><div class="hs">${ls===1?'dag':'dager'} på rad</div><div class="rec">${ic('trophy',16)} ${S.best}</div></div><div class="fav" id="fav">${favHTML()}</div></div>
@@ -392,7 +434,7 @@ ${fixCard()}
 <button id="bpath" class="lv" style="--c:var(--pri);flex-direction:row;align-items:center;width:100%;margin:10px 0" onclick="path()"><span class="ib">${ic('map',30)}</span><div style="flex:1"><b>Læringsløype</b><div class="bar" style="margin:8px 0 0"><i style="width:${PATH.filter((_,i)=>S.path[i]).length*100/PATH.length}%;background:var(--ok)"></i></div></div><div class="cnt"><b>${PATH.filter((_,i)=>S.path[i]).length}</b>/${PATH.length}<small>leksjoner</small></div></button>
 ${dqCard()}
 ${goalCard()}
-`,`<h3>Velg nivå</h3><div id="lvs" class="grid cmp">${LV.map((l,i)=>`<button class="lv" style="--c:${l.col}" onclick="start(${i})"><span class="ib">${ic(l.ic,30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
+`,`${duelMenu()}<h3>Velg nivå</h3><div id="lvs" class="grid cmp">${LV.map((l,i)=>`<button class="lv" style="--c:${l.col}" onclick="start(${i})"><span class="ib">${ic(l.ic,30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
 <h3>Akkorder</h3><div class="note" style="text-align:left">Du ser tre toner samtidig. Hvilken akkord er det?</div><div class="grid cmp">${AK.map((l,i)=>`<button class="lv" style="--c:#f0a500" onclick="start(${i},3)"><span class="ib">${ic('sparkle',30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
 <h3 id="plh">Plasser noten</h3><div class="note" style="text-align:left">Du får en bokstav, og så plasserer du noten selv på notelinja.</div><div class="grid cmp">${PL.map((l,i)=>`<button class="lv" style="--c:var(--pri)" onclick="start(${i},2)"><span class="ib">${ic(i?'bass':'note',30)}</span><b>${l.d}</b><span class="mx">${l.m}x XP</span></button>`).join('')}</div>`,`<h3 id="mel">Spill en melodi</h3>${!S.path[3]?'<div class="note" style="text-align:left">Klar leksjon 4 i læringsløypa for å åpne melodiene.</div>':`<div class="note" style="text-align:left">Trykk på riktig bokstav for hver note, så spiller du melodien. Høyere vanskelighetsgrad gir flere noter om gangen, mer XP og nye, vanskeligere sanger.</div>`}
 <div class="tabs" style="margin-top:8px">${MDS.map((d,k)=>`<button class="${k===MD?'on':''}" onclick="MD=${k};home()">${mdOpen(k)?'':ic('lock',12).replace('<svg','<svg style="width:12px;height:12px"')+' '}${d.n}</button>`).join('')}</div>
