@@ -377,7 +377,7 @@ const pc=(S.tot%1000)/1000,C=2*Math.PI*27,n=String(S.xp),nav=!!$('.nav');
 w.style.bottom=nav?'92px':'12px';w.style.pointerEvents=(G&&G.l&&G.l.t&&!nav)||DU?'none':'auto';w.setAttribute('aria-label','Du har '+S.xp+' XP');
 w.innerHTML=`<svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="27" fill="none" stroke="var(--pri)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C*pc).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span style="font-size:${n.length>4?11:n.length>3?14:17}px">${n}</span><small>XP</small></b><span class="wl">${lvl()}</span>`}
 // Rød prikk bare på Egg og dyr, når du har nok XP til å kjøpe noe eller har et egg som venter: [Hjem, Øv, Melodier, Dyr]
-const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||(e.c&&unlocked(e)&&S.xp>=e.c))];
+const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||(e.c&&unlocked(e)&&S.xp>=e.c)),false];
 function setHP(k){HP=k;home();window.scrollTo(0,0)}
 // Stor start-knapp øverst på forsiden. Favorittdyret (eller en note) hopper ved siden av.
 function startCard(){const nx=PATH.findIndex((_,i)=>!S.path[i]),k=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||[])[0],mascot=k?pet(k,64):ic('note',56);
@@ -387,17 +387,17 @@ function eggHint(){if(S.eggHint||document.querySelector('.tut')||!EGGS.some(e=>!
 const o=document.createElement('div');o.className='tut';o.onclick=e=>{if(e.target===o)o.remove()};
 o.innerHTML=`<div class="tbox"><div class="pop" style="margin:0 0 6px">${ic('egg',96)}</div><h2>Du har nok XP til et egg!</h2><button class="btn" onclick="this.closest('.tut').remove();HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til eggene</button><button class="btn g" onclick="this.closest('.tut').remove()">Senere</button></div>`;
 document.body.appendChild(o);fan()}
-// Dyrekamp: duell mot datamotstandere. Riktig svar tar liv fra motstanderen, feil svar eller tregt svar koster deg liv.
+// Dueller: duell mot datamotstandere. Riktig svar tar liv fra motstanderen, feil svar eller tregt svar koster deg liv.
 // t = hvor fort motstanderen svarer (sek), acc = hvor ofte den svarer riktig, lim = din tidsfrist, lv = hvilket nivå (LV) notene hentes fra
 const BOSSES=[{k:'tur',nm:'Skilpadden Sakte',d:'Sakte og snill',lv:0,t:7,acc:.6,lim:12,xp:150,egg:'beggs',eggn:'Fugleegg'},
 {k:'har',nm:'Haren Rask',d:'Rask, men bomme av og til',lv:1,t:5,acc:.75,lim:10,xp:250,egg:'eggs',eggn:'Gårdsdyregg'},
 {k:'owl',nm:'Uglen Visdom',d:'Begge nøkler, sjelden feil',lv:3,t:4,acc:.85,lim:9,xp:400,egg:'deggs',eggn:'Dinoegg'},
 {k:'dra',nm:'Dragen Ild',d:'Sjefen! Stokkede bokstaver',lv:4,t:3,acc:.92,lim:8,xp:700,egg:'leggs',eggn:'Legendeegg'}];
 const duelOpen=i=>!!S.path[3]&&(i===0||!!S.duel.beat[i-1]);
-function duelMenu(){return`<h3>Dyrekamp</h3><div class="note" style="text-align:left">${S.path[3]?'Slå motstanderne! Riktig svar tar liv fra dem. Første seier gir et gratis egg.':'Klar leksjon 4 i læringsløypa for å åpne dyrekampen.'}</div><div class="grid cmp">${BOSSES.map((b,i)=>{const o=duelOpen(i);return`<button class="lv" style="--c:#ef4565" ${o?`onclick="duel(${i})"`:'disabled'}><span class="ib">${o?pet(b.k,42):ic('lock',30)}</span><b>${b.nm}</b><small>${b.d}</small>${S.duel.beat[i]?'<span class="mx">Slått ✓</span>':`<span class="mx">${b.xp} XP + egg</span>`}</button>`}).join('')}</div>`}
+function duelMenu(){return`<h3 id="duh">Dueller</h3><div class="note" style="text-align:left">${S.path[3]?'Slå motstanderne! Riktig svar tar liv fra dem. Første seier gir et gratis egg.':'Klar leksjon 4 i læringsløypa for å åpne duellene.'}</div><div class="grid cmp">${BOSSES.map((b,i)=>{const o=duelOpen(i);return`<button class="lv" style="--c:#ef4565" ${o?`onclick="duel(${i})"`:'disabled'}><span class="ib">${o?pet(b.k,42):ic('lock',30)}</span><b>${b.nm}</b><small>${b.d}</small>${S.duel.beat[i]?'<span class="mx">Slått ✓</span>':`<span class="mx">${b.xp} XP + egg</span>`}</button>`}).join('')}</div>`}
 function duel(i){if(!duelOpen(i))return;const b=BOSSES[i],mk=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||['cat'])[0],mn=nm2(mk,(ANIM.find(x=>x[0]===mk)||[0,'Deg'])[1]);
 DU={i,b,mk,me:6,op:6,hit:0,busy:1,tm:[]};
-$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="duelQuit()">‹ Gi opp</button></span><span><b>Dyrekamp</b></span><span></span><span></span></div>
+$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="duelQuit()">‹ Gi opp</button></span><span><b>Duell</b></span><span></span><span></span></div>
 <div class="fgt" id="fo">${pet(b.k,72)}<div><b>${b.nm}</b><div class="hpb"><i id="hpo" style="width:100%"></i></div><div class="atk"><i id="atk"></i></div></div></div>
 <div class="card" id="st"></div><div class="msg" id="msg"></div><div class="keys" id="dk"></div>
 <div class="fgt" id="fm">${petA(mk,72)}<div><b>${mn}</b><div class="hpb"><i id="hpm" style="width:100%"></i></div></div></div>`;
@@ -424,8 +424,8 @@ $('#app').innerHTML=`<div class="center"><h1>${win?'Du vant!':'Du tapte'}</h1><d
 <div class="msg">${win?'Du slo '+b.nm+'!':b.nm+' vant denne gangen. Prøv igjen!'}</div>
 <div class="top"><div class="pill">+${xp}<small>XP</small></div><div class="pill">${d.me}<small>liv igjen</small></div></div>
 ${first?`<div class="msg" style="color:var(--ok)">Første seier! Du fikk et ${b.eggn.toLowerCase()}${nxt?' og åpnet '+nxt.nm:''}!</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}</div>
-<button class="btn" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=1;home()">Til forsiden</button>`}
-function duelQuit(){if(DU){DU.tm.forEach(clearTimeout);DU=null}HP=1;home()}
+<button class="btn" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=4;home()">Tilbake til duellene</button>`}
+function duelQuit(){if(DU){DU.tm.forEach(clearTimeout);DU=null}HP=4;home()}
 function home(){RUN=null;M=null;if(DU){DU.tm.forEach(clearTimeout);DU=null}G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
 ${[`${startCard()}
@@ -434,13 +434,13 @@ ${fixCard()}
 <button id="bpath" class="lv" style="--c:var(--pri);flex-direction:row;align-items:center;width:100%;margin:10px 0" onclick="path()"><span class="ib">${ic('map',30)}</span><div style="flex:1"><b>Læringsløype</b><div class="bar" style="margin:8px 0 0"><i style="width:${PATH.filter((_,i)=>S.path[i]).length*100/PATH.length}%;background:var(--ok)"></i></div></div><div class="cnt"><b>${PATH.filter((_,i)=>S.path[i]).length}</b>/${PATH.length}<small>leksjoner</small></div></button>
 ${dqCard()}
 ${goalCard()}
-`,`${duelMenu()}<h3>Velg nivå</h3><div id="lvs" class="grid cmp">${LV.map((l,i)=>`<button class="lv" style="--c:${l.col}" onclick="start(${i})"><span class="ib">${ic(l.ic,30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
+`,`<h3>Velg nivå</h3><div id="lvs" class="grid cmp">${LV.map((l,i)=>`<button class="lv" style="--c:${l.col}" onclick="start(${i})"><span class="ib">${ic(l.ic,30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
 <h3>Akkorder</h3><div class="note" style="text-align:left">Du ser tre toner samtidig. Hvilken akkord er det?</div><div class="grid cmp">${AK.map((l,i)=>`<button class="lv" style="--c:#f0a500" onclick="start(${i},3)"><span class="ib">${ic('sparkle',30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
 <h3 id="plh">Plasser noten</h3><div class="note" style="text-align:left">Du får en bokstav, og så plasserer du noten selv på notelinja.</div><div class="grid cmp">${PL.map((l,i)=>`<button class="lv" style="--c:var(--pri)" onclick="start(${i},2)"><span class="ib">${ic(i?'bass':'note',30)}</span><b>${l.d}</b><span class="mx">${l.m}x XP</span></button>`).join('')}</div>`,`<h3 id="mel">Spill en melodi</h3>${!S.path[3]?'<div class="note" style="text-align:left">Klar leksjon 4 i læringsløypa for å åpne melodiene.</div>':`<div class="note" style="text-align:left">Trykk på riktig bokstav for hver note, så spiller du melodien. Høyere vanskelighetsgrad gir flere noter om gangen, mer XP og nye, vanskeligere sanger.</div>`}
 <div class="tabs" style="margin-top:8px">${MDS.map((d,k)=>`<button class="${k===MD?'on':''}" onclick="MD=${k};home()">${mdOpen(k)?'':ic('lock',12).replace('<svg','<svg style="width:12px;height:12px"')+' '}${d.n}</button>`).join('')}</div>
 <div class="note" style="text-align:left;margin:4px 0 8px">${mdOpen(MD)?(MDS[MD].k===1?'Du ser én note om gangen.':'Du ser '+MDS[MD].k+' noter om gangen. Spill dem fra venstre mot høyre. Notene står der til du har spilt alle.'):(S.path[3]?ic('lock',14).replace('<svg','<svg style="width:14px;height:14px"')+' '+MDS[MD].n+' åpnes på nivå '+MDS[MD].lv+'. Du er nivå '+lvl()+'.':'')}</div>
-<div class="grid cmp">${TUNES.map((t,i)=>t.m>MD?'':`<button class="lv" style="--c:#2ed585" ${mdOpen(MD)?`onclick="tune(${i})"`:'disabled'}><span class="ib">${ic(mdOpen(MD)?'note':'lock',30)}</span><b>${t.n}${t.m&&t.m===MD?' <small style="color:var(--hot)">NY</small>':''}</b>${S.tunes[tkey(i,MD)]?'<span class="mx">Spilt ✓</span>':'<span class="mx">'+MDS[MD].xp+' XP</span>'}</button>`).join('')}</div>`,`<div class="card" id="zoo">${zoo()}</div>`][HP]}
-<div style="height:96px"></div><nav class="nav">${[['Hjem','flame'],['Øv fritt','bolt'],['Melodier','note'],['Egg og dyr','egg']].map(([t,i],k)=>`<button class="${k===HP?'on':''}" onclick="setHP(${k})"><span class="ni">${ic(i,28)}${dots()[k]?'<i class="dot"></i>':''}</span><span>${t}</span></button>`).join('')}</nav>
+<div class="grid cmp">${TUNES.map((t,i)=>t.m>MD?'':`<button class="lv" style="--c:#2ed585" ${mdOpen(MD)?`onclick="tune(${i})"`:'disabled'}><span class="ib">${ic(mdOpen(MD)?'note':'lock',30)}</span><b>${t.n}${t.m&&t.m===MD?' <small style="color:var(--hot)">NY</small>':''}</b>${S.tunes[tkey(i,MD)]?'<span class="mx">Spilt ✓</span>':'<span class="mx">'+MDS[MD].xp+' XP</span>'}</button>`).join('')}</div>`,`<div class="card" id="zoo">${zoo()}</div>`,duelMenu()][HP]}
+<div style="height:96px"></div><nav class="nav">${[['Hjem','flame',0],['Øv fritt','bolt',1],['Melodier','note',2],['Dueller','trophy',4],['Egg og dyr','egg',3]].map(([t,i,k])=>`<button class="${k===HP?'on':''}" onclick="setHP(${k})"><span class="ni">${ic(i,28)}${dots()[k]?'<i class="dot"></i>':''}</span><span>${t}</span></button>`).join('')}</nav>
 `}
 // Streak: kan reddes med XP. Prisen er 200 de to første gangene og dobles deretter.
 const fixCost=()=>{const f=S.fixes||0;return f<2?200:200*2**(f-1)};
@@ -599,6 +599,7 @@ const TUT=[
 {ic:'bolt',h:'Seks nivåer',t:'Vil du øve fritt? Velg et nivå fra Lett til Legendarisk. På Mester er bokstavene stokket, og på Legendarisk får du også toner på gehør. Akkorder har sin egen økt med 2x XP. Jo vanskeligere nivå, jo mer XP, opptil 3x.',tab:1,el:'#lvs'},
 {ic:'note',h:'Plasser noten',t:'Her får du en bokstav, og så plasserer du noten selv på notelinja. Trykk på linja, og bruk pilene for å finjustere.',tab:1,el:'#plh'},
 {ic:'note',h:'Melodier',t:'Når du har klart leksjon 4, kan du spille melodier ved å trykke på riktig bokstav for hver note. Jo høyere nivå du har, jo vanskeligere melodier åpnes.',tab:2,el:'#mel'},
+{ic:'trophy',h:'Dueller',t:'Slå motstanderne i en duell! Riktig svar tar liv fra dem. Første seier gir et gratis egg.',tab:4,el:'#duh'},
 {ic:'egg',h:'Egg, kister og dyr',t:'XP-en bruker du her. Klekk gårdsdyr, dinosaurer, fugler og overraskelsesdyr, og åpne kister med instrumenter. Noen egg er låst til du når et høyere nivå. Av og til er et dyr skinnende! Har du 3 av samme dyr, kan det danse og snurre. Får du 50 eller 100 på rad, venter et legendeegg.',tab:3,el:'#zoo'},
 {ic:'star',h:'Klar?',t:'Det var alt! Du finner omvisningen igjen med ?-knappen, og tannhjulet lar deg bytte farge og skru lyd av og på.',tab:0}];
 let TH=0;
@@ -607,12 +608,13 @@ if(i===0&&!o.dataset.on){TH=HP;o.dataset.on=1}o.onclick=null;
 const t=TUT[i];document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));HP=t.tab;home();window.scrollTo(0,0);o.classList.toggle('nv',!!t.el);
 if(t.el){const e=document.querySelector(t.el);if(e){e.classList.add('hl');e.scrollIntoView({block:'start'})}}
 const last=i===TUT.length-1;
-o.innerHTML=`<div class="tbox">${t.el?`<div class="mx" style="--c:var(--pri);display:inline-block;margin-bottom:4px">Du er nå på siden «${['Hjem','Øv fritt','Melodier','Egg og dyr'][t.tab]}»</div>`:''}<div class="tic">${ic(t.ic,64)}</div><h2>${t.h}</h2><p>${t.t}</p>${i>0?`<div class="dots">${TUT.slice(1).map((_,k)=>`<i class="${k+1===i?'on':''}"></i>`).join('')}</div>`:''}<button class="btn" onclick="${last?'tutEnd()':`tutor(${i+1})`}">${i===0?'Vis meg rundt':last?'Kom i gang':'Neste'}</button>${i===0?'<button class="btn g" onclick="tutEnd()">Nei takk</button>':last?'':'<button class="btn g" onclick="tutEnd()">Hopp over</button>'}${i>1?`<button class="x" style="margin-top:10px" onclick="tutor(${i-1})">‹ Tilbake</button>`:''}</div>`}
+o.innerHTML=`<div class="tbox">${t.el?`<div class="mx" style="--c:var(--pri);display:inline-block;margin-bottom:4px">Du er nå på siden «${['Hjem','Øv fritt','Melodier','Egg og dyr','Dueller'][t.tab]}»</div>`:''}<div class="tic">${ic(t.ic,64)}</div><h2>${t.h}</h2><p>${t.t}</p>${i>0?`<div class="dots">${TUT.slice(1).map((_,k)=>`<i class="${k+1===i?'on':''}"></i>`).join('')}</div>`:''}<button class="btn" onclick="${last?'tutEnd()':`tutor(${i+1})`}">${i===0?'Vis meg rundt':last?'Kom i gang':'Neste'}</button>${i===0?'<button class="btn g" onclick="tutEnd()">Nei takk</button>':last?'':'<button class="btn g" onclick="tutEnd()">Hopp over</button>'}${i>1?`<button class="x" style="margin-top:10px" onclick="tutor(${i-1})">‹ Tilbake</button>`:''}</div>`}
 // Hjelp for siden du er på (? øverst). Der kan man også se hele omvisningen.
 const HELP=[{ic:'flame',h:'Hjem',t:'Her ser du streaken din, dagens utfordring og neste mål. Trykk på Læringsløype for å lære steg for steg. Fullfør en runde hver dag for å holde streaken i live!'},
 {ic:'bolt',h:'Øv fritt',t:'Velg et nivå og øv så mye du vil. Jo vanskeligere nivå, jo mer XP får du. Her finner du også akkorder og Plasser noten, der du setter noten på linja selv.'},
 {ic:'note',h:'Melodier',t:'Trykk på riktig bokstav for hver note, så spiller du en hel melodi. De åpnes når du har klart leksjon 4 i læringsløypa.'},
-{ic:'egg',h:'Egg og dyr',t:'Her bruker du XP-en din. Kjøp egg og klekk dyr, eller åpne kister med instrumenter. Fanene Mine og Samling viser det du har fått. Husk at dyrene av og til er skinnende!'}];
+{ic:'egg',h:'Egg og dyr',t:'Her bruker du XP-en din. Kjøp egg og klekk dyr, eller åpne kister med instrumenter. Fanene Mine og Samling viser det du har fått. Husk at dyrene av og til er skinnende!'},
+{ic:'trophy',h:'Dueller',t:'Her kjemper dyret ditt mot datamotstandere. Riktig svar tar liv fra dem, og første seier over en motstander gir et gratis egg.'}];
 function helpPage(){let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
 o.onclick=e=>{if(e.target===o)o.remove()};const t=HELP[HP];
 o.innerHTML=`<div class="tbox"><div class="tic">${ic(t.ic,64)}</div><h2>${t.h}</h2><p>${t.t}</p><button class="btn" onclick="this.closest('.tut').remove()">Skjønner</button><button class="btn g" onclick="tutor(0)">Vis hele omvisningen</button></div>`}
