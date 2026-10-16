@@ -445,7 +445,7 @@ $('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="duelQuit(
 <div class="fgt me" id="fm"><span class="stand"><span class="ft" id="pm">${petA(mk,100)}</span></span><div><b>${mn}</b><div class="hpb"><i id="hpm" style="width:100%"></i></div></div></div>
 </div><div class="keys" id="dk"></div>`;
 window.scrollTo(0,0);dnext()}
-function dnext(){const d=DU;if(!d)return;const l=LV[d.b.lv],c=l.c[Math.floor(Math.random()*l.c.length)],[a,z]=rng(c,l),n=a+Math.floor(Math.random()*(z-a+1));
+function dnext(){const d=DU;if(!d)return;const l=LV[d.b.lv];let c,n;do{c=l.c[Math.floor(Math.random()*l.c.length)];const[a,z]=rng(c,l);n=a+Math.floor(Math.random()*(z-a+1))}while(d.cur&&d.cur.n===n&&d.cur.c===c);
 d.cur={n,c};d.busy=0;d.t0=Date.now();
 const sb=$('#st');sb.style.animation='none';sb.offsetWidth;sb.style.animation='';sb.innerHTML=staff(n,c).replace('0 0 300 150','14 0 272 150');$('#msg').textContent='Hvilken note er dette?';
 $('#dk').innerHTML=(l.sh?shuf(R(0,6)):R(0,6)).map(i=>`<button data-i="${i}" onclick="dans(${i},this)">${N[i]}</button>`).join('');
