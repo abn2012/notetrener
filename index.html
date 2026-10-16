@@ -465,8 +465,8 @@ leaf:{L:['#2e7d32','#66bb6a','#c5e1a5'],c:['#66bb6a','#a5d6a7','#c5e1a5'],p:'�
 magic:{L:['#7c4dff','#e040fb','#ffd23f'],c:['#e040fb','#ffd23f','#7c4dff'],p:'✦',b:'✨'},
 heart:{L:['#ff4081','#ff80ab','#ffd1dc'],c:['#ff80ab','#ff4081','#ffd1dc'],p:'♥',b:'💖'}};
 const FL=['M5 42Q2 70 12 92Q13 74 20 84Q24 102 29 80Q33 90 39 42Z','M10 44Q8 66 15 80Q17 68 22 76Q26 88 30 66Q34 60 34 44Z','M15 46Q14 60 20 68Q25 60 28 46Z'];
-const RB=['#ffadad','#ffd6a5','#fdffb6','#caffbf','#9bf6ff','#bdb2ff','#ffc6ff'];
-const trail=(T,a)=>`<g transform="rotate(${a} 22 40)" class="tfl">${T.R?`<clipPath id="rbc"><path d="M5 42H39V86Q22 96 5 86Z"/></clipPath><g clip-path="url(#rbc)" style="filter:blur(1.2px)">${RB.map((c,i)=>`<rect x="${4.5+i*34/7}" y="40" width="6.2" height="60" fill="${c}"/>`).join('')}</g>`:FL.map((d,i)=>`<path d="${d}" fill="${T.L[i]}"/>`).join('')}</g>`;
+const RB=['#ff3b3b','#ff9a00','#ffe600','#2ecc40','#00a8ff','#7c4dff','#ff5ec4'];
+const trail=(T,a)=>`<g transform="rotate(${a} 22 40)" class="tfl">${T.R?`<linearGradient id="rbg" x1="0" y1="0" x2="0" y2="1"><stop offset=".45" stop-color="#fff"/><stop offset="1" stop-color="#000"/></linearGradient><mask id="rbm" maskUnits="userSpaceOnUse" x="0" y="40" width="44" height="60"><rect x="0" y="40" width="44" height="60" fill="url(#rbg)"/></mask><clipPath id="rbc"><path d="M5 42H39V96H5Z"/></clipPath><g clip-path="url(#rbc)" mask="url(#rbm)">${RB.map((c,i)=>`<rect x="${4.5+i*34/7}" y="40" width="6.2" height="60" fill="${c}"/>`).join('')}</g>`:FL.map((d,i)=>`<path d="${d}" fill="${T.L[i]}"/>`).join('')}</g>`;
 const trk=k=>Object.keys(TRK).find(t=>TRK[t].split(' ').includes(k))||'heart';
 function dash(a,b,x){const A=$(a),p=A.getBoundingClientRect(),q=$(b).getBoundingClientRect(),dx=q.left-p.left,dy=q.top-p.top,n=document.createElement('div'),T=TR[trk(a==='#pm'?DU.mk:DU.b.k)];
 A.animate([{transform:'none'},{transform:'scale(1.15,.85)',offset:.25},{transform:'scale(.9,1.15) translateY(-8px)',offset:.45},{transform:'none'}],{duration:500,easing:'ease-out'});
