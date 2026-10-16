@@ -143,7 +143,7 @@ svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
 body.qk #app{animation:qk .4s}@keyframes qk{20%{transform:translate(-5px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
 .pk{display:flex;border:3px solid #222;border-radius:0 0 14px 14px;overflow:hidden;background:#fff;margin:6px 0}.pk button{flex:1;height:120px;background:#fff;color:#222;border:0;border-right:3px solid #222;font:900 22px system-ui;display:flex;align-items:flex-end;justify-content:center;padding:0 0 10px;cursor:pointer;transition:background .15s}.pk button:last-child{border-right:0}.pk button:active{background:#ddd}.pk button.ok{background:#22b866;color:#fff}.pk button.bad{background:#ef4565;color:#fff}
 .fgt.me{flex-direction:row}
-.arena #st{width:150px;margin:-6px auto 0;padding:6px 8px;border-radius:26px;position:relative;box-shadow:0 5px 0 #0002;border:3px solid #fff;background:#fffffff2;animation:pp .6s cubic-bezier(.3,1.8,.5,1)}
+.arena #st{width:158px;margin:-6px auto 0;padding:0 2px;border-radius:20px;position:relative;box-shadow:0 4px 0 #0002;border:2px solid #fff;background:#fffffff2;animation:pp .6s cubic-bezier(.3,1.8,.5,1)}
 .arena #st::after{content:'';position:absolute;bottom:-14px;left:50%;margin-left:-9px;border:9px solid transparent;border-top:12px solid #fffffff2;border-bottom:0}
 .arena #st::before{content:'✦  ✦  ✦';position:absolute;top:-16px;left:0;right:0;text-align:center;color:#ffb300;font-size:16px;letter-spacing:34px}
 @keyframes pp{from{transform:scale(.2);opacity:0}}
@@ -447,7 +447,7 @@ $('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="duelQuit(
 window.scrollTo(0,0);dnext()}
 function dnext(){const d=DU;if(!d)return;const l=LV[d.b.lv],c=l.c[Math.floor(Math.random()*l.c.length)],[a,z]=rng(c,l),n=a+Math.floor(Math.random()*(z-a+1));
 d.cur={n,c};d.busy=0;d.t0=Date.now();
-const sb=$('#st');sb.style.animation='none';sb.offsetWidth;sb.style.animation='';sb.innerHTML=staff(n,c);$('#msg').textContent='Hvilken note er dette?';
+const sb=$('#st');sb.style.animation='none';sb.offsetWidth;sb.style.animation='';sb.innerHTML=staff(n,c).replace('0 0 300 150','14 0 272 150');$('#msg').textContent='Hvilken note er dette?';
 $('#dk').innerHTML=(l.sh?shuf(R(0,6)):R(0,6)).map(i=>`<button data-i="${i}" onclick="dans(${i},this)">${N[i]}</button>`).join('');
 const T=d.b.t*(.6+.8*Math.random()),ok=Math.random()<d.b.acc,bar=$('#atk');bar.style.transition='none';bar.style.width='0';bar.offsetWidth;bar.style.transition=`width ${T}s linear`;bar.style.width='100%';
 $('#po').classList.add('chg');$('#pm').classList.remove('ko');
@@ -470,7 +470,7 @@ const trail=(T,a)=>`<g transform="rotate(${a} 22 40)" class="tfl">${T.R?`<linear
 const trk=k=>Object.keys(TRK).find(t=>TRK[t].split(' ').includes(k))||'heart';
 function dash(a,b,x){const A=$(a),p=A.getBoundingClientRect(),q=$(b).getBoundingClientRect(),dx=q.left-p.left,dy=q.top-p.top,n=document.createElement('div'),T=TR[trk(a==='#pm'?DU.mk:DU.b.k)];
 A.animate([{transform:'none'},{transform:'scale(1.15,.85)',offset:.25},{transform:'scale(.9,1.15) translateY(-8px)',offset:.45},{transform:'none'}],{duration:500,easing:'ease-out'});
-const ang=Math.atan2(dy,dx)*180/Math.PI+90;n.className='thr';n.innerHTML=`<svg viewBox="0 0 60 100" width="72" height="120" style="overflow:visible">${trail(T,ang)}${T.R?'<text x="-2" y="70" font-size="14" fill="#ffd23f" class="twk">✦</text><text x="44" y="60" font-size="14" fill="#ffd23f" class="twk" style="animation-delay:.3s">✦</text><text x="40" y="92" font-size="12" fill="#ffd23f" class="twk" style="animation-delay:.6s">✦</text>':''}<ellipse cx="22" cy="40" rx="16" ry="12" transform="rotate(-22 22 40)" fill="#111"/><rect x="33" y="0" width="6" height="40" rx="2" fill="#111"/></svg>`;
+const ang=Math.atan2(dy,dx)*180/Math.PI+90;n.className='thr';n.innerHTML=`<svg viewBox="0 0 60 100" width="72" height="120" style="overflow:visible">${trail(T,ang)}${T.R?'<text x="-2" y="70" font-size="14" fill="#ffd23f" class="twk">✦</text><text x="44" y="60" font-size="14" fill="#ffd23f" class="twk" style="animation-delay:.3s">✦</text><text x="40" y="92" font-size="12" fill="#ffd23f" class="twk" style="animation-delay:.6s">✦</text>':''}<ellipse cx="22" cy="40" rx="16" ry="12" transform="rotate(-22 22 40)" fill="#111"/><rect x="33" y="0" width="6" height="40" rx="3" fill="#111"/></svg>`;
 n.style.left=p.left+p.width/2-26+'px';n.style.top=p.top+p.height/2-48+'px';n.style.transform=`scale(${x?1.35:1})`;document.body.appendChild(n);
 setTimeout(()=>{n.animate([{transform:'translate(0,0) scale(.5)'},{transform:`translate(${dx/2}px,${dy/2-50}px) scale(1.4)`,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(1.2)`}],{duration:450,easing:'ease-in',fill:'forwards'});
 setTimeout(()=>{n.remove();const e=document.createElement('div');e.className='bst';e.textContent=T.b;e.style.left=q.left+q.width/2-30+'px';e.style.top=q.top+q.height/2-30+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),500)},450)},200)}
