@@ -132,9 +132,10 @@ svg{max-width:100%}.card svg{width:100%;height:auto;display:block}
 .fgt{display:flex;gap:14px;align-items:center;background:transparent;border:0;border-radius:18px;padding:4px 12px;margin:4px 0}.fgt>div:last-child{flex:1}.fgt .pop{margin:0}
 .ft{display:inline-block;animation:bob 1.3s ease-in-out infinite alternate}.ft.chg{animation:chg .25s linear infinite alternate}@keyframes chg{from{transform:translateX(-4px) scale(1)}to{transform:translateX(4px) scale(1.12)}}
 .ft.lgU{animation:lgU .45s}@keyframes lgU{40%{transform:translateY(-34px) scale(1.25)}}.ft.lgD{animation:lgD .45s}@keyframes lgD{40%{transform:translateY(34px) scale(1.3)}}
-.ft.hurt{animation:hurt .5s}@keyframes hurt{20%{transform:translateX(-12px) rotate(-14deg);filter:brightness(2) sepia(1) saturate(6) hue-rotate(-30deg)}50%{transform:translateX(12px) rotate(10deg);filter:brightness(1.6)}80%{transform:translateX(-5px)}}
+.ft.hurt{animation:hurt .5s}@keyframes hurt{20%{transform:translateX(-18px) rotate(-20deg) scale(.9);filter:brightness(2) sepia(1) saturate(6) hue-rotate(-30deg)}50%{transform:translateX(12px) rotate(10deg);filter:brightness(1.6)}80%{transform:translateX(-5px)}}
 .ft.ko{animation:ko .9s forwards}@keyframes ko{to{transform:translateY(30px) rotate(100deg) scale(.6);opacity:.2}}
 .flsh{animation:flsh .4s}@keyframes flsh{40%{background:color-mix(in srgb,var(--bad) 30%,var(--card))}}
+.bst{position:fixed;z-index:60;font-size:60px;line-height:60px;pointer-events:none;animation:bst .5s forwards}@keyframes bst{from{transform:scale(.3)}40%{transform:scale(1.6) rotate(15deg)}to{transform:scale(2);opacity:0}}
 .proj{position:fixed;z-index:60;font-size:30px;line-height:32px;width:32px;transition:transform .35s ease-in;pointer-events:none}
 .dmg{position:fixed;z-index:60;font:900 28px system-ui;pointer-events:none;text-shadow:0 2px 0 #fff,0 0 6px #fff;animation:dmg .9s forwards}@keyframes dmg{from{transform:translateY(0) scale(.6)}30%{transform:translateY(-18px) scale(1.4)}to{transform:translateY(-60px) scale(1);opacity:0}}
 body.qk #app{animation:qk .4s}@keyframes qk{20%{transform:translate(-5px,3px)}40%{transform:translate(5px,-3px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
@@ -445,17 +446,17 @@ d.tm=[setTimeout(()=>dopp(d,ok),T*1000),setTimeout(()=>dres(d,'late'),d.b.lim*10
 function dopp(d,ok){if(DU!==d||d.busy)return;if(ok)dres(d,'opp');else{$('#msg').textContent=d.b.nm.split(' ')[0]+' bommet! Nå er det din sjanse';$('#atk').style.transition='none';$('#atk').style.width='0'}}
 function dans(i,btn){const d=DU;if(!d||d.busy)return;if(i===d.cur.n%7)dres(d,'me',Date.now()-d.t0<1500);else dres(d,'wrong',btn)}
 function fx(id,c){const e=$(id);e.classList.remove(c);e.offsetWidth;e.classList.add(c)}
-function shot(a,b,t){const x=$(a).getBoundingClientRect(),y=$(b).getBoundingClientRect(),e=document.createElement('div');e.className='proj';e.textContent=t;e.style.left=x.left+x.width/2-16+'px';e.style.top=x.top+x.height/2-16+'px';document.body.appendChild(e);e.offsetWidth;e.style.transform=`translate(${y.left-x.left}px,${y.top-x.top}px) scale(1.5) rotate(360deg)`;setTimeout(()=>e.remove(),500)}
+function dash(a,b,x){const A=$(a),p=A.getBoundingClientRect(),q=$(b).getBoundingClientRect(),dx=(q.left-p.left)*.8,dy=(q.top-p.top)*.8;A.animate([{transform:'none'},{transform:'translate(0,0) scale(.85)',offset:.15},{transform:`translate(${dx}px,${dy}px) scale(1.3) rotate(${x?-15:15}deg)`,offset:.5},{transform:`translate(${dx}px,${dy}px) scale(1.3) rotate(${x?-15:15}deg)`,offset:.58},{transform:'none'}],{duration:650,easing:'ease-in-out'});setTimeout(()=>{const e=document.createElement('div');e.className='bst';e.textContent=x?'💫':'💥';e.style.left=q.left+q.width/2-30+'px';e.style.top=q.top+q.height/2-30+'px';document.body.appendChild(e);setTimeout(()=>e.remove(),500)},320)}
 function dmg(id,t,c){const x=$(id).getBoundingClientRect(),e=document.createElement('div');e.className='dmg';e.textContent=t;e.style.left=x.left+x.width/2-20+'px';e.style.top=x.top+'px';e.style.color=c;document.body.appendChild(e);setTimeout(()=>e.remove(),900)}
 function dres(d,kind,x){if(DU!==d||d.busy)return;d.busy=1;d.tm.forEach(clearTimeout);const r=d.cur.n%7,kb=document.querySelector(`#dk button[data-i="${r}"]`),m=$('#msg'),mine=kind==='me';
 if(kb)kb.classList.add('ok');$('#atk').style.transition='none';$('#po').classList.remove('chg');
 let dm=0;
-if(mine){dm=x?2:1;d.op-=dm;m.textContent=x?'Kjempetreff!':'Treff!';tone(d.cur.n);fx('#pm','lgU');shot('#pm','#po',x?'🌟':'⭐')}
-else{dm=1;d.me--;d.hit++;beep(d.cur.n,false);fx('#po','lgD');shot('#po','#pm','💥');if(kind==='opp')m.textContent=d.b.nm.split(' ')[0]+' traff deg!';else{if(kind==='wrong'&&x)x.classList.add('bad');m.textContent=(kind==='late'?'Tiden gikk ut! ':'Au! ')+'Det var '+N[r]}}
+if(mine){dm=x?2:1;d.op-=dm;m.textContent=x?'Kjempetreff!':'Treff!';tone(d.cur.n);dash('#pm','#po',x)}
+else{dm=1;d.me--;d.hit++;beep(d.cur.n,false);dash('#po','#pm',0);if(kind==='opp')m.textContent=d.b.nm.split(' ')[0]+' traff deg!';else{if(kind==='wrong'&&x)x.classList.add('bad');m.textContent=(kind==='late'?'Tiden gikk ut! ':'Au! ')+'Det var '+N[r]}}
 d.op=Math.max(d.op,0);d.me=Math.max(d.me,0);
 setTimeout(()=>{if(DU!==d)return;const v=mine?'#po':'#pm';fx(v,'hurt');fx(mine?'#fo':'#fm','flsh');dmg(v,'-'+dm,mine?'#ffb300':'#ef4565');if(mine&&x)document.body.classList.add('qk'),setTimeout(()=>document.body.classList.remove('qk'),400);
 [['#hpo',d.op],['#hpm',d.me]].forEach(([id,n])=>{const e=$(id);e.style.width=n*100/6+'%';e.style.background=n<=2?'var(--bad)':''});
-if(d.op<=0||d.me<=0)$(v).classList.add('ko')},320);
+if(d.op<=0||d.me<=0)$(v).classList.add('ko')},340);
 setTimeout(()=>{if(DU!==d)return;d.op<=0||d.me<=0?dend(d):dnext()},d.op<=0||d.me<=0?1500:mine?950:1500)}
 // Egg gis ved seier nr 1, 10, 20, 30 ... over hver motstander
 function dend(d){const b=d.b,win=d.op<=0,first=win&&!S.duel.beat[d.i],perfect=win&&d.hit===0;if(win)S.duel.wins[d.i]=(S.duel.wins[d.i]||0)+1;const wn=S.duel.wins[d.i]||0,egg=win&&(wn===1||wn%10===0);let xp=win?(first?b.xp:50):10;if(perfect)xp+=100;
