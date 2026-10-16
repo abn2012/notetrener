@@ -439,7 +439,7 @@ const BOSSES=[{k:'tur',nm:'Skilpadden Sakte',d:'Sakte og snill',lv:0,t:7,acc:.6,
 const duelOpen=i=>!!S.path[3]&&(i===0||!!S.duel.beat[i-1]);
 function duelMenu(){return`<h3 id="duh">Dueller</h3><div class="note" style="text-align:left">${S.path[3]?'Slå motstanderne! Riktig svar tar liv fra dem. Du får et gratis egg ved 1., 10., 20. seier og så videre.':'Klar leksjon 4 i læringsløypa for å åpne duellene.'}</div><div class="grid cmp">${BOSSES.map((b,i)=>{const o=duelOpen(i);return`<button class="lv" style="--c:#ef4565" ${o?`onclick="duel(${i})"`:'disabled'}><span class="ib">${o?pet(b.k,42):ic('lock',30)}</span><b>${b.nm}</b><small>${b.d}</small>${S.duel.beat[i]?'<span class="mx">Slått ✓</span>':`<span class="mx">${b.xp} XP + egg</span>`}</button>`}).join('')}</div>`}
 function duel(i){if(!duelOpen(i))return;const b=BOSSES[i],mk=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||['cat'])[0],mn=nm2(mk,(ANIM.find(x=>x[0]===mk)||[0,'Deg'])[1]);
-DU={i,b,mk,me:6,op:6,hit:0,busy:1,tm:[]};
+DU={i,b,mk,me:6,op:6,hit:0,busy:1,tm:[],ts:[]};
 $('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="duelQuit()">‹ Gi opp</button></span><span><b>Duell</b></span><span></span><span></span></div>
 <div class="arena"><div class="fgt" id="fo"><span class="stand"><span class="ft" id="po">${pet(b.k,100)}</span></span><div><b>${b.nm}</b><div class="hpb"><i id="hpo" style="width:100%"></i></div><div class="atk"><i id="atk"></i></div></div></div>
 <div class="card" id="st"></div><div class="msg" id="msg"></div>
@@ -454,7 +454,7 @@ const T=d.b.t*(.6+.8*Math.random()),ok=Math.random()<d.b.acc,bar=$('#atk');bar.s
 $('#po').classList.add('chg');$('#pm').classList.remove('ko');
 d.tm=[setTimeout(()=>dopp(d,ok),T*1000),setTimeout(()=>dres(d,'late'),d.b.lim*1000)];tone(n)}
 function dopp(d,ok){if(DU!==d||d.busy)return;if(ok)dres(d,'opp');else{$('#msg').textContent=d.b.nm.split(' ')[0]+' bommet! Nå er det din sjanse';$('#atk').style.transition='none';$('#atk').style.width='0'}}
-function dans(i,btn){const d=DU;if(!d||d.busy)return;if(i===d.cur.n%7)dres(d,'me',Date.now()-d.t0<1500);else dres(d,'wrong',btn)}
+function dans(i,btn){const d=DU;if(!d||d.busy)return;if(i===d.cur.n%7){d.ts.push(Date.now()-d.t0);dres(d,'me',Date.now()-d.t0<1500)}else dres(d,'wrong',btn)}
 function fx(id,c){const e=$(id);e.classList.remove(c);e.offsetWidth;e.classList.add(c)}
 // Hvert dyr har sin egen hale på noten
 const TRK={fire:'dra fen rex rap pte',rainbow:'uni peg',water:'dol oct shs hal cra sta mos tur swa her wal seal',ice:'pen pbr fox har owl',leaf:'lamb calf tri bra cap zeb spi sna tro gri',magic:'wiz cry ele pla'};
@@ -487,13 +487,13 @@ setTimeout(()=>{if(DU!==d)return;const v=mine?'#po':'#pm';fx(v,'hurt');fx(mine?'
 if(d.op<=0||d.me<=0)$(v).classList.add('ko')},660);
 setTimeout(()=>{if(DU!==d)return;d.op<=0||d.me<=0?dend(d):dnext()},d.op<=0||d.me<=0?1700:mine?1150:1600)}
 // Egg gis ved seier nr 1, 10, 20, 30 ... over hver motstander
-function dend(d){const b=d.b,win=d.op<=0,first=win&&!S.duel.beat[d.i],perfect=win&&d.hit===0;if(win)S.duel.wins[d.i]=(S.duel.wins[d.i]||0)+1;const wn=S.duel.wins[d.i]||0,egg=win&&(wn===1||wn%10===0);let xp=win?(first?b.xp:50):10;if(perfect)xp+=100;
+function dend(d){const b=d.b,win=d.op<=0,first=win&&!S.duel.beat[d.i],perfect=win&&d.hit===0;if(win)S.duel.wins[d.i]=(S.duel.wins[d.i]||0)+1;const wn=S.duel.wins[d.i]||0,egg=win&&(wn===1||wn%10===0);let xp=win?(first?b.xp:50):10;if(perfect)xp+=100;const av=d.ts.length?d.ts.reduce((a,c)=>a+c,0)/d.ts.length/1000:99,sp=win?(av<1.5?1:av<2.5?.6:av<4?.3:0):0,bonus=Math.round(xp*sp/10)*10;xp+=bonus;
 S.xp+=xp;S.tot+=xp;if(first)S.duel.beat[d.i]=1;if(egg)S[b.egg]=(S[b.egg]||0)+1;if(win)dqAdd('rounds',1);save();DU=null;window.scrollTo(0,0);if(win){tick();setTimeout(()=>{party(0,'Seier!');fan()},300)}
 const nxt=BOSSES[d.i+1],EI=EGGS.findIndex(e=>e.k===b.egg);
 $('#app').innerHTML=`<div class="center"><h1>${win?'Du vant!':'Du tapte'}</h1><div class="rowi" style="gap:16px;align-items:flex-end"><div class="${win?'':'shk'}">${petA(d.mk,110)}</div><div style="opacity:${win?.5:1}">${pet(b.k,110)}</div></div>
 <div class="msg">${win?'Du slo '+b.nm+'!':b.nm+' vant denne gangen. Prøv igjen!'}</div>
 <div class="top"><div class="pill">+${xp}<small>XP</small></div><div class="pill">${d.me}<small>liv igjen</small></div></div>
-${egg?`<div class="msg" style="color:var(--ok)">${first?'Første seier':'Seier nr '+wn}! Du fikk et <a class="lnk" onclick="hatch(${EI})">${b.eggn.toLowerCase()}</a>${first&&nxt?' og åpnet '+nxt.nm:''}!</div>`:win?`<div class="note">${10-wn%10} seiere til neste egg</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}</div>
+${egg?`<div class="msg" style="color:var(--ok)">${first?'Første seier':'Seier nr '+wn}! Du fikk et <a class="lnk" onclick="hatch(${EI})">${b.eggn.toLowerCase()}</a>${first&&nxt?' og åpnet '+nxt.nm:''}!</div>`:win?`<div class="note">${10-wn%10} seiere til neste egg</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}${bonus?`<div class="msg" style="color:var(--ok)">Superfort! ${ic('bolt',22)} +${bonus} XP</div>`:''}</div>
 ${egg?`<button class="btn" onclick="hatch(${EI})">Klekk ${b.eggn} nå</button>`:''}<button class="btn${egg?' g':''}" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=4;home()">Tilbake til duellene</button>`}
 function duelQuit(){if(DU){DU.tm.forEach(clearTimeout);DU=null}HP=4;home()}
 function home(){RUN=null;M=null;if(DU){DU.tm.forEach(clearTimeout);DU=null}G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
