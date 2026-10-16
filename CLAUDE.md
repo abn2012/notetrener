@@ -2,7 +2,7 @@
 
 ## Om prosjektet
 
-Notetrener er en app for å lære å lese noter. Det er **Astrid sin første app laget med Claude Code**. Forklar endringer med enkle ord, og hold koden så lett å forstå som mulig.
+NoteQuest er en app for å lære å lese noter. Det er **Astrid sin første app laget med Claude Code**. Forklar endringer med enkle ord, og hold koden så lett å forstå som mulig.
 
 ## Oppbygning
 

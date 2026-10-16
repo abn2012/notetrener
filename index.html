@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="nb"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Notetrener</title>
+<title>NoteQuest</title>
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
 --bg:#fff8ee;--card:#fff;--ink:#2b2140;--mut:#7a6f8f;--pri:#7c4dff;--ok:#1fb86a;--bad:#ef4565;--hot:#ff8a1f;--line:#e8dff5}
@@ -499,7 +499,7 @@ ${egg?`<div class="msg" style="color:var(--ok)">${first?'Første seier':'Seier n
 ${egg?`<button class="btn" onclick="hatch(${EI})">Klekk ${b.eggn} nå</button>`:''}<button class="btn${egg?' g':''}" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=4;home()">Tilbake til duellene</button>`}
 function duelQuit(){if(DU){DU.tm.forEach(clearTimeout);DU=null}HP=4;home()}
 function home(){RUN=null;M=null;if(DU){DU.tm.forEach(clearTimeout);DU=null}G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
-$('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
+$('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>NoteQuest</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
 ${[`${startCard()}
 <div class="hero">${ic('flame',68)}<div><div class="hn">${ls}</div><div class="hs">${ls===1?'dag':'dager'} på rad</div><div class="rec">${ic('trophy',16)} ${S.best}</div></div><div class="fav" id="fav">${favHTML()}</div></div>
 ${fixCard()}

@@ -1,4 +1,4 @@
-# Notetrener 🎵
+# NoteQuest 🎵
 
 En app som lærer deg å lese noter på en gøy måte.
 
