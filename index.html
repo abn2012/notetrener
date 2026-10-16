@@ -273,7 +273,7 @@ const PL=[
 const $=s=>document.querySelector(s);
 let S={streak:0,last:'',best:0,xp:0,tot:null,eggs:0,pets:{}},G=null,AC=null,RUN=null,HT=0,DU=null;
 try{Object.assign(S,JSON.parse(localStorage.getItem('nt1')||'{}'))}catch(e){}
-if(S.tot==null)S.tot=S.xp;if(!S.pets)S.pets={};if(!S.bn)S.bn={};if(!S.duel)S.duel={beat:{}};if(!S.names)S.names={};if(!S.fed)S.fed={};for(const k in S.pets)if(!S.fed[k])S.fed[k]=Date.now();['nis','sjo','fai','mer','kit','jac'].forEach(k=>{delete S.pets[k];if(S.shiny)delete S.shiny[k];if(S.acc)delete S.acc[k];if(S.fav===k)S.fav=null});if(S.pathDone&&!S.pets.ele)S.pets.ele=1;if(!S.shiny)S.shiny={};if(!S.tunes)S.tunes={};
+if(S.tot==null)S.tot=S.xp;if(!S.pets)S.pets={};if(!S.bn)S.bn={};if(!S.duel)S.duel={beat:{}};if(!S.duel.wins){S.duel.wins={};for(const k in S.duel.beat)S.duel.wins[k]=1}if(!S.names)S.names={};if(!S.fed)S.fed={};for(const k in S.pets)if(!S.fed[k])S.fed[k]=Date.now();['nis','sjo','fai','mer','kit','jac'].forEach(k=>{delete S.pets[k];if(S.shiny)delete S.shiny[k];if(S.acc)delete S.acc[k];if(S.fav===k)S.fav=null});if(S.pathDone&&!S.pets.ele)S.pets.ele=1;if(!S.shiny)S.shiny={};if(!S.tunes)S.tunes={};
 const THEMES=['#7c4dff','#2f80ed','#1fb86a','#ff4d8d','#ff8a1f','#14b8c4'];
 if(!S.theme)S.theme=THEMES[0];if(!S.acc)S.acc={};if(!S.path)S.path={};if(!S.anim)S.anim={};if(!S.pv){S.path={};S.pv=2}if(S.pv===2){const o=S.path,n={};Object.keys(o).forEach(k=>{k=+k;if(k<4)n[k]=o[k];else if(k===4){n[4]=o[4];n[5]=o[4]}else n[k+1]=o[k]});S.path=n;S.pv=3}if(S.pv===3){const o=S.path,n={};Object.keys(o).forEach(k=>{k=+k;n[k<3?k:k+1]=o[k]});S.path=n;S.pv=4}if(S.pv===4){const o=S.path,n={},g=k=>o[k]||0,both=g(9)&&g(10)?Math.min(g(9),g(10)):0;for(let k=0;k<9;k++)if(o[k])n[k]=o[k];if(g(9))n[10]=n[13]=g(9);if(both)[11,12,14,15].forEach(k=>n[k]=both);if(g(11))n[16]=g(11);if(g(12))n[18]=g(12);if(g(13))n[19]=g(13);S.path=n;S.pv=5}
 for(const k in S.anim)if(S.anim[k]===true)S.anim[k]='own';
@@ -395,7 +395,7 @@ const BOSSES=[{k:'tur',nm:'Skilpadden Sakte',d:'Sakte og snill',lv:0,t:7,acc:.6,
 {k:'owl',nm:'Uglen Visdom',d:'Begge nøkler, sjelden feil',lv:3,t:4,acc:.85,lim:9,xp:400,egg:'deggs',eggn:'Dinoegg'},
 {k:'dra',nm:'Dragen Ild',d:'Sjefen! Stokkede bokstaver',lv:4,t:3,acc:.92,lim:8,xp:700,egg:'leggs',eggn:'Legendeegg'}];
 const duelOpen=i=>!!S.path[3]&&(i===0||!!S.duel.beat[i-1]);
-function duelMenu(){return`<h3 id="duh">Dueller</h3><div class="note" style="text-align:left">${S.path[3]?'Slå motstanderne! Riktig svar tar liv fra dem. Første seier gir et gratis egg.':'Klar leksjon 4 i læringsløypa for å åpne duellene.'}</div><div class="grid cmp">${BOSSES.map((b,i)=>{const o=duelOpen(i);return`<button class="lv" style="--c:#ef4565" ${o?`onclick="duel(${i})"`:'disabled'}><span class="ib">${o?pet(b.k,42):ic('lock',30)}</span><b>${b.nm}</b><small>${b.d}</small>${S.duel.beat[i]?'<span class="mx">Slått ✓</span>':`<span class="mx">${b.xp} XP + egg</span>`}</button>`}).join('')}</div>`}
+function duelMenu(){return`<h3 id="duh">Dueller</h3><div class="note" style="text-align:left">${S.path[3]?'Slå motstanderne! Riktig svar tar liv fra dem. Du får et gratis egg ved 1., 10., 20. seier og så videre.':'Klar leksjon 4 i læringsløypa for å åpne duellene.'}</div><div class="grid cmp">${BOSSES.map((b,i)=>{const o=duelOpen(i);return`<button class="lv" style="--c:#ef4565" ${o?`onclick="duel(${i})"`:'disabled'}><span class="ib">${o?pet(b.k,42):ic('lock',30)}</span><b>${b.nm}</b><small>${b.d}</small>${S.duel.beat[i]?'<span class="mx">Slått ✓</span>':`<span class="mx">${b.xp} XP + egg</span>`}</button>`}).join('')}</div>`}
 function duel(i){if(!duelOpen(i))return;const b=BOSSES[i],mk=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||['cat'])[0],mn=nm2(mk,(ANIM.find(x=>x[0]===mk)||[0,'Deg'])[1]);
 DU={i,b,mk,me:6,op:6,hit:0,busy:1,tm:[]};
 $('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="duelQuit()">‹ Gi opp</button></span><span><b>Duell</b></span><span></span><span></span></div>
@@ -418,14 +418,15 @@ else{d.me--;d.hit++;hit('#fm');beep(d.cur.n,false);if(kind==='opp')m.textContent
 d.op=Math.max(d.op,0);d.me=Math.max(d.me,0);
 [['#hpo',d.op],['#hpm',d.me]].forEach(([id,v])=>{const e=$(id);e.style.width=v*100/6+'%';e.style.background=v<=2?'var(--bad)':''});
 setTimeout(()=>{if(DU!==d)return;d.op<=0||d.me<=0?dend(d):dnext()},kind==='me'?900:1500)}
-function dend(d){const b=d.b,win=d.op<=0,first=win&&!S.duel.beat[d.i],perfect=win&&d.hit===0;let xp=win?(first?b.xp:50):10;if(perfect)xp+=100;
-S.xp+=xp;S.tot+=xp;if(first){S.duel.beat[d.i]=1;S[b.egg]=(S[b.egg]||0)+1}if(win)dqAdd('rounds',1);save();DU=null;window.scrollTo(0,0);if(win){tick();setTimeout(()=>{party(0,'Seier!');fan()},300)}
+// Egg gis ved seier nr 1, 10, 20, 30 ... over hver motstander
+function dend(d){const b=d.b,win=d.op<=0,first=win&&!S.duel.beat[d.i],perfect=win&&d.hit===0;if(win)S.duel.wins[d.i]=(S.duel.wins[d.i]||0)+1;const wn=S.duel.wins[d.i]||0,egg=win&&(wn===1||wn%10===0);let xp=win?(first?b.xp:50):10;if(perfect)xp+=100;
+S.xp+=xp;S.tot+=xp;if(first)S.duel.beat[d.i]=1;if(egg)S[b.egg]=(S[b.egg]||0)+1;if(win)dqAdd('rounds',1);save();DU=null;window.scrollTo(0,0);if(win){tick();setTimeout(()=>{party(0,'Seier!');fan()},300)}
 const nxt=BOSSES[d.i+1],EI=EGGS.findIndex(e=>e.k===b.egg);
 $('#app').innerHTML=`<div class="center"><h1>${win?'Du vant!':'Du tapte'}</h1><div class="rowi" style="gap:16px;align-items:flex-end"><div class="${win?'':'shk'}">${petA(d.mk,110)}</div><div style="opacity:${win?.5:1}">${pet(b.k,110)}</div></div>
 <div class="msg">${win?'Du slo '+b.nm+'!':b.nm+' vant denne gangen. Prøv igjen!'}</div>
 <div class="top"><div class="pill">+${xp}<small>XP</small></div><div class="pill">${d.me}<small>liv igjen</small></div></div>
-${first?`<div class="msg" style="color:var(--ok)">Første seier! Du fikk et <a class="lnk" onclick="hatch(${EI})">${b.eggn.toLowerCase()}</a>${nxt?' og åpnet '+nxt.nm:''}!</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}</div>
-${first?`<button class="btn" onclick="hatch(${EI})">Klekk ${b.eggn} nå</button>`:''}<button class="btn${first?' g':''}" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=4;home()">Tilbake til duellene</button>`}
+${egg?`<div class="msg" style="color:var(--ok)">${first?'Første seier':'Seier nr '+wn}! Du fikk et <a class="lnk" onclick="hatch(${EI})">${b.eggn.toLowerCase()}</a>${first&&nxt?' og åpnet '+nxt.nm:''}!</div>`:win?`<div class="note">${10-wn%10} seiere til neste egg</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}</div>
+${egg?`<button class="btn" onclick="hatch(${EI})">Klekk ${b.eggn} nå</button>`:''}<button class="btn${egg?' g':''}" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="HP=4;home()">Tilbake til duellene</button>`}
 function duelQuit(){if(DU){DU.tm.forEach(clearTimeout);DU=null}HP=4;home()}
 function home(){RUN=null;M=null;if(DU){DU.tm.forEach(clearTimeout);DU=null}G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
 $('#app').innerHTML=`<div class="hd"><div class="logo">${ic('note',30)}<h1>Notetrener</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>
@@ -600,7 +601,7 @@ const TUT=[
 {ic:'bolt',h:'Seks nivåer',t:'Vil du øve fritt? Velg et nivå fra Lett til Legendarisk. På Mester er bokstavene stokket, og på Legendarisk får du også toner på gehør. Akkorder har sin egen økt med 2x XP. Jo vanskeligere nivå, jo mer XP, opptil 3x.',tab:1,el:'#lvs'},
 {ic:'note',h:'Plasser noten',t:'Her får du en bokstav, og så plasserer du noten selv på notelinja. Trykk på linja, og bruk pilene for å finjustere.',tab:1,el:'#plh'},
 {ic:'note',h:'Melodier',t:'Når du har klart leksjon 4, kan du spille melodier ved å trykke på riktig bokstav for hver note. Jo høyere nivå du har, jo vanskeligere melodier åpnes.',tab:2,el:'#mel'},
-{ic:'trophy',h:'Dueller',t:'Slå motstanderne i en duell! Riktig svar tar liv fra dem. Første seier gir et gratis egg.',tab:4,el:'#duh'},
+{ic:'trophy',h:'Dueller',t:'Slå motstanderne i en duell! Riktig svar tar liv fra dem. Du får et gratis egg ved første seier, og så ved 10., 20. seier og så videre.',tab:4,el:'#duh'},
 {ic:'egg',h:'Egg, kister og dyr',t:'XP-en bruker du her. Klekk gårdsdyr, dinosaurer, fugler og overraskelsesdyr, og åpne kister med instrumenter. Noen egg er låst til du når et høyere nivå. Av og til er et dyr skinnende! Har du 3 av samme dyr, kan det danse og snurre. Får du 50 eller 100 på rad, venter et legendeegg.',tab:3,el:'#zoo'},
 {ic:'star',h:'Klar?',t:'Det var alt! Du finner omvisningen igjen med ?-knappen, og tannhjulet lar deg bytte farge og skru lyd av og på.',tab:0}];
 let TH=0;
@@ -615,7 +616,7 @@ const HELP=[{ic:'flame',h:'Hjem',t:'Her ser du streaken din, dagens utfordring o
 {ic:'bolt',h:'Øv fritt',t:'Velg et nivå og øv så mye du vil. Jo vanskeligere nivå, jo mer XP får du. Her finner du også akkorder og Plasser noten, der du setter noten på linja selv.'},
 {ic:'note',h:'Melodier',t:'Trykk på riktig bokstav for hver note, så spiller du en hel melodi. De åpnes når du har klart leksjon 4 i læringsløypa.'},
 {ic:'egg',h:'Egg og dyr',t:'Her bruker du XP-en din. Kjøp egg og klekk dyr, eller åpne kister med instrumenter. Fanene Mine og Samling viser det du har fått. Husk at dyrene av og til er skinnende!'},
-{ic:'trophy',h:'Dueller',t:'Her kjemper dyret ditt mot datamotstandere. Riktig svar tar liv fra dem, og første seier over en motstander gir et gratis egg.'}];
+{ic:'trophy',h:'Dueller',t:'Her kjemper dyret ditt mot datamotstandere. Riktig svar tar liv fra dem, og du får et gratis egg ved første seier over en motstander, og så ved 10., 20. seier og så videre.'}];
 function helpPage(){let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
 o.onclick=e=>{if(e.target===o)o.remove()};const t=HELP[HP];
 o.innerHTML=`<div class="tbox"><div class="tic">${ic(t.ic,64)}</div><h2>${t.h}</h2><p>${t.t}</p><button class="btn" onclick="this.closest('.tut').remove()">Skjønner</button><button class="btn g" onclick="tutor(0)">Vis hele omvisningen</button></div>`}
