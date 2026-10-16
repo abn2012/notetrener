@@ -455,7 +455,7 @@ $('#dk').innerHTML=(l.sh?shuf(R(0,6)):R(0,6)).map(i=>`<button data-i="${i}" oncl
 const T=d.b.t*(.6+.8*Math.random()),ok=Math.random()<d.b.acc,bar=$('#atk');bar.style.transition='none';bar.style.width='0';bar.offsetWidth;bar.style.transition=`width ${T}s linear`;bar.style.width='100%';
 $('#po').classList.add('chg');$('#pm').classList.remove('ko');
 d.tm=[setTimeout(()=>dopp(d,ok),T*1000),setTimeout(()=>dres(d,'late'),d.b.lim*1000)];tone(n)}
-function dopp(d,ok){if(DU!==d||d.busy)return;if(ok)dres(d,'opp');else{$('#msg').textContent=d.b.nm.split(' ')[0]+' bommet! Nå er det din sjanse';$('#atk').style.transition='none';$('#atk').style.width='0'}}
+function dopp(d,ok){if(DU!==d||d.busy)return;if(ok)dres(d,'opp');else{$('#msg').textContent=d.b.nm+' bommet! Nå er det din sjanse';$('#atk').style.transition='none';$('#atk').style.width='0'}}
 function dans(i,btn){const d=DU;if(!d||d.busy)return;if(i===d.cur.n%7){d.ts.push(Date.now()-d.t0);dres(d,'me',Date.now()-d.t0<1500)}else dres(d,'wrong',btn)}
 function fx(id,c){const e=$(id);e.classList.remove(c);e.offsetWidth;e.classList.add(c)}
 // Hvert dyr har sin egen hale på noten
@@ -482,7 +482,7 @@ function dres(d,kind,x){if(DU!==d||d.busy)return;d.busy=1;d.tm.forEach(clearTime
 if(kb)kb.classList.add('ok');$('#atk').style.transition='none';$('#po').classList.remove('chg');
 let dm=0;
 if(mine){dm=x?2:1;d.op-=dm;m.textContent=x?'Kjempetreff!':'Treff!';tone(d.cur.n);dash('#pm','#po',x)}
-else{dm=1;d.me--;d.hit++;beep(d.cur.n,false);dash('#po','#pm',0);if(kind==='opp')m.textContent=d.b.nm.split(' ')[0]+' traff deg!';else{if(kind==='wrong'&&x)x.classList.add('bad');m.textContent=(kind==='late'?'Tiden gikk ut! ':'Au! ')+'Det var '+N[r]}}
+else{dm=1;d.me--;d.hit++;beep(d.cur.n,false);dash('#po','#pm',0);if(kind==='opp')m.textContent=d.b.nm+' traff deg!';else{if(kind==='wrong'&&x)x.classList.add('bad');m.textContent=(kind==='late'?'Tiden gikk ut! ':'Au! ')+'Det var '+N[r]}}
 d.op=Math.max(d.op,0);d.me=Math.max(d.me,0);
 setTimeout(()=>{if(DU!==d)return;const v=mine?'#po':'#pm';fx(v,'hurt');fx(mine?'#fo':'#fm','flsh');dmg(v,'-'+dm,mine?'#ffb300':'#ef4565');if(mine&&x)document.body.classList.add('qk'),setTimeout(()=>document.body.classList.remove('qk'),400);
 [['#hpo',d.op],['#hpm',d.me]].forEach(([id,n])=>{const e=$(id);e.style.width=n*100/6+'%';e.style.background=n<=2?'var(--bad)':''});
