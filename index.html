@@ -558,7 +558,7 @@ function closeHelp(t){const o=document.querySelector('.tut');if(o)o.remove();if(
 function meet(i,k){const l=PATH[i],[c,n]=l.nw[k],last=k===l.nw.length-1,mk=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||['cat'])[0];window.scrollTo(0,0);
 $('#app').innerHTML=`<div class="stk"><button class="x" onclick="intro(${i})">‹ Tilbake</button></div><div class="msg" style="margin:8px 0 0">Møt noten ${k+1} av ${l.nw.length}</div>
 <div class="card" id="st" onclick="tone(${n})" style="margin-top:6px">${staff(n,c)}<div class="bub">Trykk for å høre tonen</div></div>
-<div class="fgt" style="justify-content:center"><span class="ft">${susi(84)}</span><div style="flex:none"><div class="fbub" style="font-size:15px;white-space:normal">Dette er <b style="font-size:24px;color:var(--pri)">${N[n%7]}</b>!<br><small style="color:var(--mut)">Hilsen Susi</small></div></div></div>
+<div class="fgt" style="justify-content:center"><span class="ft">${susi(84)}</span><div style="flex:none"><div class="fbub" style="font-size:15px;white-space:normal">Dette er <b style="font-size:24px;color:var(--pri)">${N[n%7]}</b>!</div></div></div>
 <div class="note" style="font-size:15px;color:var(--ink)">${where(n,c)}</div><div class="card" style="text-align:left;background:var(--bg)"><b>Husketriks</b><div style="margin-top:4px">${trick(n,c)||'Tell linjene nedenfra, så finner du den.'}</div></div>${pianoSvg(n%7)}
 <button class="btn" onclick="tone(${n})">${ic('spk',20)} Hør tonen</button><button class="btn g" onclick="${last?`start(${i},1)`:`meet(${i},${k+1})`}">${last?'Start leksjonen':'Neste note'}</button>`;tone(n)}
 // Notepar: finn noten og bokstaven som hører sammen
