@@ -573,7 +573,7 @@ CG={notes:use.map((n,i)=>({id:i,n})),letters:shuf(use.map((n,i)=>({id:i,n}))),se
 function cgDraw(){const g=CG;window.scrollTo(0,0);
 const nc=(c)=>{const d=g.done[c.id];return`<button class="cgc${d?' ok':''}${g.sel&&g.sel.s==='n'&&g.sel.id===c.id?' sel':''}" style="${d?`border-color:${CGC[c.id]};background:color-mix(in srgb,${CGC[c.id]} 16%,var(--card))`:''}" data-n="${c.id}" onclick="cgPick('n',${c.id})">${staff(c.n,'t').replace('0 0 300 150','14 22 190 110')}</button>`};
 const lc=(c)=>{const d=g.done[c.id];return`<button class="cgc cgl${d?' ok':''}${g.sel&&g.sel.s==='l'&&g.sel.id===c.id?' sel':''}" style="${d?`border-color:${CGC[c.id]};background:color-mix(in srgb,${CGC[c.id]} 16%,var(--card));color:${CGC[c.id]}`:''}" data-l="${c.id}" onclick="cgPick('l',${c.id})"><b>${N[c.n%7]}</b></button>`};
-$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="HP=1;home()">‹ Tilbake</button></span><span><b>Koble notene</b></span><span></span><span>${Object.keys(g.done).length}/${g.notes.length}</span></div><div class="note" style="margin:8px 0">Trykk på en note, og så på bokstaven den hører til.</div>
+$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="HP=1;home()">‹ Tilbake</button></span><span><b>Koble notene</b></span><span></span><span>${Object.keys(g.done).length}/${g.notes.length}</span></div><div class="note" style="margin:8px 0">Trykk på en note, og så på bokstaven den hører til. 50 XP for hver du kobler!</div>
 <div class="cgw" id="cgw"><svg class="cgs" id="cgs"></svg><div class="cgcol">${g.notes.map(nc).join('')}</div><div class="cgcol">${g.letters.map(lc).join('')}</div></div>`;
 const w=$('#cgw'),sv=$('#cgs'),wr=w.getBoundingClientRect();let h='';
 Object.keys(g.done).forEach(id=>{const a=w.querySelector(`[data-n="${id}"]`).getBoundingClientRect(),b=w.querySelector(`[data-l="${id}"]`).getBoundingClientRect();
@@ -583,10 +583,10 @@ function cgPick(side,id){const g=CG;if(!g||g.done[id]&&g.done[id])return;const c
 if(side==='n')tone(c.n);
 if(!g.sel||g.sel.s===side){g.sel={s:side,id};cgDraw();return}
 const nid=side==='n'?id:g.sel.id,lid=side==='l'?id:g.sel.id;
-if(nid===lid){g.done[nid]=1;g.sel=null;tone(g.notes.find(x=>x.id===nid).n);cgDraw();if(Object.keys(g.done).length===g.notes.length)setTimeout(cgEnd,700)}
+if(nid===lid){g.done[nid]=1;g.sel=null;S.xp+=50;S.tot+=50;save();tone(g.notes.find(x=>x.id===nid).n);cgDraw();{const a=document.querySelector(`[data-l="${nid}"]`).getBoundingClientRect(),f=document.createElement('div');f.className='dmg';f.textContent='+50 XP';f.style.left=a.left+a.width/2-30+'px';f.style.top=a.top+'px';f.style.color='#1fb86a';document.body.appendChild(f);setTimeout(()=>f.remove(),900)}if(Object.keys(g.done).length===g.notes.length)setTimeout(cgEnd,700)}
 else{g.wrong++;const el=document.querySelector(`[data-${side==='n'?'n':'l'}="${id}"]`);g.sel=null;beep(30,false);cgDraw();const e2=document.querySelector(`[data-${side==='n'?'n':'l'}="${id}"]`);if(e2){e2.classList.add('shk')}}}
-function cgEnd(){const g=CG,xp=25+(g.wrong===0?15:0);S.xp+=xp;S.tot+=xp;save();party(0,'Alle koblet!');
-$('#app').innerHTML=`<div class="center"><div class="rowi">${ic('star',64)}</div><h1>Alle koblet!</h1><div class="top"><div class="pill">${g.wrong}<small>feil</small></div><div class="pill">+${xp}<small>XP</small></div></div>${g.wrong===0?'<div class="msg" style="color:var(--ok)">Uten en eneste feil! +15 XP</div>':''}</div><button class="btn" onclick="connect()">Spill igjen</button><button class="btn g" onclick="HP=1;home()">Tilbake</button>`}
+function cgEnd(){const g=CG,xp=50*g.notes.length;party(0,'Alle koblet!');
+$('#app').innerHTML=`<div class="center"><div class="rowi">${ic('star',64)}</div><h1>Alle koblet!</h1><div class="top"><div class="pill">${g.wrong}<small>feil</small></div><div class="pill">+${xp}<small>XP</small></div></div>${g.wrong===0?'<div class="msg" style="color:var(--ok)">Uten en eneste feil!</div>':''}</div><button class="btn" onclick="connect()">Spill igjen</button><button class="btn g" onclick="HP=1;home()">Tilbake</button>`}
 // Notepar: finn noten og bokstaven som hører sammen
 let PG=null;
 function pairs(){const k=PATH.filter((_,i)=>S.path[i]).length,pool=(PATH[Math.min(k,PATH.length-1)].pool.t||[]).slice(),have=[];pool.forEach(n=>{if(!have.some(x=>x%7===n%7))have.push(n)});
