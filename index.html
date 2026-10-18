@@ -301,14 +301,14 @@ const hasAll=b=>b.L.every(([k])=>S.pets[k]);
 const LV=[
 {n:'Lett',ic:'leaf',col:'#2ed585',d:'G-nøkkel, enkle noter',c:['t'],lo:30,hi:39,t:0,m:1},
 {n:'Middels',ic:'note',col:'#4dabf7',d:'G-nøkkel, hjelpelinjer',c:['t'],lo:26,hi:42,t:0,m:1.25},
-{n:'Vanskelig',ic:'bass',col:'#ff8a1f',d:'Bassnøkkel',c:['b'],lo:16,hi:30,t:0,m:1.5},
+{n:'Vanskelig',ic:'bass',col:'#ff8a1f',d:'F-nøkkel',c:['b'],lo:16,hi:30,t:0,m:1.5},
 {n:'Ekspert',ic:'bolt',col:'#a77bff',d:'Begge nøkler, 8 sek',c:['t','b'],lo:16,hi:42,t:8,m:2},
 {n:'Mester',ic:'trophy',col:'#ef4565',d:'Stokkede bokstaver, flere hjelpelinjer, 8 sek',c:['t','b'],r:{t:[24,44],b:[12,32]},t:8,m:2.5,sh:1},
 {n:'Legendarisk',ic:'sparkle',col:'#f0a500',d:'Som Mester, 5 sek og gehør',c:['t','b'],r:{t:[24,44],b:[12,32]},t:5,m:3,sh:1,ear:.2}];
 const AK=[{n:'Akkorder',d:'Hvilken akkord er dette?',c:['t'],r:{t:[28,36]},t:12,m:2,chord:1}];
 const PL=[
 {n:'Plasser noten',d:'G-nøkkel',c:['t'],r:{t:[28,40]},t:0,m:1.5,place:1},
-{n:'Plasser noten',d:'Bassnøkkel',c:['b'],r:{b:[16,28]},t:0,m:2,place:1},
+{n:'Plasser noten',d:'F-nøkkel',c:['b'],r:{b:[16,28]},t:0,m:2,place:1},
 {n:'Plasser noten',d:'Begge nøkler',c:['t','b'],r:{t:[28,40],b:[16,28]},t:0,m:2.5,place:1}];
 const $=s=>document.querySelector(s);
 let S={streak:0,last:'',best:0,xp:0,tot:null,eggs:0,pets:{}},G=null,AC=null,RUN=null,HT=0,DU=null,DFM=0;
@@ -539,13 +539,13 @@ const BS={t:30,b:18};
 function where(n,c){const p=n-BS[c];if(p<-2)return'Langt under notelinjene';if(p===-2)return'På en liten hjelpelinje under notelinjene';if(p===-1)return'Rett under nederste linje';if(p<=8)return p%2===0?`På linje ${p/2+1} (telt nedenfra)`:`I rommet mellom linje ${(p-1)/2+1} og ${(p-1)/2+2}`;if(p===9)return'Rett over øverste linje';if(p===10)return'På en liten hjelpelinje over notelinjene';return'Høyt over notelinjene'}
 function trick(n,c){const p=n-BS[c],M=MNEM[c];let t='';
 if(c==='t'&&n===32)t='Nøkkelen krøller seg rundt denne linjen. Derfor heter den G-nøkkel!';
-else if(c==='b'&&n===24)t='De to prikkene i bassnøkkelen ligger rundt denne linjen. Den heter F.';
+else if(c==='b'&&n===24)t='De to prikkene i F-nøkkelen ligger rundt denne linjen. Derfor heter den F-nøkkel!';
 else if(c==='t'&&n===28)t='Midt-C: den henger under notelinjene med en egen liten strek.';
 else if(p>=0&&p<=8&&p%2===0){const j=p/2;t=`Linjene nedenfra: ${M.l.map((w,i)=>i===j?`<b style="color:var(--pri)">${w}</b>`:w).join(' ')}. Første bokstav i hvert ord er notenavnet.`}
 else if(p>=1&&p<=7&&p%2===1){const j=(p-1)/2;t=`Rommene nedenfra heter ${M.s.map((w,i)=>i===j?`<b style="color:var(--pri)">${w}</b>`:w).join(' ')}.${c==='t'?' Det blir ordet «FACE».':''}`}
 return t}
 function sheetBody(){const l=G&&G.l;if(!l)return'';const cl=(l.c||['t']).filter(c=>c==='t'||c==='b'),M=MNEM;
-return cl.map(c=>`<div class="note" style="margin:6px 0 0"><b>${c==='t'?'G-nøkkel':'Bassnøkkel'}</b></div><div class="card" style="margin:4px 0">${ov(c,pl(c,l),new Set())}</div><div class="note" style="text-align:left;margin:2px 0">Linjene nedenfra: ${M[c].l.join(' ')}.<br>Rommene: ${M[c].s.join(' ')}.</div>`).join('')}
+return cl.map(c=>`<div class="note" style="margin:6px 0 0"><b>${c==='t'?'G-nøkkel':'F-nøkkel'}</b></div><div class="card" style="margin:4px 0">${ov(c,pl(c,l),new Set())}</div><div class="note" style="text-align:left;margin:2px 0">Linjene nedenfra: ${M[c].l.join(' ')}.<br>Rommene: ${M[c].s.join(' ')}.</div>`).join('')}
 function helpSheet(){if(!G)return;clearTimeout(G.tm);let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
 const timed=G.l.t&&!G.cur.k;o.onclick=e=>{if(e.target===o)closeHelp(timed)};
 o.innerHTML=`<div class="tbox" style="text-align:left;max-height:88vh;overflow:auto"><h2 style="margin:0 0 6px;text-align:center">Jukselapp</h2>${sheetBody()}<div class="msg" style="margin-top:8px">Piano</div><div class="note" style="margin:0 0 4px">Trykk på en tangent for å høre den</div>${pianoSvg(-1)}<button class="btn" onclick="closeHelp(${!!timed})">Ferdig</button></div>`}
@@ -722,18 +722,18 @@ const PATH=[
 {n:'Hele notelinjen',c:['t'],pool:{t:R(30,38)},nw:[],tip:'Nå kommer alle notene på notelinjene om hverandre. Du klarer dette!',m:1,t:0},
 {n:'Hjelpelinjer',c:['t'],pool:{t:R(28,40)},nw:[['t',39],['t',40]],tip:'Over de fem notelinjene finner du G i mellomrommet over øverste linje, og A på en liten hjelpelinje.',m:1.25,t:0},
 {n:'Plasser notene: G-nøkkel',c:['t'],pool:{t:[]},nw:[],place:1,tip:'Nå snur vi det på hodet! Du får en bokstav, og så skal du plassere noten selv på notelinja. Trykk der du tror noten skal være, finjuster med pilene, og trykk Sjekk.',m:1.25,t:0},
-{n:'Bass: under midtlinja, linjer',c:['b'],pool:{b:[18,20]},nw:[['b',18],['b',20]],tip:'Nå er det bassnøkkelen sin tur! Vi starter under midtlinja, akkurat som i G-nøkkelen. De to linjene under midtlinja heter G (nederst) og H.',m:1.25,t:0},
+{n:'Bass: under midtlinja, linjer',c:['b'],pool:{b:[18,20]},nw:[['b',18],['b',20]],tip:'Nå er det F-nøkkelen sin tur! Vi starter under midtlinja, akkurat som i G-nøkkelen. De to linjene under midtlinja heter G (nederst) og H.',m:1.25,t:0},
 {n:'Bass: under midtlinja, rom',c:['b'],pool:{b:[19,21]},nw:[['b',19],['b',21]],tip:'Mellom linjene under midtlinja finner du A og C.',m:1.25,t:0},
 {n:'Bass: alt under midtlinja',c:['b'],pool:{b:R(18,21)},nw:[],tip:'Nå blander vi G, A, H og C.',m:1.25,t:0},
-{n:'Bass: midtlinja',c:['b'],pool:{b:R(18,22)},nw:[['b',22]],tip:'På midtlinja i bassnøkkelen sitter D.',m:1.25,t:0},
-{n:'Bass: over midtlinja',c:['b'],pool:{b:R(22,24)},nw:[['b',23],['b',24]],tip:'Rett over midtlinja finner du E i mellomrommet og F på linjen over. Bassnøkkelen heter også F-nøkkelen, og de to prikkene sitter rundt nettopp F-linjen!',m:1.25,t:0},
+{n:'Bass: midtlinja',c:['b'],pool:{b:R(18,22)},nw:[['b',22]],tip:'På midtlinja i F-nøkkelen sitter D.',m:1.25,t:0},
+{n:'Bass: over midtlinja',c:['b'],pool:{b:R(22,24)},nw:[['b',23],['b',24]],tip:'Rett over midtlinja finner du E i mellomrommet og F på linjen over. F-nøkkelen har to prikker, og de sitter rundt nettopp F-linjen!',m:1.25,t:0},
 {n:'Bass: helt øverst',c:['b'],pool:{b:R(22,26)},nw:[['b',25],['b',26]],tip:'Øverst finner du G i mellomrommet og A på den øverste linjen.',m:1.25,t:0},
-{n:'Hele bassnøkkelen',c:['b'],pool:{b:R(16,30)},nw:[['b',16],['b',28]],tip:'Nå kommer hele bassnøkkelen, også notene på hjelpelinjer. Under nederste linje sitter E på en hjelpelinje. Over øverste linje sitter midt-C på en hjelpelinje, akkurat som C¹ i G-nøkkelen.',m:1.5,t:0},
-{n:'Plasser notene: bass',c:['b'],pool:{b:[]},nw:[],place:1,tip:'Nå skal du plassere notene selv i bassnøkkelen. Trykk der du tror noten skal være, finjuster med pilene, og trykk Sjekk.',m:1.5,t:0},
+{n:'Hele F-nøkkelen',c:['b'],pool:{b:R(16,30)},nw:[['b',16],['b',28]],tip:'Nå kommer hele F-nøkkelen, også notene på hjelpelinjer. Under nederste linje sitter E på en hjelpelinje. Over øverste linje sitter midt-C på en hjelpelinje, akkurat som C¹ i G-nøkkelen.',m:1.5,t:0},
+{n:'Plasser notene: F-nøkkel',c:['b'],pool:{b:[]},nw:[],place:1,tip:'Nå skal du plassere notene selv i F-nøkkelen. Trykk der du tror noten skal være, finjuster med pilene, og trykk Sjekk.',m:1.5,t:0},
 {n:'Begge nøkler',c:['t','b'],pool:{t:R(26,40),b:R(16,30)},nw:[],tip:'Nå kommer begge nøklene om hverandre. Se godt på nøkkelen først!',m:1.5,t:0},
 {n:'Mesterprøven',c:['t','b'],pool:{t:R(26,40),b:R(16,30)},nw:[],tip:'Siste prøve! Alle notene i begge nøklene. Ta deg god tid. Du er klar!',m:2,t:0}];
 // Bonus-XP når man har klart alle leksjonene i en del av løypa (R(a,b) = leksjon a til b).
-const BONUS=[{k:'under',xp:500,L:R(0,2),t:'Under midtlinja er klart!'},{k:'g',xp:1000,L:R(0,9),t:'Hele G-nøkkelen er klar!'},{k:'bass',xp:1000,L:R(10,17),t:'Hele bassnøkkelen er klar!'}];
+const BONUS=[{k:'under',xp:500,L:R(0,2),t:'Under midtlinja er klart!'},{k:'g',xp:1000,L:R(0,9),t:'Hele G-nøkkelen er klar!'},{k:'bass',xp:1000,L:R(10,17),t:'Hele F-nøkkelen er klar!'}];
 (()=>{const acc={t:new Set(),b:new Set()};PATH.forEach(l=>{for(const c in l.pool)l.pool[c].forEach(n=>acc[c].add(n));l.pool=Object.fromEntries(l.c.map(c=>[c,[...acc[c]].sort((a,b)=>a-b)]))})})();
 function pl(c,l){if(l.pool)return l.pool[c];const[a,b]=rng(c,l);return R(a,b)}
 function tone(n){if(S.mute)return;try{piano(hz(n),0,.6)}catch(e){}}
@@ -806,7 +806,7 @@ const nn=nw.has(n);s+=`<ellipse cx="${x}" cy="${y}" rx="5.500" ry="4" transform=
 arr.forEach((n,i)=>{const x=x0+dx*(i+.5);s+=`<rect x="${(x-dx/2).toFixed(1)}" y="25" width="${dx.toFixed(1)}" height="110" fill="transparent" onclick="event.stopPropagation();tone(${n})" style="cursor:pointer"/>`});
 return`<svg viewBox="0 25 300 110">${s}</svg>`}
 function playAll(a){a.forEach((n,i)=>setTimeout(()=>tone(n),i*420))}
-function info(l){const nm={t:'G-nøkkel',b:'Bassnøkkel'};
+function info(l){const nm={t:'G-nøkkel',b:'F-nøkkel'};
 return`<div class="note" style="text-align:left">${l.tip}</div>${l.nw.length?`<div class="msg">Nye noter</div><div class="note">Trykk på en note for å høre den</div><div class="grid">${l.nw.map(([c,n])=>`<div class="card center tapall" style="margin:0" onclick="tone(${n})">${staff(n,c)}<b style="font-size:22px;display:flex;align-items:center;justify-content:center;gap:6px">${ic('spk',18).replace('<svg','<svg style="width:18px;height:18px;vertical-align:middle"')} ${N[n%7]}${c==='t'&&n<30?'¹':''}</b></div>`).join('')}</div>`:''}
 <div class="msg" style="margin-top:12px">Disse notene kommer</div>${l.c.map(c=>`<div class="note" style="margin:4px 0 0">${nm[c]}</div><div class="card tapall" style="margin:4px 0" onclick="playAll([${l.pool[c].join(',')}])">${ov(c,l.pool[c],new Set(l.nw.filter(x=>x[0]===c).map(x=>x[1])))}<div class="note" style="margin:2px 0 0;display:flex;align-items:center;justify-content:center;gap:6px">${ic('spk',16).replace('<svg','<svg style="width:16px;height:16px;vertical-align:middle"')} Trykk på en note, eller på boksen for å høre alle</div></div>`).join('')}${l.nw.length&&l.c.some(c=>l.pool[c].some(n=>!l.nw.some(x=>x[0]===c&&x[1]===n)))?'<div class="note">Lilla noter er nye. De andre kjenner du fra før.</div>':''}`}
 function intro(i){const l=PATH[i];window.scrollTo(0,0);
