@@ -564,7 +564,7 @@ $('#app').innerHTML=`<div class="stk"><button class="x" onclick="intro(${i})">�
 <div class="card" style="text-align:left;background:var(--bg);padding:10px 12px;margin:6px 0;font-size:14px"><b>Huskeregel</b><div style="margin-top:2px">${trick(n,c)||'Tell linjene nedenfra, så finner du den.'}</div></div><div class="mpi">${pianoSvg(n%7)}</div>
 <div class="stickb"><button class="btn" onclick="${last?`start(${i},1)`:`meet(${i},${k+1})`}">${last?'Start leksjonen':'Neste note'}</button><button class="btn g" onclick="tone(${n})">${ic('spk',20)} Hør tonen</button></div>`;tone(n)}
 // Koble notene (lett): noter til venstre, bokstaver til høyre. Trykk på en note og så bokstaven den hører til.
-const CGC=['#7c4dff','#ff8a1f','#1fb86a','#ef4565','#4dabf7','#e040fb'];
+const CGC=['#1fb86a','#1fb86a','#1fb86a','#1fb86a','#1fb86a','#1fb86a'];
 let CG=null;
 function connect(){const k=PATH.filter((_,i)=>S.path[i]).length,pool=(PATH[Math.min(k,PATH.length-1)].pool.t||[]).slice(),have=[];pool.forEach(n=>{if(!have.some(x=>x%7===n%7))have.push(n)});
 const defs=[30,31,32,33,34,35,36];while(have.length<4)have.push(defs.find(d=>!have.some(x=>x%7===d%7)));
