@@ -534,7 +534,7 @@ $('#app').innerHTML=`<div class="center"><h1>${win?'Du vant!':'Du tapte'}</h1><d
 <div class="top"><div class="pill">+${xp}<small>XP</small></div><div class="pill">${d.me}<small>liv igjen</small></div></div>
 ${egg?`<div class="msg" style="color:var(--ok)">${first?'Første seier':'Seier nr '+wn}! Du fikk et <a class="lnk" onclick="hatch(${EI})">${b.eggn.toLowerCase()}</a>${first&&nxt?' og åpnet '+nxt.nm:''}!</div>`:win?`<div class="note">${10-wn%10} seiere til neste egg</div>`:''}${perfect?'<div class="msg" style="color:var(--ok)">Uten å miste liv! +100 XP</div>':''}${bonus?`<div class="msg" style="color:var(--ok)">Superfort! ${ic('bolt',22)} +${bonus} XP</div>`:''}</div>
 ${egg?`<button class="btn" onclick="hatch(${EI})">Klekk ${b.eggn} nå</button>`:''}<button class="btn${egg?' g':''}" onclick="duel(${d.i})">${win?'Kjemp igjen':'Prøv igjen'}</button>${win&&nxt&&!DFM&&duelOpen(d.i+1)?`<button class="btn" onclick="duel(${d.i+1})">Neste: ${nxt.nm}</button>`:''}<button class="btn g" onclick="${DFM?'DFM=0;path()':'HP=4;home()'}">${DFM?'Tilbake til kartet':'Tilbake til duellene'}</button>`}
-// Jukselapp, møt noten, husketriks og notepar (for nybegynnere)
+// Jukselapp, møt noten, huskeregel og notepar (for nybegynnere)
 const KEYN=['C','D','E','F','G','A','H'];
 function pianoSvg(hl){const w=44;let k='';for(let i=0;i<7;i++)k+=`<g onclick="tone(${28+i})" style="cursor:pointer"><rect x="${i*w+2}" y="4" width="${w-4}" height="96" rx="6" fill="${i===hl?'var(--pri)':'#fff'}" stroke="#2b2140" stroke-width="2"/><text x="${i*w+w/2}" y="88" text-anchor="middle" font-size="20" font-weight="900" fill="${i===hl?'#fff':'#2b2140'}">${KEYN[i]}</text></g>`;
 for(const i of [0,1,3,4,5])k+=`<rect x="${(i+1)*w-9}" y="4" width="18" height="58" rx="4" fill="#2b2140" pointer-events="none"/>`;
@@ -555,12 +555,12 @@ function helpSheet(){if(!G)return;clearTimeout(G.tm);let o=document.querySelecto
 const timed=G.l.t&&!G.cur.k;o.onclick=e=>{if(e.target===o)closeHelp(timed)};
 o.innerHTML=`<div class="tbox" style="text-align:left;max-height:88vh;overflow:auto"><h2 style="margin:0 0 6px;text-align:center">Jukselapp</h2>${sheetBody()}<div class="msg" style="margin-top:8px">Piano</div><div class="note" style="margin:0 0 4px">Trykk på en tangent for å høre den</div>${pianoSvg(-1)}<button class="btn" onclick="closeHelp(${!!timed})">Ferdig</button></div>`}
 function closeHelp(t){const o=document.querySelector('.tut');if(o)o.remove();if(t&&G&&!G.busy)draw()}
-// Møt noten: hver ny note vises for seg, med lyd og et husketriks
+// Møt noten: hver ny note vises for seg, med lyd og et huskeregel
 function meet(i,k){const l=PATH[i],[c,n]=l.nw[k],last=k===l.nw.length-1,mk=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||['cat'])[0];window.scrollTo(0,0);
 $('#app').innerHTML=`<div class="stk"><button class="x" onclick="intro(${i})">‹ Tilbake</button></div><div class="msg" style="margin:8px 0 0">Møt noten ${k+1} av ${l.nw.length}</div>
 <div class="card mst" id="st" onclick="tone(${n})" style="margin-top:6px">${staff(n,c).replace('0 0 300 150','0 15 300 115')}<div class="bub">Trykk for å høre tonen</div></div>
 <div class="fgt" style="justify-content:center;margin:2px 0"><span class="ft">${susi(70)}</span><div style="flex:1;max-width:260px"><div class="fbub" style="font-size:15px;white-space:normal">Dette er <b style="font-size:24px;color:var(--pri)">${N[n%7]}</b>!<br><span style="font-weight:700;color:var(--mut)">${where(n,c)}</span></div></div></div>
-<div class="card" style="text-align:left;background:var(--bg);padding:10px 12px;margin:6px 0;font-size:14px"><b>Husketriks</b><div style="margin-top:2px">${trick(n,c)||'Tell linjene nedenfra, så finner du den.'}</div></div><div class="mpi">${pianoSvg(n%7)}</div>
+<div class="card" style="text-align:left;background:var(--bg);padding:10px 12px;margin:6px 0;font-size:14px"><b>Huskeregel</b><div style="margin-top:2px">${trick(n,c)||'Tell linjene nedenfra, så finner du den.'}</div></div><div class="mpi">${pianoSvg(n%7)}</div>
 <div class="stickb"><button class="btn" onclick="${last?`start(${i},1)`:`meet(${i},${k+1})`}">${last?'Start leksjonen':'Neste note'}</button><button class="btn g" onclick="tone(${n})">${ic('spk',20)} Hør tonen</button></div>`;tone(n)}
 // Notepar: finn noten og bokstaven som hører sammen
 let PG=null;
