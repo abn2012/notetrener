@@ -764,7 +764,7 @@ function info(l){const nm={t:'Diskantnøkkel',b:'Bassnøkkel'};
 return`<div class="note" style="text-align:left">${l.tip}</div>${l.nw.length?`<div class="msg">Nye noter</div><div class="note">Trykk på en note for å høre den</div><div class="grid">${l.nw.map(([c,n])=>`<div class="card center" style="margin:0" onclick="tone(${n})">${staff(n,c)}<b style="font-size:22px">${N[n%7]}${c==='t'&&n<30?'¹':''}</b></div>`).join('')}</div>`:''}
 <div class="msg" style="margin-top:12px">Disse notene kommer</div>${l.c.map(c=>`<div class="note" style="margin:4px 0 0">${nm[c]}</div><div class="card" style="margin:4px 0">${ov(c,l.pool[c],new Set(l.nw.filter(x=>x[0]===c).map(x=>x[1])))}</div>`).join('')}${l.nw.length?'<div class="note">Lilla noter er nye. De andre kjenner du fra før.</div>':''}`}
 function intro(i){const l=PATH[i];window.scrollTo(0,0);
-$('#app').innerHTML=`<div class="stk"><button class="x" onclick="path()">‹ Tilbake</button></div><h1 style="margin:10px 0 4px">${i+1}. ${l.n}</h1>${info(l)}<button class="btn" onclick="start(${i},1)">Start leksjonen</button>`}
+$('#app').innerHTML=`<div class="stk"><button class="x" onclick="path()">‹ Tilbake</button></div><h1 style="margin:10px 0 4px">${i+1}. ${l.n}</h1>${info(l)}${l.nw.length?'<div class="note" style="margin-top:10px">For å komme videre må du klare de nye notene to ganger hver.</div>':''}<button class="btn" onclick="start(${i},1)">Start leksjonen</button>`}
 function showNotes(){const o=document.createElement('div');o.className='nov';o.innerHTML=`<div class="nbox"><div class="stk"><button class="x" onclick="closeNotes()">‹ Tilbake til leksjonen</button></div><h2 style="margin:6px 0">${G.l.n}</h2>${info(G.l)}<button class="btn" onclick="closeNotes()">Tilbake til leksjonen</button></div>`;document.body.appendChild(o)}
 function closeNotes(){const o=document.querySelector('.nov');if(o)o.remove()}
 // tab = fanen omvisningen går til, el = det som lyses opp
@@ -808,9 +808,10 @@ h+=`<div class="ban">${msg}</div>`;o.innerHTML=h;document.body.appendChild(o);se
 function cheer(){if(RUN.combo===50||RUN.combo===100){S.leggs=(S.leggs||0)+1;save();party(1,RUN.combo+' på rad! Du fikk et legendeegg!');fan()}else if(!G.p&&RUN.seen.size>=tot()){party(1,'ALLE NOTENE!');fan();RUN.seen.clear()}else if(RUN.combo%10===0){party(0,RUN.combo+' på rad!');fan()}else if(RUN.combo%5===0)cheerPet()}
 const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
 // p: 0 = nivå, 1 = læringsløype, 2 = plasser noten, 3 = akkorder
-function start(i,p){p=p||0;window.scrollTo(0,0);const l=[LV,PATH,PL,AK][p][i],key='lpqa'[p]+i;if(!RUN||RUN.i!==key)RUN={i:key,combo:0,seen:new Set()};G={i,p:p===1,mode:p,l,Q:p===1?Math.min(10,Math.max(5,l.c.reduce((s,k)=>s+pl(k,l).length,0)*2)):10,q:0,ok:0,hp:3,max:0,xp:0,cur:null,busy:false,tm:null,pos:null,show:0};next()}
+function start(i,p){p=p||0;window.scrollTo(0,0);const l=[LV,PATH,PL,AK][p][i],key='lpqa'[p]+i;if(!RUN||RUN.i!==key)RUN={i:key,combo:0,seen:new Set()};G={i,p:p===1,mode:p,l,Q:p===1?Math.max(Math.min(10,Math.max(5,l.c.reduce((s,k)=>s+pl(k,l).length,0)*2)),(l.nw||[]).length*2+3):10,q:0,nm:p===1&&l.nw&&l.nw.length?Object.fromEntries(l.nw.map(([c,n])=>[c+n,{a:0,ok:0,n}])):null,must:p===1&&l.nw&&l.nw.length?shuf(l.nw.concat(l.nw).map(([c,n])=>[c,n])):null,ok:0,hp:3,max:0,xp:0,cur:null,busy:false,tm:null,pos:null,show:0};next()}
 function next(){const l=G.l,x=Math.random();G.pos=null;G.show=0;
-if(l.ear&&x<l.ear)G.cur={n:28+Math.floor(Math.random()*7),c:'t',k:'ear'};
+if(G.must&&G.must.length&&(G.Q-G.q<=G.must.length||x<.45)){const[c,n]=G.must.pop();G.cur={n,c}}
+else if(l.ear&&x<l.ear)G.cur={n:28+Math.floor(Math.random()*7),c:'t',k:'ear'};
 else if(l.chord&&x<(l.ear||0)+l.chord)G.cur={n:28+Math.floor(Math.random()*8),c:'t',k:'chord'};
 else{if(!RUN.bag||!RUN.bag.length){const a=[];l.c.forEach(c=>pl(c,l).forEach(n=>a.push({n,c})));if(l.nw)l.nw.forEach(([c,n])=>a.push({n,c}));shuf(a);
 const t=a[a.length-1];if(G.cur&&a.length>1&&t.n===G.cur.n&&t.c===G.cur.c)a.unshift(a.pop());RUN.bag=a}
@@ -858,20 +859,21 @@ function check(){if(G.busy||G.pos==null)return;ans(G.pos%7===G.cur.n%7?G.cur.n%7
 function ans(i,btn){if(G.busy)return;G.busy=true;clearTimeout(G.tm);const r=G.cur.n%7,ok=i===r,pm=G.l.place;
 if(pm){G.show=ok?1:2;$('#st').innerHTML=bigStaff();$('#chk').disabled=true}
 else{const kb=document.querySelector(`.keys button[data-i="${r}"]`);if(kb)kb.classList.add('ok');if(!ok&&btn)btn.classList.add('bad')}
+if(G.nm){const e=G.nm[G.cur.c+G.cur.n];if(e){e.a++;if(ok)e.ok++}}
 const m=$('#msg'),fp=$('#fp');G.q++;if(fp){fp.classList.remove('jump','sad');fp.offsetWidth;fp.classList.add(ok?'jump':'sad')}
 if(ok){G.ok++;RUN.combo++;if(!G.cur.k)RUN.seen.add(G.cur.c+G.cur.n);G.max=Math.max(G.max,RUN.combo);addXp(10+Math.min(RUN.combo,5));dqAdd('ok',1);dqAdd('combo',RUN.combo);
 m.textContent=['Riktig!','Bra!','Strålende!','Fantastisk!'][Math.min(RUN.combo-1,3)];$('#st').classList.add('flash');cheer()}
 else{if(!G.p)G.hp--;RUN.combo=0;RUN.seen.clear();m.textContent=pm?(G.p?'Ikke helt! ':'Oi! ')+'De grønne notene er '+N[r]:(i===-1?'Tiden gikk ut! ':G.p?'Ikke helt! ':'Oi! ')+'Det var '+N[r];if(G.p&&!pm){const bb=$('#bub');if(bb)bb.textContent='Riktig svar: '+N[r]}}
 if(!ok){if(G.p||pm)tone(G.cur.n);else beep(G.cur.n,false)}save();
 setTimeout(()=>{(G.hp<=0||G.q>=G.Q)?end():next()},ok?650:(G.p||pm?2200:1300))}
-function end(){window.scrollTo(0,0);const win=G.p?G.ok>=Math.ceil(G.Q/2):G.hp>0,st=!win?0:G.ok>=G.Q?3:G.ok>=G.Q*.8?2:1;
+function end(){window.scrollTo(0,0);const nmBad=G.nm?Object.values(G.nm).filter(e=>e.ok<2):[],win=G.p?G.ok>=Math.ceil(G.Q/2)&&!nmBad.length:G.hp>0,st=!win?0:G.ok>=G.Q?3:G.ok>=G.Q*.8?2:1;
 if(G.ok>=5||win)tick();addXp(st*5);if(win){dqAdd('rounds',1);if(!G.p&&G.hp===3)dqAdd('perfect',1)}const PM=[];if(G.p&&win){S.path[G.i]=Math.max(S.path[G.i]||0,st);G.bn=BONUS.filter(b=>!S.bn[b.k]&&b.L.every(k=>S.path[k]));G.bn.forEach(b=>{S.bn[b.k]=1;S.xp+=b.xp;S.tot+=b.xp;G.xp+=b.xp;PM.push(b.t+' +'+b.xp+' XP')});
 if(!S.pathDone&&PATH.every((_,k)=>S.path[k])){S.pathDone=true;S.pets.ele=(S.pets.ele||0)+1;S.xp+=2000;S.tot+=2000;G.xp+=2000;G.done=1;PM.push('Hele løypa er klar! +2000 XP','')}}
 PM.forEach((m,j)=>setTimeout(()=>{party(0,m);fan()},400+j*2200));setTimeout(eggHint,1500+PM.length*2200);save();
-$('#app').innerHTML=`<div class="rowi">${win?ic('star',64).repeat(st):ic(G.p?'note':'heartO',64)}</div><h1 class="center">${win?'Runden er klar!':'Prøv igjen!'}</h1>
+$('#app').innerHTML=`<div class="rowi">${win?ic('star',64).repeat(st):ic(G.p?'note':'heartO',64)}</div><h1 class="center">${win?'Runden er klar!':'Prøv igjen!'}</h1>${G.nm&&!win&&nmBad.length?`<div class="msg" style="color:var(--hot)">Du må klare de nye notene to ganger hver for å komme videre.</div>`:''}${G.nm?`<div class="top">${Object.values(G.nm).map(e=>`<div class="pill" style="${e.ok>=2?'':'color:var(--bad)'}">${N[e.n%7]}<small>${e.ok}/${e.a} riktige</small></div>`).join('')}</div>`:''}
 ${(G.bn||[]).map(b=>`<div class="msg" style="font-size:18px;color:var(--ok)">${b.t} +${b.xp} XP</div>`).join('')}${G.done?`<div class="msg" style="font-size:18px;color:var(--ok)">Du klarte hele løypa! +2000 XP</div><div class="pop" style="margin:0">${pet('ele',120)}</div><div class="msg">Du fikk en studentelefant!</div>`:''}<div class="top"><div class="pill">${G.ok}/${G.q}<small>riktige</small></div><div class="pill">${ic('flame',18)} ${G.max}<small>beste kombo</small></div><div class="pill">+${G.xp}<small>XP · ${G.l.m}x</small></div></div>
 <div class="note">${goal().txt}</div>
-${G.p&&win&&PATH[G.i+1]?`<button class="btn" onclick="intro(${G.i+1})">Neste leksjon</button>`:''}<button class="btn${G.p&&win&&PATH[G.i+1]?' g':''}" onclick="start(${G.i},${G.mode})">Spill igjen</button><button class="btn g" onclick="${G.p?'path()':'home()'}">${G.p?'Til løypa':'Til forsiden'}</button>`}
+${G.p&&win&&PATH[G.i+1]?`<button class="btn" onclick="intro(${G.i+1})">Neste leksjon</button>`:''}<button class="btn${G.p&&win&&PATH[G.i+1]?' g':''}" onclick="start(${G.i},${G.mode})">${G.p&&!win?'Gjør leksjonen på nytt':'Spill igjen'}</button><button class="btn g" onclick="${G.p?'path()':'home()'}">${G.p?'Til løypa':'Til forsiden'}</button>`}
 new MutationObserver(()=>{updWheel();if(document.querySelector('.nav'))setTimeout(()=>{eggHint();gm()},600)}).observe($('#app'),{childList:true});
 home();
 </script></body></html>
