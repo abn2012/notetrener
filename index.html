@@ -10,9 +10,9 @@
 <meta name="apple-mobile-web-app-title" content="NoteQuest">
 <style>
 :root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
---bg:#fff8ee;--card:#fff;--ink:#2b2140;--mut:#7a6f8f;--pri:#7c4dff;--ok:#1fb86a;--bad:#ef4565;--hot:#ff8a1f;--line:#e8dff5}
-@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171226;--card:#241c3a;--ink:#f3eefc;--mut:#a99fc4;--pri:#9b7bff;--ok:#2ed585;--bad:#ff5d7a;--hot:#ffa043;--line:#3a2f5a}}
-:root[data-theme="dark"]{--bg:#171226;--card:#241c3a;--ink:#f3eefc;--mut:#a99fc4;--pri:#9b7bff;--ok:#2ed585;--bad:#ff5d7a;--hot:#ffa043;--line:#3a2f5a}
+--bg:#fff8ee;--card:#fff;--ink:#2b2140;--mut:#7a6f8f;--pri:var(--theme,#7c4dff);--ok:#1fb86a;--bad:#ef4565;--hot:#ff8a1f;--line:#e8dff5}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#171226;--card:#241c3a;--ink:#f3eefc;--mut:#a99fc4;--pri:color-mix(in srgb,var(--theme,#7c4dff) 80%,#fff);--ok:#2ed585;--bad:#ff5d7a;--hot:#ffa043;--line:#3a2f5a}}
+:root[data-theme="dark"]{--bg:#171226;--card:#241c3a;--ink:#f3eefc;--mut:#a99fc4;--pri:color-mix(in srgb,var(--theme,#7c4dff) 80%,#fff);--ok:#2ed585;--bad:#ff5d7a;--hot:#ffa043;--line:#3a2f5a}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;min-height:100vh}
@@ -320,10 +320,14 @@ if(S.tot==null)S.tot=S.xp;if(!S.nmast)S.nmast={};if(S.assist===undefined)S.assis
 const THEMES=['#7c4dff','#2f80ed','#1fb86a','#ff4d8d','#ff8a1f','#14b8c4'];
 if(!S.theme)S.theme=THEMES[0];if(!S.acc)S.acc={};if(!S.path)S.path={};if(!S.anim)S.anim={};if(!S.pv){S.path={};S.pv=2}if(S.pv===2){const o=S.path,n={};Object.keys(o).forEach(k=>{k=+k;if(k<4)n[k]=o[k];else if(k===4){n[4]=o[4];n[5]=o[4]}else n[k+1]=o[k]});S.path=n;S.pv=3}if(S.pv===3){const o=S.path,n={};Object.keys(o).forEach(k=>{k=+k;n[k<3?k:k+1]=o[k]});S.path=n;S.pv=4}if(S.pv===4){const o=S.path,n={},g=k=>o[k]||0,both=g(9)&&g(10)?Math.min(g(9),g(10)):0;for(let k=0;k<9;k++)if(o[k])n[k]=o[k];if(g(9))n[10]=n[13]=g(9);if(both)[11,12,14,15].forEach(k=>n[k]=both);if(g(11))n[16]=g(11);if(g(12))n[18]=g(12);if(g(13))n[19]=g(13);S.path=n;S.pv=5}
 for(const k in S.anim)if(S.anim[k]===true)S.anim[k]='own';
-if(S.chests){S.xp+=S.chests*250;S.chests=0}
+// Gamle lagringer: S.chests var et antall uåpnede kister (gir 250 XP hver). Nå er det kistene på kartet: {leksjon:1}.
+if(typeof S.chests==='number'){S.xp+=S.chests*250;delete S.chests}
+// Redder framgang som fikk XP = NaN (lagres som null) av en tidligere feil med kistene på kartet.
+if(typeof S.xp!=='number'||!isFinite(S.xp))S.xp=0;
 if(!S.badges)S.badges={};BADGES.forEach(b=>{if(hasAll(b))S.badges[b.n]=1});
 if(S.pets.flu){S.pets.cla=(S.pets.cla||0)+S.pets.flu;delete S.pets.flu}for(const k in S.acc)if(S.acc[k]==='flu')S.acc[k]='cla';
-function applyTheme(){const d=document.documentElement;d.style.setProperty('--pri',S.theme);if(S.look)d.dataset.theme=S.look;else delete d.dataset.theme}
+// --theme er fargen man velger. CSS-en lager --pri av den, litt lysere i mørk modus.
+function applyTheme(){const d=document.documentElement;d.style.removeProperty('--pri');d.style.setProperty('--theme',S.theme);if(S.look)d.dataset.theme=S.look;else delete d.dataset.theme}
 // S.look: '' = følg telefonen, 'light' eller 'dark'
 function setLook(v){S.look=v;save();applyTheme();document.querySelectorAll('.lk2 .x').forEach(x=>x.classList.toggle('on',x.dataset.v===v))}
 function setTheme(c,b){S.theme=c;save();applyTheme();document.querySelectorAll('.swb').forEach(x=>x.classList.toggle('on',x===b))}
@@ -602,7 +606,7 @@ if(g.open.length<2)return;g.flips++;const[a,b]=g.open.map(x=>g.cards[x]);g.lock=
 if(a.id===b.id&&a.t!==b.t){a.ok=b.ok=1;a.up=b.up=0;g.done++;g.open=[];g.lock=0;const gn=pgGain(g.tier,g.keys[a.id]);g.gain+=gn;S.xp+=gn;S.tot+=gn;save();fan();{const f=document.createElement('div');f.className='dmg';f.textContent='+'+gn+' XP';f.style.left='calc(50% - 30px)';f.style.top='40%';f.style.color='#1fb86a';document.body.appendChild(f);setTimeout(()=>f.remove(),900)}if(g.done===g.np){setTimeout(pgEnd,500)}else pgDraw()}
 else setTimeout(()=>{if(PG!==g)return;a.up=b.up=0;g.open=[];g.lock=0;pgDraw()},1000)}
 function pgEnd(){const g=PG,bonus=g.flips<=g.np*2?g.tier:0,xp=g.gain+bonus;S.xp+=bonus;S.tot+=bonus;save();party(0,'Alle par!');
-$('#app').innerHTML=`<div class="center"><div class="rowi">${ic('star',64)}</div><h1>Alle par funnet!</h1><div class="top"><div class="pill">${g.flips}<small>vendinger</small></div><div class="pill">+${xp}<small>XP</small></div></div>${bonus?'<div class="msg" style="color:var(--ok)">Supert minne! +${bonus} XP ekstra</div>':''}</div><button class="btn" onclick="pairs()">Spill igjen</button><button class="btn g" onclick="HP=1;home()">Tilbake</button>`}
+$('#app').innerHTML=`<div class="center"><div class="rowi">${ic('star',64)}</div><h1>Alle par funnet!</h1><div class="top"><div class="pill">${g.flips}<small>vendinger</small></div><div class="pill">+${xp}<small>XP</small></div></div>${bonus?`<div class="msg" style="color:var(--ok)">Supert minne! +${bonus} XP ekstra</div>`:''}</div><button class="btn" onclick="pairs()">Spill igjen</button><button class="btn g" onclick="HP=1;home()">Tilbake</button>`}
 // Rebus: noter og bokstaver blir til et ord. Alle bokstavene C D E F G A H vises som noter, de andre som vanlige bokstaver.
 const RBS=[['HA DET GØY','Noe du sier når du har det fint'],['HAGE','Blomster vokser her'],['EGG','Dyr kommer ut av dem'],['HADDE','Fortid av «ha»'],['FLAGG','Norges er rødt, hvitt og blått'],['GAFFEL','Du spiser med den'],['DRAGE','Dyr som spyr ild'],['DEG','Meg og ...'],['DAGEN','Da er det lyst ute'],['HAGEN','Gress og blomster hjemme'],['KAFFE','Voksne drikker den'],['FASADE','Utsiden av et hus'],['AHA','Du sier det når du skjønner noe'],['HAHA','Lyden av latter'],['ELEFANT','Stort dyr med snabel'],['GAVE','Du får den i bursdagen'],['HAKE','Under munnen din'],['FADER','Pappa'],['DAGER','Mange av dem blir en uke'],['MAGE','Der maten havner'],['HAGL','Små isbiter fra himmelen'],['DAME','Motsatt av herre'],['EGGEHVITE','Den hvite delen av egget'],['DAGENE','Mandag, tirsdag, onsdag ...'],['HARDINGFELE','Norsk instrument med strenger og bue'],['LANGELEIK','Norsk instrument du spiller liggende på et bord'],['HARPE','Instrument med mange strenger du plukker'],['ORGEL','Stort instrument i kirken']];
 let RBX=null;
@@ -825,7 +829,7 @@ const mk=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||['cat'])[0],tg
 let bs='';[[3,0],[9,1],[17,2]].forEach(([a,bi])=>{const q1=pt(a),q2=pt(a+1),x=(q1.x+q2.x)/2,y=(q1.y+q2.y)/2;bs+=bossMark(bi,x,y,!!P[a])});
 {const q=pt(N-1);bs+=bossMark(3,q.x<200?q.x+84:q.x-84,q.y+4,!!S.duel.beat[2])}
 CHN.forEach(i=>{const q=pt(i),x=q.x<200?q.x+68:q.x-68,av=!!P[i]&&!(S.chests&&S.chests[i]),dn2=!!(S.chests&&S.chests[i]);
-bs+=`<g transform="translate(${x.toFixed(0)} ${q.y.toFixed(0)})" ${av?`onclick="chestQ(${i})"`:''} style="cursor:${av?'pointer':'default'}" opacity="${av?1:dn2?.5:.3}"><g ${av?'style="animation:bnc 1.2s ease-in-out infinite"':''}><rect x="-19" y="-6" width="38" height="24" rx="4" fill="#c98b4e" stroke="#7a4a1c" stroke-width="3"/>${dn2?'<path d="M-19 -6l4-14h30l4 14z" fill="#d9a05f" stroke="#7a4a1c" stroke-width="3"/>':'<path d="M-19 -6a19 14 0 0 1 38 0z" fill="#d9a05f" stroke="#7a4a1c" stroke-width="3"/>'}<rect x="-4" y="-2" width="8" height="10" rx="2" fill="#ffd23f" stroke="#a87600" stroke-width="1.5"/></g>${av?'<g transform="translate(-9 -46) scale(.56)">${EM.sparkle}</g>':''}</g>`});
+bs+=`<g transform="translate(${x.toFixed(0)} ${q.y.toFixed(0)})" ${av?`onclick="chestQ(${i})"`:''} style="cursor:${av?'pointer':'default'}" opacity="${av?1:dn2?.5:.3}"><g ${av?'style="animation:bnc 1.2s ease-in-out infinite"':''}><rect x="-19" y="-6" width="38" height="24" rx="4" fill="#c98b4e" stroke="#7a4a1c" stroke-width="3"/>${dn2?'<path d="M-19 -6l4-14h30l4 14z" fill="#d9a05f" stroke="#7a4a1c" stroke-width="3"/>':'<path d="M-19 -6a19 14 0 0 1 38 0z" fill="#d9a05f" stroke="#7a4a1c" stroke-width="3"/>'}<rect x="-4" y="-2" width="8" height="10" rx="2" fill="#ffd23f" stroke="#a87600" stroke-width="1.5"/></g>${av?`<g transform="translate(-9 -46) scale(.56)">${EM.sparkle}</g>`:''}</g>`});
 $('#app').innerHTML=`<div class="hd stk"><button class="x" onclick="home()">‹ Tilbake</button><b>${dn} av ${N}</b></div><svg class="kmap" viewBox="0 0 400 ${H}" role="img" aria-label="Eventyrkart"><rect y="0" width="400" height="${b3}" fill="#e2d8ff"/><rect y="${b3}" width="400" height="${b2-b3}" fill="#a9d8ff"/><rect y="${b2}" width="400" height="${b1-b2}" fill="#a8dc98"/><rect y="${b1}" width="400" height="${H-b1}" fill="#c8ecb0"/>${sc}<polyline points="${line}" fill="none" stroke="#fff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/><polyline points="${line}" fill="none" stroke="#f0b35a" stroke-width="4" stroke-dasharray="2 9" stroke-linecap="round" stroke-linejoin="round"/>${sign('Slottet',14,290)}${sign('Havet',b3+16)}${sign('Skogen',b2+16)}${sign('Engen',b1+16)}${zn}${bs}${nodes}${mascot}</svg>`;
 walkMascot(from0,tgt,pt);
 setTimeout(zoneCheck,500);window.scrollTo(0,0);const c=document.querySelector('.mcur')||document.querySelector('.kmap g.mn:last-of-type');if(c)window.scrollTo(0,Math.max(0,c.getBoundingClientRect().top+scrollY-innerHeight/2))}
@@ -958,4 +962,6 @@ ${G.p&&win&&PATH[G.i+1]?`<button class="btn" onclick="intro(${G.i+1})">Neste lek
 addEventListener('resize',()=>{try{updWheel()}catch(e){}});
 new MutationObserver(()=>{updWheel();if(document.querySelector('.nav'))setTimeout(()=>{eggHint();gm()},600)}).observe($('#app'),{childList:true});
 home();
+// Omvisningen starter av seg selv én gang for nye spillere (S.tut settes når den lukkes).
+if(!S.tut&&!(S.tot>0||Object.keys(S.pets).length||Object.keys(S.path).length))setTimeout(()=>tutor(0),400);
 </script></body></html>
