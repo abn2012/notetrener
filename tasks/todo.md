@@ -8,7 +8,7 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Designsystem i `styles.css`: fonter (woff2), farger, himmelbakgrunn, 3D-knapper, kremkort, piller, bunnmeny. Mørk modus = natthimmel
 - [x] Forsiden: Hjem 1 med prioritert kort (streak brutt → nok XP til egg → dagens utfordring → neste mål) og bunnmeny med fem faner
 - [ ] Overskriftsraden på fanene (NoteQuest, Nivå, ?, tannhjul) brytes på to linjer på mobil. Ordnes når fanene får ny drakt
-- [ ] Leksjonsintro, leksjonsrunde, Plasser noten og resultat («Du klarte det!»)
+- [x] Leksjonsintro, leksjonsrunde, Plasser noten og resultat («Du klarte det!»)
 - [ ] Øv fritt, Rebus (lange ord), Notepar og Koble notene
 - [ ] Melodier, Dueller og duell med kast per dyr
 - [ ] Egg og dyr: egg, kiste, klekking, samling og nytt merke
@@ -25,6 +25,12 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Kortet på forsiden er riktig i alle tilstandene: vanlig dag (Dagens utfordring), nok XP (egg), streak brutt (Redd streaken), hele løypa klar (Neste mål, og Spill! går til Øv fritt) og ny spiller (Susi og «Velkommen!»).
 - Omvisningen markerer streak-pillen, løype-stripen og dagens utfordring. Arket flytter seg til toppen når det markerte ligger langt nede.
 - Fanene, leksjonene og dialogene har fått fonter, farger og 3D-knapper fra designsystemet, men ikke ny layout ennå.
+
+## Gjennomgang, steg 3 (leksjonene)
+- Leksjonsintroen er delt i steg: 1) Susi forklarer tipset (med midtlinje-illustrasjon når tipset handler om midtlinja), 2) de nye notene, 3) notene som kommer og start-knappene. Leksjoner uten nye noter har to steg. «Tilbake» fra Møt noten går til steg 3.
+- Runden har én rad øverst (tilbake, tittel/hjerter, Noter, Hjelp) og fremdrift med kombo under. Overskriften brytes ikke lenger på mobil.
+- Resultatet heter nå «Du klarte det!». Stjernene spretter inn én og én med stråler bak. «Prøv igjen!» er som før.
+- Testet i 375 px, lyst og mørkt: intro steg 1–3, riktig/feil svar med forklaring, Plasser noten med grønn Sjekk-knapp, 3 stjerner og tapt leksjon. Ingen konsollfeil.
 
 ---
 
