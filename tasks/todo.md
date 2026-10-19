@@ -19,7 +19,7 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Klekking og åpning av kister som på tavla
 - [x] Egg og dyr: egg, kiste, Mine, samling og nytt merke
 - [x] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
-- [ ] Barnemodus: hundehus (dag/natt), stell dyret og eventyrkartet
+- [x] Barnemodus: hundehus (dag/natt), stell dyret og eventyrkartet
 - [ ] Sluttest: mobil (375 px), lys/mørk, gammel framgang, ingen konsollfeil. Så slå sammen med `main`
 
 ## Gjennomgang, steg 1 (oppdeling)
@@ -78,6 +78,12 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Omvisning: steg uten markering er et kort med Susi over, og steg med markering er et ark med ikon, «Du er nå på siden …», «Hopp over» og «Neste» side om side. Prikken for steget du er på er lengre.
 - XP-oversikten: stjerne med stråler og stort tall, hvite rader med nivåring, neste mål og dagens utfordring med fremdrift, og streak/samling i to kolonner. «Gå til egg og dyr» er oransje.
 - Testet i 375 px, lyst og mørkt: bryterne (lyd av/på), utseende og temafarge virker. Ingen konsollfeil.
+
+## Gjennomgang, steg 10 (barnemodus)
+- Hundehuset er en liten verden: dag med sol, skyer som driver og favorittdyret som logrer i døra, natt med måne, stjerner som blinker, lys i døra, Zzz og mørkere dyr. Dyrene står i et kort under, med stjerne for favoritt og rød prikk for sulten.
+- Stell dyret: himmel og gress (natt når dyret sover), stort dyr som spretter, snakkeboblen øverst («Jeg er glad!» osv.), mett-stolpe i grønt/oransje/rødt, fargede lekeknapper (Klapp, Kile, Ball), grønn «Gi mat», og navn med oransje «Lagre». Om natta er «Vekk dyret» lilla.
+- Eventyrkartet: soner med gradient, oransje skilt, kremfarget sti med skygge og blått toppfelt med «N av 20».
+- Testet i 375 px: dag og natt (klokka satt til 22 i testen), lek gir «+5 XP» og hjerter, kartet med slått sjef, kister og «?» for soner du ikke har nådd. Ingen konsollfeil.
 
 ---
 
