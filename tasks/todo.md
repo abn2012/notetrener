@@ -16,7 +16,8 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Navigasjon: ingen skjerm uten vei ut, og tidtakere fra en runde man har forlatt gjør ikke lenger noe
 - [x] Melodier-fanen, melodirunden og selve duellen (kast per dyr) som på tavlene
 - [ ] Mobilens tilbakeknapp lukker appen i stedet for å gå et steg tilbake (appen bruker ikke nettleserhistorikken). Vurder å legge til
-- [ ] Egg og dyr: egg, kiste, klekking, samling og nytt merke
+- [x] Klekking og åpning av kister som på tavla
+- [ ] Egg og dyr: egg, kiste, samling og nytt merke
 - [ ] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
 - [ ] Barnemodus: hundehus (dag/natt), stell dyret og eventyrkartet
 - [ ] Sluttest: mobil (375 px), lys/mørk, gammel framgang, ingen konsollfeil. Så slå sammen med `main`
@@ -56,6 +57,12 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Melodirunden har samme toppfelt som leksjonene. Sluttskjermen har en stor plate som snurrer, med stråler bak.
 - Duellen: himmel og gress, motstanderen øverst til høyre (snudd mot deg), livet som 6 biter som blir røde på de to siste, noten i en snakkeboble med stjerner som blinker, og ditt dyr nederst til venstre. Kastene per dyr er som før (testet hjerte fra katten og is fra haren). «Du vant!» har stråler.
 - Testet i 375 px: Kjempetreff tar 2 liv (6/6 → 4/6), motstanderens treff tar 1 (6/6 → 5/6), seier gir sluttskjermen. Ingen konsollfeil.
+
+## Gjennomgang, steg 7 (klekking)
+- Klekkeskjermen er bygd etter tavla: solnedgang med stråler som snurrer og glød bak egget. Egget vugger av og til, og en hånd viser hvor man skal trykke (den forsvinner etter første trykk). Tre lamper lyser gult for hvert trykk, og teksten («Det knaker!», «Nesten der...») spretter.
+- Under vises en rad med dyrene i egget: dyr du har, og «?» for dem du mangler (ingen silhuetter). Når dyret kommer ut, spretter det fram, og det nye dyret får gul ring i raden.
+- Kister bruker samme skjerm («Trykk på kisten 3 ganger», «Den knirker!»).
+- Testet i 375 px: fugleegg (1 av 7 → 2 av 7) og slagverkkiste. Ingen konsollfeil.
 
 ---
 

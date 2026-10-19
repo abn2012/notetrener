@@ -280,3 +280,22 @@ body.qk #app{animation:qk .4s}@keyframes qk{20%{transform:translate(-5px,3px)}40
 @keyframes dtw{0%,100%{opacity:.3;transform:scale(.6)}50%{opacity:1;transform:scale(1.1)}}
 .dmsg{min-height:52px;margin-top:10px;padding:0 10px;text-align:center;font-family:var(--fd);font-size:22px;line-height:1.15;color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.3)}
 .dkeys{margin-top:8px}.dkeys button{padding:20px 0;font-size:28px}
+/* Klekking: solnedgang med stråler og glød bak egget, egget vugger, lamper for trykkene og en rad med dyrene fra egget */
+.hsun{position:fixed;inset:0;z-index:-1;overflow:hidden;background:radial-gradient(90% 60% at 50% 42%,#ffb057 0%,#ff7a3d 45%,#9a2f6b 100%)}
+.hsun::before{content:'';position:absolute;left:50%;top:42%;width:900px;height:900px;margin:-450px 0 0 -450px;border-radius:50%;background:repeating-conic-gradient(rgba(255,240,180,.25) 0deg 10deg,transparent 10deg 24deg);animation:rspin 18s linear infinite}
+.hsun::after{content:'';position:absolute;left:50%;top:42%;width:320px;height:320px;margin:-160px 0 0 -160px;border-radius:50%;background:radial-gradient(rgba(255,240,180,.6),transparent 65%)}
+.hch{color:#fff;padding-top:24px}.hch h1{font-size:34px;color:#fff;text-shadow:0 4px 0 rgba(0,0,0,.25)}.hch .note{color:#fff;opacity:.9}
+.hmsg{font-family:var(--fd);font-size:22px;margin-top:6px;color:#fff3c4;min-height:28px}.hpop{animation:pop .35s ease-out}
+.hstage{position:relative;display:flex;justify-content:center;margin:20px 0 8px}
+.hegg{margin:0;transform-origin:50% 90%;animation:hwob 2.4s ease-in-out infinite;filter:drop-shadow(0 10px 6px rgba(80,20,40,.35))}.hegg svg{width:200px;height:200px}
+@keyframes hwob{0%,70%,100%{transform:rotate(0)}76%{transform:rotate(-6deg)}84%{transform:rotate(5deg)}92%{transform:rotate(-3deg)}}
+.hegg.shk{animation:shk .5s}
+.htap{position:absolute;left:calc(50% + 58px);bottom:-6px;pointer-events:none;animation:htap 1s ease-in-out infinite}@keyframes htap{50%{transform:translate(-6px,-8px)}}
+.hpips{display:flex;justify-content:center;gap:8px;margin:8px 0 18px}.hpips i{width:40px;height:12px;border-radius:6px;background:rgba(255,255,255,.3);transition:background .2s,box-shadow .2s}.hpips i.on{background:var(--gold);box-shadow:0 0 12px rgba(255,210,63,.9)}
+.hrow{background:rgba(60,10,40,.35);border-radius:22px;padding:10px 12px;margin-top:10px}.hrt{font-weight:900;font-size:13px;margin-bottom:6px}
+.hrg{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.hrg span{aspect-ratio:1;border-radius:14px;background:rgba(255,255,255,.15);display:grid;place-items:center}.hrg svg{width:80%;height:80%}
+.hrg b{font-family:var(--fd);font-weight:400;font-size:26px;color:rgba(255,255,255,.7)}.hrg span.nw{background:rgba(255,210,63,.35);box-shadow:0 0 0 3px var(--gold);animation:pop .5s cubic-bezier(.3,1.6,.5,1) .6s both}
+.hrev{display:flex;justify-content:center;margin:14px 0 6px;animation:hrev .7s ease-out both}@keyframes hrev{0%{transform:scale(.2) rotate(-20deg);opacity:0}60%{transform:scale(1.15) rotate(4deg);opacity:1}100%{transform:none}}
+.hres{font-family:var(--fd);font-size:26px;text-shadow:0 3px 0 rgba(0,0,0,.25)}.hfrom{font-weight:800;opacity:.9}
+.hbadge{background:var(--gold);color:#6b3a00;border-radius:14px;padding:6px 12px;display:inline-flex;align-items:center;gap:6px}
+.btn.hlater{background:rgba(255,255,255,.2);border-bottom-color:rgba(0,0,0,.15);color:#fff}
