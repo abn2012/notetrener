@@ -12,7 +12,7 @@ NoteQuest er en app for å lære å lese noter. Det er **Astrid sin første app 
   - `app.js`: all JavaScript. Det er et vanlig skript (ikke en modul), så funksjonene kan brukes fra `onclick` i HTML-en.
 - Ingen build-steg, ingen avhengigheter og ingen skript eller fonter fra andre nettsteder. Alt ligger i repoet. Appikonene (`icon-*.png`) og `manifest.webmanifest` ligger ved siden av. Ikke del opp i flere filer med mindre Astrid ber om det.
 - Når du endrer `styles.css` eller `app.js`, øk tallet i `?v=` der fila lenkes inn i `index.html`. Ellers kan nettleseren bruke en gammel versjon av fila sammen med en ny versjon av den andre.
-- Notene tegnes som inline SVG. Lyden lages med Web Audio (`AudioContext`).
+- Notene tegnes som inline SVG. Nøkkelen og notene må alltid vises helt, aldri kuttet verken i høyden eller bredden. Når du beskjærer `viewBox` eller legger notelinja i et kort med `overflow:hidden`, sjekk i nettleseren at nøkkelen og de høyeste og laveste notene (med hjelpelinjer) får plass. Lyden lages med Web Audio (`AudioContext`).
 - Framgang (XP, streak, dyr, instrumenter og innstillinger) lagres i `localStorage`. Endres formatet på lagrede data, må gammel framgang fortsatt fungere.
 - Farger er CSS-variabler på `:root`, med egne verdier for mørk modus. Nye farger legges til på samme måte.
 - Layouten er laget for mobil først (`#app` har maks bredde 480px).

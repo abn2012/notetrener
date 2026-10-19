@@ -423,13 +423,13 @@ shuf(R(0,6)).slice(0,count).forEach(L=>{const c=bP.length&&Math.random()<.4?'b':
 function connect(){const use=pairNotes(5),tier=pgTier();
 CG={notes:use.map((u,i)=>({id:i,n:u.n,c:u.c})),letters:shuf(use.map((u,i)=>({id:i,n:u.n,c:u.c}))),sel:null,done:{},wrong:0,tier,gain:0};cgDraw()}
 function cgDraw(){const g=CG;window.scrollTo(0,0);
-const nc=(c)=>{const d=g.done[c.id];return`<button class="cgc${d?' ok':''}${g.sel&&g.sel.s==='n'&&g.sel.id===c.id?' sel':''}" style="${d?`border-color:${CGC[c.id]};background:color-mix(in srgb,${CGC[c.id]} 16%,var(--card))`:''}" data-n="${c.id}" onclick="cgPick('n',${c.id})">${staff(c.n,c.c).replace('0 0 300 150','14 20 190 116')}</button>`};
+const nc=(c)=>{const d=g.done[c.id];return`<button class="cgc${d?' ok':''}${g.sel&&g.sel.s==='n'&&g.sel.id===c.id?' sel':''}" style="${d?`border-color:${CGC[c.id]};background:color-mix(in srgb,${CGC[c.id]} 16%,var(--card))`:''}" data-n="${c.id}" onclick="cgPick('n',${c.id})">${staff(c.n,c.c).replace('0 0 300 150','14 8 190 136')}</button>`};
 const lc=(c)=>{const d=g.done[c.id];return`<button class="cgc cgl${d?' ok':''}${g.sel&&g.sel.s==='l'&&g.sel.id===c.id?' sel':''}" style="${d?`border-color:${CGC[c.id]};background:color-mix(in srgb,${CGC[c.id]} 16%,var(--card));color:${CGC[c.id]}`:''}" data-l="${c.id}" onclick="cgPick('l',${c.id})"><b>${N[c.n%7]}</b></button>`};
-$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="HP=1;home()">‹ Tilbake</button></span><span><b>Koble notene</b></span><span></span><span>${Object.keys(g.done).length}/${g.notes.length}</span></div><div class="note" style="margin:8px 0">Trykk på en note, og så på bokstaven den hører til. ${g.tier} XP for hver du kobler!</div>
+$('#app').innerHTML=`${mgHud('Koble notene',`${Object.keys(g.done).length}/${g.notes.length}`)}<div class="note" style="margin:8px 0">Trykk på en note, og så på bokstaven den hører til. ${g.tier} XP for hver du kobler!</div>
 <div class="cgw" id="cgw"><svg class="cgs" id="cgs"></svg><div class="cgcol">${g.notes.map(nc).join('')}</div><div class="cgcol">${g.letters.map(lc).join('')}</div></div>`;
 const w=$('#cgw'),sv=$('#cgs'),wr=w.getBoundingClientRect();let h='';
 Object.keys(g.done).forEach(id=>{const a=w.querySelector(`[data-n="${id}"]`).getBoundingClientRect(),b=w.querySelector(`[data-l="${id}"]`).getBoundingClientRect();
-h+=`<line x1="${a.right-wr.left}" y1="${a.top+a.height/2-wr.top}" x2="${b.left-wr.left}" y2="${b.top+b.height/2-wr.top}" stroke="${CGC[id]}" stroke-width="6" stroke-linecap="round"/>`});
+h+=`<line x1="${a.right-wr.left}" y1="${a.top+a.height/2-wr.top}" x2="${b.left-wr.left}" y2="${b.top+b.height/2-wr.top}" stroke="${CGC[id]}" stroke-width="7" stroke-linecap="round"/><circle cx="${a.right-wr.left}" cy="${a.top+a.height/2-wr.top}" r="7" fill="${CGC[id]}"/><circle cx="${b.left-wr.left}" cy="${b.top+b.height/2-wr.top}" r="7" fill="${CGC[id]}"/>`});
 sv.setAttribute('width',wr.width);sv.setAttribute('height',wr.height);sv.innerHTML=h}
 function cgPick(side,id){const g=CG;if(!g||g.done[id]&&g.done[id])return;const c=(side==='n'?g.notes:g.letters).find(x=>x.id===id);if(g.done[id])return;
 if(side==='n')tone(c.n);
@@ -439,12 +439,14 @@ if(nid===lid){g.done[nid]=1;g.sel=null;const gn=pgGain(g.tier,g.notes.find(x=>x.
 else{g.wrong++;const el=document.querySelector(`[data-${side==='n'?'n':'l'}="${id}"]`);g.sel=null;beep(30,false);cgDraw();const e2=document.querySelector(`[data-${side==='n'?'n':'l'}="${id}"]`);if(e2){e2.classList.add('shk')}}}
 function cgEnd(){const g=CG,xp=g.gain;party(0,'Alle koblet!');
 $('#app').innerHTML=`<div class="center"><div class="rowi">${ic('star',64)}</div><h1>Alle koblet!</h1><div class="top"><div class="pill">${g.wrong}<small>feil</small></div><div class="pill">+${xp}<small>XP</small></div></div>${g.wrong===0?'<div class="msg" style="color:var(--ok)">Uten en eneste feil!</div>':''}</div><button class="btn" onclick="connect()">Spill igjen</button><button class="btn g" onclick="HP=1;home()">Tilbake</button>`}
+// Toppfeltet i minispillene: tilbake, navn og hvor langt du har kommet
+const mgHud=(t,c)=>`<div class="qhud"><button class="x" onclick="HP=1;home()" aria-label="Tilbake">‹</button><div class="qt">${t}</div><span class="qcnt">${c}</span></div>`;
 // Notepar: finn noten og bokstaven som hører sammen
 let PG=null;
 function pairs(){const use=pairNotes(6),tier=pgTier(),cards=[];
 use.forEach((u,i)=>{cards.push({id:i,t:'n',n:u.n,c:u.c,l:N[u.n%7]});cards.push({id:i,t:'l',n:u.n,c:u.c,l:N[u.n%7]})});shuf(cards);PG={cards,open:[],lock:0,flips:0,done:0,np:use.length,tier,gain:0,keys:use.map(u=>u.c+u.n)};pgDraw()}
 function pgDraw(){const g=PG;window.scrollTo(0,0);
-$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="HP=1;home()">‹ Tilbake</button></span><span><b>Notepar</b></span><span></span><span>${g.done}/${g.np}</span></div><div class="note" style="margin:8px 0">Finn noten og bokstaven som hører sammen. ${g.tier} XP for hvert par!</div><div class="pgr" id="pgr" style="grid-template-columns:repeat(${g.np===6?3:2},minmax(0,1fr))">${g.cards.map((c,i)=>`<button class="pgc${c.up?' up':''}${c.ok?' ok':''}${c.t==='l'?' lt':''}" onclick="pgFlip(${i})">${c.up||c.ok?(c.t==='n'?staff(c.n,c.c).replace('0 0 300 150','14 20 190 116'):`<b>${c.l}</b>`):'<span class="pgq">?</span>'}</button>`).join('')}</div><div class="note">Vendinger: ${g.flips}</div>`}
+$('#app').innerHTML=`${mgHud('Notepar',`${g.done}/${g.np}`)}<div class="note" style="margin:8px 0">Finn noten og bokstaven som hører sammen. ${g.tier} XP for hvert par!</div><div class="pgr" id="pgr" style="grid-template-columns:repeat(${g.np===6?3:2},minmax(0,1fr))">${g.cards.map((c,i)=>`<button class="pgc${c.up?' up':''}${c.ok?' ok':''}${c.t==='l'?' lt':''}" onclick="pgFlip(${i})">${c.up||c.ok?(c.t==='n'?staff(c.n,c.c).replace('0 0 300 150','14 8 190 136'):`<b>${c.l}</b>`):'<span class="pgq">?</span>'}</button>`).join('')}</div><div class="note">Vendinger: ${g.flips}</div>`}
 function pgFlip(i){const g=PG,c=g.cards[i];if(!g||g.lock||c.up||c.ok)return;c.up=1;g.open.push(i);if(c.t==='n')tone(c.n);pgDraw();
 if(g.open.length<2)return;g.flips++;const[a,b]=g.open.map(x=>g.cards[x]);g.lock=1;
 if(a.id===b.id&&a.t!==b.t){a.ok=b.ok=1;a.up=b.up=0;g.done++;g.open=[];g.lock=0;const gn=pgGain(g.tier,g.keys[a.id]);g.gain+=gn;S.xp+=gn;S.tot+=gn;save();fan();{const f=document.createElement('div');f.className='dmg';f.textContent='+'+gn+' XP';f.style.left='calc(50% - 30px)';f.style.top='40%';f.style.color='#1fb86a';document.body.appendChild(f);setTimeout(()=>f.remove(),900)}if(g.done===g.np){setTimeout(pgEnd,500)}else pgDraw()}
@@ -458,10 +460,12 @@ function rebus(){if(!S.rebus||S.rebus.v!==5)S.rebus={done:{},v:5};const left=RBS
 const ln='CDEFGAH';let p=RBS[i][0];for(let k=0;k<p.length;k++){const c=p[k];if(c==='*')continue;if(ln.includes(c)){const l=c,q=ln.indexOf(l),ns=[28,29,30,31,32,33,34,35,36,37,38,39].filter(n=>n%7===q);tiles.push({t:'n',l,n:ns[Math.floor(Math.random()*ns.length)]})}else if(c===' ')tiles.push({t:'s'});else tiles.push({t:'l',l:c})}
 RBX={i,tiles,wrong:0,done:0};rbDraw()}
 function rbDraw(){const r=RBX,act=r.tiles.findIndex(t=>t.t==='n'&&!t.ok),words=[[]];r.tiles.forEach((t,k)=>{if(t.t==='s')words.push([]);else words[words.length-1].push([t,k])});
+const ch=r.tiles.filter(t=>t.t!=='s').length,sp=words.length-1,W=Math.min(innerWidth,480)-32,sw=Math.max(26,Math.min(52,Math.floor((W-sp*14-(ch-sp-1)*4)/ch)));
 window.scrollTo(0,0);
-$('#app').innerHTML=`<div class="hud"><span><button class="x" onclick="HP=1;home()">‹ Tilbake</button></span><span><b>Rebus</b></span><span></span><span>${r.tiles.filter(t=>t.ok).length}/${r.tiles.filter(t=>t.t==='n').length}</span></div>
-<div class="note" style="margin:8px 0 2px">Tips: ${RBS[r.i][1]}</div>
-<div class="rbw" id="rbw">${words.map(w=>`<div class="rbg">${w.map(([t,k])=>t.t==='l'?`<div class="rbt l">${t.l}</div>`:`<div class="rbt n${t.ok?' ok':''}${k===act?' act':''}">${t.ok?`<b>${t.l}</b>`:staff(t.n,'t').replace('0 0 300 150','14 22 190 110')}</div>`).join('')}</div>`).join('')}</div>
+$('#app').innerHTML=`${mgHud('Rebus',`${r.tiles.filter(t=>t.ok).length}/${r.tiles.filter(t=>t.t==='n').length}`)}
+<div class="rbtip">${ic('sparkle',22)}<span>Tips: ${RBS[r.i][1]}</span></div>
+<div class="rbw" id="rbw" style="--sw:${sw}px">${words.map(w=>`<div class="rbg">${w.map(([t,k])=>`<i class="rs${t.t==='l'?' l':t.ok?' ok':k===act?' act':' n'}">${t.t==='l'||t.ok?t.l:'♪'}</i>`).join('')}</div>`).join('')}</div>
+${act>=0?`<div class="card rbbig" onclick="tone(${r.tiles[act].n})" aria-label="Noten du skal lese">${staff(r.tiles[act].n,'t').replace('0 0 300 150','14 18 260 114')}</div>`:`<div class="rbword">${RBS[r.i][0]}</div>`}
 <div class="msg" id="msg">${act<0?'':'Hvilken note er den som blinker?'}</div><div class="keys" id="rbk">${R(0,6).map(i=>`<button onclick="rbA(${i},this)">${N[i]}</button>`).join('')}</div>`;
 if(act>=0)tone(r.tiles[act].n)}
 function rbA(i,b){const r=RBX;if(!r||r.done)return;const k=r.tiles.findIndex(t=>t.t==='n'&&!t.ok),t=r.tiles[k];
@@ -469,10 +473,10 @@ if(i!==t.n%7){r.wrong++;b.classList.add('bad');beep(t.n,false);$('#msg').textCon
 t.ok=1;tone(t.n);if(r.tiles.some(x=>x.t==='n'&&!x.ok)){rbDraw();return}
 r.done=1;const xp=50+(r.wrong===0?25:0);S.xp+=xp;S.tot+=xp;S.rebus.done[r.i]=1;save();rbDraw();
 $('#msg').innerHTML=`<span style="color:var(--ok)">Riktig!</span>`;fan();party(0,'Riktig!');
-$('#rbk').outerHTML=`<div class="top"><div class="pill">+${xp}<small>XP</small></div></div>${r.wrong===0?'<div class="msg" style="color:var(--ok)">Uten en eneste feil! +25 XP</div>':''}<button class="btn" onclick="rebus()">Neste rebus</button><button class="btn g" onclick="HP=1;home()">Tilbake</button>`}
+$('#rbk').outerHTML=`<div class="top rbres"><div class="pill">+${xp}<small>XP</small></div></div>${r.wrong===0?'<div class="msg" style="color:var(--ok)">Uten en eneste feil! +25 XP</div>':''}<button class="btn" onclick="rebus()">Neste rebus</button><button class="btn g" onclick="HP=1;home()">Tilbake</button>`}
 function duelQuit(){if(DU){DU.tm.forEach(clearTimeout);DU=null}if(DFM){DFM=0;path()}else{HP=4;home()}}
 function home(){RUN=null;M=null;if(DU){DU.tm.forEach(clearTimeout);DU=null}G=null;const done=S.last===day(),p=Math.min(S.xp/500,1)*100,ls=liveStreak();
-$('#app').innerHTML=`${HP===0?homeTop(ls):`<div class="hd"><div class="logo">${ic('note',30)}<h1>NoteQuest</h1></div><div style="display:flex;gap:8px;align-items:center"><div class="lvb">${ic('star',16)} Nivå ${lvl()}</div><button class="x" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div></div>`}
+$('#app').innerHTML=`${HP===0?homeTop(ls):`<div class="thd"><h1>${['Hjem','Øv fritt','Melodier','Egg og dyr','Dueller'][HP]}</h1><span class="hpl">${ic('star',20)}<b>Nivå ${lvl()}</b></span><button class="x hx" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x hx" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div>`}
 ${[`${homeMain()}
 `,`<h3>Velg nivå</h3><div id="lvs" class="grid cmp">${LV.map((l,i)=>`<button class="lv" style="--c:${l.col}" onclick="start(${i})"><span class="ib">${ic(l.ic,30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
 <h3>Akkorder</h3><div class="note" style="text-align:left">Du ser tre toner samtidig. Hvilken akkord er det?</div><div class="grid cmp">${AK.map((l,i)=>`<button class="lv" style="--c:#f0a500" onclick="start(${i},3)"><span class="ib">${ic('sparkle',30)}</span><b>${l.n}</b><small>${l.d}</small><span class="mx">${l.m}x XP</span></button>`).join('')}</div>
@@ -772,6 +776,8 @@ clearTimeout(G.tm);G.tm=setTimeout(()=>ans(-1),tl*1000)}playNote()}
 // Plasser noten: notelinja tegnes dobbelt så høy, så den er lett å treffe med fingeren.
 function pr(){const c=G.cur.c,base=c==='t'?30:18,P=pl(c,G.l);return{c,base,lo:Math.min(...P,base),hi:Math.max(...P,base+8)}}
 function bigStaff(){const{c,base,lo,hi}=pr(),Y=v=>20+(hi-v)*10,H=(hi-lo)*10+40,x=190,r=G.cur.n%7;let s='';
+// Nøkkelen er tegnet i dobbel størrelse og kan stikke ut over og under. y0 og y1 er hele området som må vises.
+const y0=Math.min(0,Y(base+8)-56),y1=Math.max(H,Y(base)+40);G.vb=[y0,y1-y0];
 for(let k=0;k<5;k++){const y=Y(base+2*k);s+=`<line x1="14" x2="290" y1="${y}" y2="${y}" stroke="currentColor" stroke-width="2"/>`}
 s+=`<g transform="translate(-16 ${Y(base+8)-100}) scale(2)">${CLEF[c]}</g>`;
 const head=(v,col,op)=>{const y=Y(v);let h='';for(let ly=Y(base)+20;ly<=y+.1;ly+=20)h+=`<line x1="${x-22}" x2="${x+22}" y1="${ly}" y2="${ly}" stroke="currentColor" stroke-width="2"/>`;
@@ -779,12 +785,12 @@ for(let ly=Y(base+8)-20;ly>=y-.1;ly-=20)h+=`<line x1="${x-22}" x2="${x+22}" y1="
 return h+`<ellipse cx="${x}" cy="${y}" rx="12" ry="8.5" transform="rotate(-20 ${x} ${y})" style="fill:${col}" opacity="${op||1}" stroke="currentColor" stroke-width="1.5"/>`};
 if(G.show)R(lo,hi).filter(v=>v%7===r&&v!==G.pos).forEach(v=>s+=head(v,'var(--ok)',.6));
 if(G.pos!=null)s+=head(G.pos,G.show===2?'var(--bad)':G.show===1?'var(--ok)':'var(--pri)');
-return`<svg viewBox="0 0 300 ${H}" role="img" aria-label="Notelinje" style="touch-action:manipulation">${s}</svg>`}
+return`<svg viewBox="0 ${y0} 300 ${y1-y0}" role="img" aria-label="Notelinje" style="touch-action:manipulation">${s}</svg>`}
 function drawPlace(){const r=G.cur.n%7;
 $('#app').innerHTML=`${hud()}<div class="msg" id="msg" style="font-size:22px">Hvor er ${N[r]}?</div><div class="card" id="st" onclick="placeTap(event)">${bigStaff()}</div>
 <div class="keys pk"><button onclick="nudge(1)" aria-label="Flytt opp">▲</button><button onclick="nudge(-1)" aria-label="Flytt ned">▼</button><button id="chk" onclick="check()" disabled>Sjekk</button></div><div class="note" style="margin-top:10px">Trykk på notelinja, og bruk pilene for å flytte noten.</div>`}
 function setPos(v){const{lo,hi}=pr();G.pos=Math.max(lo,Math.min(hi,v));$('#st').innerHTML=bigStaff();$('#chk').disabled=false;tone(G.pos)}
-function placeTap(e){if(G.busy)return;const b=$('#st svg').getBoundingClientRect(),{lo,hi}=pr(),H=(hi-lo)*10+40;setPos(Math.round(hi-((e.clientY-b.top)/b.height*H-20)/10))}
+function placeTap(e){if(G.busy)return;const b=$('#st svg').getBoundingClientRect(),{hi}=pr(),[y0,h]=G.vb;setPos(Math.round(hi-((e.clientY-b.top)/b.height*h+y0-20)/10))}
 function nudge(d){if(G.busy)return;setPos(G.pos==null?pr().base+4:G.pos+d)}
 function check(){if(G.busy||G.pos==null)return;ans(G.pos%7===G.cur.n%7?G.cur.n%7:-2)}
 // i: svaret (0-6), -1 = tiden gikk ut, -2 = feil plassering

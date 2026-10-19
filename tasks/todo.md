@@ -9,7 +9,8 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Forsiden: Hjem 1 med prioritert kort (streak brutt → nok XP til egg → dagens utfordring → neste mål) og bunnmeny med fem faner
 - [ ] Overskriftsraden på fanene (NoteQuest, Nivå, ?, tannhjul) brytes på to linjer på mobil. Ordnes når fanene får ny drakt
 - [x] Leksjonsintro, leksjonsrunde, Plasser noten og resultat («Du klarte det!»)
-- [ ] Øv fritt, Rebus (lange ord), Notepar og Koble notene
+- [x] Øv fritt, Rebus (lange ord), Notepar og Koble notene
+- [x] Overskriftsraden på fanene er nå én rad (fanens navn, Nivå, ?, tannhjul)
 - [ ] Melodier, Dueller og duell med kast per dyr
 - [ ] Egg og dyr: egg, kiste, klekking, samling og nytt merke
 - [ ] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
@@ -31,6 +32,14 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Runden har én rad øverst (tilbake, tittel/hjerter, Noter, Hjelp) og fremdrift med kombo under. Overskriften brytes ikke lenger på mobil.
 - Resultatet heter nå «Du klarte det!». Stjernene spretter inn én og én med stråler bak. «Prøv igjen!» er som før.
 - Testet i 375 px, lyst og mørkt: intro steg 1–3, riktig/feil svar med forklaring, Plasser noten med grønn Sjekk-knapp, 3 stjerner og tapt leksjon. Ingen konsollfeil.
+
+## Gjennomgang, steg 4 (Øv fritt og minispill)
+- Fanene har fått overskrift med fanens navn på én rad.
+- Rebus: hele ordet vises som små ruter øverst (lilla ♪ for noter, gul og blinkende for den du skal lese, grønn bokstav når den er klart, vanlige bokstaver som de er), og noten du skal lese vises stor under. Rutene krymper så alt får plass på én rad: HARDINGFELE (11 bokstaver) får 27 px ruter på 375 px. «HA DET GØY» viser mellomrom mellom ordene.
+- Notepar: lilla bakside med «?», kremfarget forside som vendes, grønt for par som er funnet.
+- Koble notene: kremfargede notekort, lilla bokstavkort, gul ring rundt det som er valgt og grønne streker med prikker i hver ende.
+- Nøkkelen kuttes aldri (Astrids ønske): Plasser noten viser nå hele den store nøkkelen, og trykk på notelinja treffer fortsatt riktig (12 av 12 testet). Notepar og Koble notene har fått mer plass over og under. Sjekket med et skript: nøkkelen ligger innenfor både notelinja og kortet i 152 tilfeller (alle Plasser noten-nivåene, notepar, koble, rebus, alle 20 leksjonene og alle nivåene). Skriptet fanget den gamle feilen.
+- Testet i 375 px, lyst og mørkt. Ingen konsollfeil.
 
 ---
 
