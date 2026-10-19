@@ -14,7 +14,7 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Øv fritt som på tavla: fargede bånd, nivåfliser i to kolonner med XP-merke, kort for akkorder, Plasser noten og Rebus/Notepar/Koble
 - [x] Dueller-fanen som på tavla: kveldshimmel, tårn med låste øverst, neste motstander med pulserende «Kjemp!», slåtte i grønt med «Slått»
 - [x] Navigasjon: ingen skjerm uten vei ut, og tidtakere fra en runde man har forlatt gjør ikke lenger noe
-- [ ] Melodier og selve duellen (kast per dyr)
+- [x] Melodier-fanen, melodirunden og selve duellen (kast per dyr) som på tavlene
 - [ ] Mobilens tilbakeknapp lukker appen i stedet for å gå et steg tilbake (appen bruker ikke nettleserhistorikken). Vurder å legge til
 - [ ] Egg og dyr: egg, kiste, klekking, samling og nytt merke
 - [ ] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
@@ -50,6 +50,12 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Navigasjon: sjekket 69 skjermer og dialoger med et skript (alle fanene, løypa, intro, møt noten, runder i alle fire modusene med hjelp/noter/resultat/tap, minispill med sluttskjerm, melodi, duell, klekking, dyredetaljer, merker, innstillinger, hjelp, XP-hjul, omvisning, barnemodus med kart, stell og kiste, duell-fanen låst/åpen/alt slått). Alle har en vei ut.
 - Fant og rettet en feil som fantes fra før: går man ut av en runde med tidsfrist (eller ut i pausen etter et svar), fortsatte tidtakeren. Startet man en ny runde, ble et «Tiden gikk ut» talt med der. Nå hører tidtakeren til runden sin. Testet: ny runde står på 0, ingen konsollfeil.
 - Mer plass nederst, så XP-hjulet ikke dekker de nederste flisene.
+
+## Gjennomgang, steg 6 (Melodier og duellen)
+- Melodier: lilla bakgrunn, brikker for vanskelighetsgrad (valgt er gul og hevet, låste har hengelås), infoboks med en liten notelinje, og melodikort med plate. Den første melodien du ikke har spilt, snurrer. Merkene er «Spilt ✓», XP og «NY» som vipper.
+- Melodirunden har samme toppfelt som leksjonene. Sluttskjermen har en stor plate som snurrer, med stråler bak.
+- Duellen: himmel og gress, motstanderen øverst til høyre (snudd mot deg), livet som 6 biter som blir røde på de to siste, noten i en snakkeboble med stjerner som blinker, og ditt dyr nederst til venstre. Kastene per dyr er som før (testet hjerte fra katten og is fra haren). «Du vant!» har stråler.
+- Testet i 375 px: Kjempetreff tar 2 liv (6/6 → 4/6), motstanderens treff tar 1 (6/6 → 5/6), seier gir sluttskjermen. Ingen konsollfeil.
 
 ---
 
