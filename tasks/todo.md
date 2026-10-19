@@ -17,7 +17,7 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Melodier-fanen, melodirunden og selve duellen (kast per dyr) som på tavlene
 - [ ] Mobilens tilbakeknapp lukker appen i stedet for å gå et steg tilbake (appen bruker ikke nettleserhistorikken). Vurder å legge til
 - [x] Klekking og åpning av kister som på tavla
-- [ ] Egg og dyr: egg, kiste, samling og nytt merke
+- [x] Egg og dyr: egg, kiste, Mine, samling og nytt merke
 - [ ] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
 - [ ] Barnemodus: hundehus (dag/natt), stell dyret og eventyrkartet
 - [ ] Sluttest: mobil (375 px), lys/mørk, gammel framgang, ingen konsollfeil. Så slå sammen med `main`
@@ -63,6 +63,14 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Under vises en rad med dyrene i egget: dyr du har, og «?» for dem du mangler (ingen silhuetter). Når dyret kommer ut, spretter det fram, og det nye dyret får gul ring i raden.
 - Kister bruker samme skjerm («Trykk på kisten 3 ganger», «Den knirker!»).
 - Testet i 375 px: fugleegg (1 av 7 → 2 av 7) og slagverkkiste. Ingen konsollfeil.
+
+## Gjennomgang, steg 8 (Egg og dyr)
+- Varm bakgrunn, fanene som segmentert knapp og XP-pille.
+- Egg og kister som kort: grønn «Kjøp» når du har råd, oransje «Klekk egget» som gløder (og egget vugger) når det venter, fremdrift med «N XP igjen», og grå kort med lås og «Låses opp på nivå N».
+- Samling: merker som gull-medaljer med glans (tatt) eller ring som viser fremdrift. Hver gruppe har tittel, «N av M», fremdrift (grønn når alt er samlet) og ruter der dyr du mangler bare er «?». Skinnende dyr får gull-ring.
+- Nytt merke: egen skjerm 1,4 s etter klekkingen. Medaljen faller ned og snurrer, stråler og konfetti, navnet, dyrene og «N av M merker». «Fortsett» viser neste nye merke hvis det er flere. «Se samlingen» går til Samling.
+- På smale skjermer viser nivå-pillen bare stjerne og tall, så fanens navn får plass.
+- Testet i 375 px: kjøp/klekk/fremdrift/låst, Samling, Mine, merke-skjermen via en ekte klekking og begge knappene. Ingen konsollfeil.
 
 ---
 
