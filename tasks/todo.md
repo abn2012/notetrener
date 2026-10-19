@@ -20,7 +20,8 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Egg og dyr: egg, kiste, Mine, samling og nytt merke
 - [x] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
 - [x] Barnemodus: hundehus (dag/natt), stell dyret og eventyrkartet
-- [ ] Sluttest: mobil (375 px), lys/mørk, gammel framgang, ingen konsollfeil. Så slå sammen med `main`
+- [x] Sluttest: mobil (375 px), lys/mørk, gammel framgang, ingen konsollfeil
+- [ ] Slå sammen med `main` (venter på ja)
 
 ## Gjennomgang, steg 1 (oppdeling)
 - `styles.css` og `app.js` er tatt ut byte for byte. Sammensatt igjen gir de nøyaktig den gamle `index.html`.
@@ -84,6 +85,13 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Stell dyret: himmel og gress (natt når dyret sover), stort dyr som spretter, snakkeboblen øverst («Jeg er glad!» osv.), mett-stolpe i grønt/oransje/rødt, fargede lekeknapper (Klapp, Kile, Ball), grønn «Gi mat», og navn med oransje «Lagre». Om natta er «Vekk dyret» lilla.
 - Eventyrkartet: soner med gradient, oransje skilt, kremfarget sti med skygge og blått toppfelt med «N av 20».
 - Testet i 375 px: dag og natt (klokka satt til 22 i testen), lek gir «+5 XP» og hjerter, kartet med slått sjef, kister og «?» for soner du ikke har nådd. Ingen konsollfeil.
+
+## Gjennomgang, sluttest
+- Lagret framgang: koden som laster og lagrer er tegn for tegn lik den på `main`. Testet fire lagringer: svært gammel uten versjon, versjon 4 (gamle kister, `anim:true`, et fjernet dyr som favoritt, barnemodus, mørk, rosa tema), tom (ny spiller) og en fersk. Alle lastes uten feil. Versjon 4 ble flyttet riktig (løypa til nye nummer, 2 kister = +500 XP, favoritten nullstilt, tema og mørk modus beholdt).
+- Alle skjermer: 79 skjermer og dialoger, både lyst og mørkt, i 375 px. Ingen konsollfeil, ingenting stikker ut på siden, og ingen sideveis rulling.
+- Funnet og rettet: nodene i den vanlige læringsløypa var fulle blokker som ble skjøvet sideveis og stakk 40 px ut (fantes fra før). Strålene bak resultatene og steg som glir inn kunne gi sideveis rulling et øyeblikk. Nå har nodene egen bredde, og siden klipper sideveis overløp.
+- Navigasjon: 58 skjermer og dialoger har en vei ut. Tidtakere fra en forlatt runde gjør ingenting.
+- **Ikke testet:** på ekte telefon (lyd, berøring, iOS Safari). `overflow-x:clip` virker i iOS 16 og nyere. Eldre nettlesere ignorerer det bare.
 
 ---
 
