@@ -5,8 +5,9 @@ Plan: bygge Eventyr-designen fra canvaset inn i appen, skjerm for skjerm. Bare u
 Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én knapp, ett kort») som forside, og fontene Lilita One og Nunito som filer i repoet.
 
 - [x] Del `index.html` i `styles.css` og `app.js` (ingen synlig endring)
-- [ ] Designsystem i `styles.css`: fonter (woff2), farger, himmelbakgrunn, 3D-knapper, kremkort med bånd, piller, bunnmeny og animasjoner. Avgjør hvordan mørk modus skal se ut
-- [ ] Forsiden: Hjem 1 med prioritert kort (streak brutt → nok XP til egg → dagens utfordring → neste mål) og bunnmeny med fem faner
+- [x] Designsystem i `styles.css`: fonter (woff2), farger, himmelbakgrunn, 3D-knapper, kremkort, piller, bunnmeny. Mørk modus = natthimmel
+- [x] Forsiden: Hjem 1 med prioritert kort (streak brutt → nok XP til egg → dagens utfordring → neste mål) og bunnmeny med fem faner
+- [ ] Overskriftsraden på fanene (NoteQuest, Nivå, ?, tannhjul) brytes på to linjer på mobil. Ordnes når fanene får ny drakt
 - [ ] Leksjonsintro, leksjonsrunde, Plasser noten og resultat («Du klarte det!»)
 - [ ] Øv fritt, Rebus (lange ord), Notepar og Koble notene
 - [ ] Melodier, Dueller og duell med kast per dyr
@@ -18,6 +19,12 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 ## Gjennomgang, steg 1 (oppdeling)
 - `styles.css` og `app.js` er tatt ut byte for byte. Sammensatt igjen gir de nøyaktig den gamle `index.html`.
 - Testet på localhost:8765: CSS-en lastes, lagret framgang (`nt1`, 2 leksjoner og katt) leses, Spill! åpner leksjon 3, og leksjonen starter med notetastene. Ingen konsollfeil.
+
+## Gjennomgang, steg 2 (designsystem og forside)
+- Testet på localhost:8765 i 375 px, både lyst og mørkt. Ingen konsollfeil.
+- Kortet på forsiden er riktig i alle tilstandene: vanlig dag (Dagens utfordring), nok XP (egg), streak brutt (Redd streaken), hele løypa klar (Neste mål, og Spill! går til Øv fritt) og ny spiller (Susi og «Velkommen!»).
+- Omvisningen markerer streak-pillen, løype-stripen og dagens utfordring. Arket flytter seg til toppen når det markerte ligger langt nede.
+- Fanene, leksjonene og dialogene har fått fonter, farger og 3D-knapper fra designsystemet, men ikke ny layout ennå.
 
 ---
 
