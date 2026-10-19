@@ -11,7 +11,11 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Leksjonsintro, leksjonsrunde, Plasser noten og resultat («Du klarte det!»)
 - [x] Øv fritt, Rebus (lange ord), Notepar og Koble notene
 - [x] Overskriftsraden på fanene er nå én rad (fanens navn, Nivå, ?, tannhjul)
-- [ ] Melodier, Dueller og duell med kast per dyr
+- [x] Øv fritt som på tavla: fargede bånd, nivåfliser i to kolonner med XP-merke, kort for akkorder, Plasser noten og Rebus/Notepar/Koble
+- [x] Dueller-fanen som på tavla: kveldshimmel, tårn med låste øverst, neste motstander med pulserende «Kjemp!», slåtte i grønt med «Slått»
+- [x] Navigasjon: ingen skjerm uten vei ut, og tidtakere fra en runde man har forlatt gjør ikke lenger noe
+- [ ] Melodier og selve duellen (kast per dyr)
+- [ ] Mobilens tilbakeknapp lukker appen i stedet for å gå et steg tilbake (appen bruker ikke nettleserhistorikken). Vurder å legge til
 - [ ] Egg og dyr: egg, kiste, klekking, samling og nytt merke
 - [ ] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
 - [ ] Barnemodus: hundehus (dag/natt), stell dyret og eventyrkartet
@@ -40,6 +44,12 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Koble notene: kremfargede notekort, lilla bokstavkort, gul ring rundt det som er valgt og grønne streker med prikker i hver ende.
 - Nøkkelen kuttes aldri (Astrids ønske): Plasser noten viser nå hele den store nøkkelen, og trykk på notelinja treffer fortsatt riktig (12 av 12 testet). Notepar og Koble notene har fått mer plass over og under. Sjekket med et skript: nøkkelen ligger innenfor både notelinja og kortet i 152 tilfeller (alle Plasser noten-nivåene, notepar, koble, rebus, alle 20 leksjonene og alle nivåene). Skriptet fanget den gamle feilen.
 - Testet i 375 px, lyst og mørkt. Ingen konsollfeil.
+
+## Gjennomgang, steg 5 (Øv fritt, Dueller og navigasjon)
+- Øv fritt og Dueller er bygd etter tavlene, med animasjonene: ikonet på Legendarisk svever, «Kjemp!» pulserer, og motstanderen spretter.
+- Navigasjon: sjekket 69 skjermer og dialoger med et skript (alle fanene, løypa, intro, møt noten, runder i alle fire modusene med hjelp/noter/resultat/tap, minispill med sluttskjerm, melodi, duell, klekking, dyredetaljer, merker, innstillinger, hjelp, XP-hjul, omvisning, barnemodus med kart, stell og kiste, duell-fanen låst/åpen/alt slått). Alle har en vei ut.
+- Fant og rettet en feil som fantes fra før: går man ut av en runde med tidsfrist (eller ut i pausen etter et svar), fortsatte tidtakeren. Startet man en ny runde, ble et «Tiden gikk ut» talt med der. Nå hører tidtakeren til runden sin. Testet: ny runde står på 0, ingen konsollfeil.
+- Mer plass nederst, så XP-hjulet ikke dekker de nederste flisene.
 
 ---
 
