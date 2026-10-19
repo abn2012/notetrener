@@ -29,5 +29,3 @@ NoteQuest er en app for å lære å lese noter. Det er **Astrid sin første app 
 ## Commit og push
 
 Etter hver endring skal du committe og pushe til `main` uten å spørre først. Det betyr at endringen havner på nettsiden med en gang, så test i nettleseren før du committer. Skriv commit-meldingen på norsk, og forklar hva som er endret.
-
-Unntak: Den nye Eventyr-designen bygges på grenen `redesign-eventyr`. Commit og push dit underveis, og slå den sammen med `main` først når hele designen henger sammen.

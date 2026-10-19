@@ -1,4 +1,4 @@
-# Eventyr-designen (grenen `redesign-eventyr`)
+# Eventyr-designen (slått sammen med `main`)
 
 Plan: bygge Eventyr-designen fra canvaset inn i appen, skjerm for skjerm. Bare utseende og bevegelse endres: spillformer, regler, tekster og tall er de samme som i dag. Lagret framgang må virke som før. Grenen slås sammen med `main` først når alt henger sammen.
 
@@ -21,7 +21,7 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [x] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
 - [x] Barnemodus: hundehus (dag/natt), stell dyret og eventyrkartet
 - [x] Sluttest: mobil (375 px), lys/mørk, gammel framgang, ingen konsollfeil
-- [ ] Slå sammen med `main` (venter på ja)
+- [x] Slått sammen med `main` og publisert
 
 ## Gjennomgang, steg 1 (oppdeling)
 - `styles.css` og `app.js` er tatt ut byte for byte. Sammensatt igjen gir de nøyaktig den gamle `index.html`.
