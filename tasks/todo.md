@@ -18,7 +18,7 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - [ ] Mobilens tilbakeknapp lukker appen i stedet for å gå et steg tilbake (appen bruker ikke nettleserhistorikken). Vurder å legge til
 - [x] Klekking og åpning av kister som på tavla
 - [x] Egg og dyr: egg, kiste, Mine, samling og nytt merke
-- [ ] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
+- [x] Dialoger: innstillinger, hjelp, omvisning og XP-oversikt
 - [ ] Barnemodus: hundehus (dag/natt), stell dyret og eventyrkartet
 - [ ] Sluttest: mobil (375 px), lys/mørk, gammel framgang, ingen konsollfeil. Så slå sammen med `main`
 
@@ -71,6 +71,13 @@ Avgjort: tre filer (index.html, styles.css, app.js), egen gren, Hjem 1 («én kn
 - Nytt merke: egen skjerm 1,4 s etter klekkingen. Medaljen faller ned og snurrer, stråler og konfetti, navnet, dyrene og «N av M merker». «Fortsett» viser neste nye merke hvis det er flere. «Se samlingen» går til Samling.
 - På smale skjermer viser nivå-pillen bare stjerne og tall, så fanens navn får plass.
 - Testet i 375 px: kjøp/klekk/fremdrift/låst, Samling, Mine, merke-skjermen via en ekte klekking og begge knappene. Ingen konsollfeil.
+
+## Gjennomgang, steg 9 (dialogene)
+- Innstillinger: oransje bånd over kortet, lukkeknapp, hvite rader med ikon og 3D-brytere (På/Av med kule som glir), lilla «Spill», Utseende som tre knapper og temafargene som ruter. «Ferdig» er grønn.
+- Hjelp: Susi titter over kanten, sidens navn står på et oransje bånd med ikon, og «Skjønner» er grønn.
+- Omvisning: steg uten markering er et kort med Susi over, og steg med markering er et ark med ikon, «Du er nå på siden …», «Hopp over» og «Neste» side om side. Prikken for steget du er på er lengre.
+- XP-oversikten: stjerne med stråler og stort tall, hvite rader med nivåring, neste mål og dagens utfordring med fremdrift, og streak/samling i to kolonner. «Gå til egg og dyr» er oransje.
+- Testet i 375 px, lyst og mørkt: bryterne (lyd av/på), utseende og temafarge virker. Ingen konsollfeil.
 
 ---
 

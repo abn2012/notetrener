@@ -260,15 +260,13 @@ let HP=0;
 // Trykker man på hjulet, kommer det opp en oversikt. (Ikke under oppgaver med tidsfrist, så klokka ikke går mens man leser.)
 function wheelInfo(){let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
 o.onclick=e=>{if(e.target===o)o.remove()};
-const g=goal(),q=dq(),c=DQS[q.g],v=Math.min(q[c.s],c.n),into=S.tot%1000,bar=(w,col)=>`<div class="bar" style="margin:6px 0"><i style="width:${w}%;${col?'background:'+col:''}"></i></div>`,
-row=(t,x)=>`<div style="text-align:left;margin:12px 0 0"><b>${t}</b>${x}</div>`;
-o.innerHTML=`<div class="tbox"><div style="font-size:44px;font-weight:900;line-height:1">${S.xp}</div><div class="note" style="margin:2px 0 4px">XP å bruke</div>
-${row('Nivå '+lvl(),bar(into/10)+`<div class="note" style="text-align:left;margin:0">Ringen på hjulet viser dette: ${1000-into} XP til nivå ${lvl()+1}. Du har tjent ${S.tot} XP totalt.</div>`)}
-${row('Neste mål',`<div class="note" style="text-align:left;margin:2px 0">${g.txt}</div>`+(g.a?bar(S.xp*100/g.a.c):''))}
-${row('Dagens utfordring',`<div class="note" style="text-align:left;margin:2px 0">${c.t}: ${q.done?'klart! ✓':v+' av '+c.n}</div>`+bar(v*100/c.n,q.done?'var(--ok)':''))}
-${row('Streak',`<div class="note" style="text-align:left;margin:2px 0">${ic('flame',16)} ${liveStreak()} dager på rad · rekord ${S.best}</div>`)}
-${row('Samling',`<div class="note" style="text-align:left;margin:2px 0">${ANIM.filter(([k])=>S.pets[k]).length} av ${ANIM.length} dyr · ${ALLI.filter(([k])=>S.pets[k]).length} av ${ALLI.length} instrumenter</div>`)}
-${$('.nav')?'<button class="btn" onclick="this.closest(\'.tut\').remove();HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til egg og dyr</button>':''}<button class="btn g" onclick="this.closest('.tut').remove()">Lukk</button></div>`}
+const g=goal(),q=dq(),c=DQS[q.g],v=Math.min(q[c.s],c.n),into=S.tot%1000,bar=(w,cl)=>`<div class="ebar xbar ${cl||''}"><i style="width:${w}%"></i></div>`;
+o.innerHTML=`<div class="tbox dlg xdlg"><div class="xtop"><span class="xrays"></span>${ic('star',64)}<div class="xnum">${S.xp}</div><div class="xsub">XP å bruke</div></div>
+<div class="xrow"><span class="xring" style="--p:${into/10}%"><span>${lvl()}</span></span><div><b>Nivå ${lvl()}</b><small>Ringen på hjulet viser dette: ${1000-into} XP til nivå ${lvl()+1}. Du har tjent ${S.tot} XP totalt.</small></div></div>
+<div class="xrow"><span class="xico">${ic('egg',34)}</span><div><b>Neste mål</b><small>${g.txt}</small>${g.a?bar(S.xp*100/g.a.c):''}</div></div>
+<div class="xrow"><span class="xico gold">${ic('sparkle',34)}</span><div><b>Dagens utfordring</b><small>${c.t}: ${q.done?'klart! ✓':v+' av '+c.n}</small>${bar(v*100/c.n,q.done?'full':'pur')}</div></div>
+<div class="xtwo"><div class="xrow"><div><b>${ic('flame',22)} Streak</b><small>${liveStreak()} dager på rad · rekord ${S.best}</small></div></div><div class="xrow"><div><b>Samling</b><small>${ANIM.filter(([k])=>S.pets[k]).length} av ${ANIM.length} dyr · ${ALLI.filter(([k])=>S.pets[k]).length} av ${ALLI.length} instrumenter</small></div></div></div>
+${$('.nav')?'<button class="btn hot" onclick="this.closest(\'.tut\').remove();HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til egg og dyr</button>':''}<button class="btn g" onclick="this.closest('.tut').remove()">Lukk</button></div>`}
 function updWheel(){let w=$('#wheel');if(!w){w=document.createElement('button');w.id='wheel';w.className='wheel';w.onclick=wheelInfo;document.body.appendChild(w)}
 const pc=(S.tot%1000)/1000,C=2*Math.PI*27,n=String(S.xp),nav=!!$('.nav');
 const sb=$('.stickb');w.style.bottom=nav?($('.nav').offsetHeight+12)+'px':sb?(sb.offsetHeight+10)+'px':'calc(12px + env(safe-area-inset-bottom,0px))';w.style.pointerEvents=(G&&G.l&&G.l.t&&!nav)||DU?'none':'auto';w.setAttribute('aria-label','Du har '+S.xp+' XP');
@@ -619,11 +617,21 @@ if(k==='ear'){piano(hz(28),0,.6);piano(hz(n),.9,.6)}else if(k==='chord')[n,n+2,n
 function testLyd(b){const t=b.textContent;let m;try{unlock();const c=pf();if(S.mute)m='Lyd er Av';else{piano(hz(30),0,.6);piano(hz(32),.5,.6);m=c.state==='running'?'Hørte du den?':'Lyden er på pause. Trykk igjen'}}catch(e){m='Nettleseren støtter ikke lyd'}
 b.textContent=m;b.style.minWidth='0';setTimeout(()=>{b.textContent=t},3500)}
 // Barnemodus: læringsløypa blir et eventyrkart, og dyrene kan få navn, bli sultne og få mat.
-function kidMode(b){S.kid=!S.kid;save();b.textContent=S.kid?'På':'Av';b.classList.toggle('on',!!S.kid);home()}
-function mute(b){S.mute=!S.mute;save();b.textContent=S.mute?'Av':'På';b.classList.toggle('on',!S.mute)}
+// Brytere som ser ut som 3D-knapper med en kule som flytter seg
+const tgl=(on,act)=>`<button class="tgl${on?' on':''}" role="switch" aria-checked="${on}" onclick="${act}">${on?'På':'Av'}<i></i></button>`;
+function tgSet(b,on){b.classList.toggle('on',on);b.setAttribute('aria-checked',on);b.innerHTML=(on?'På':'Av')+'<i></i>'}
+function kidMode(b){S.kid=!S.kid;save();tgSet(b,!!S.kid);home()}
+function mute(b){S.mute=!S.mute;save();tgSet(b,!S.mute)}
 function settings(){let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
 o.onclick=e=>{if(e.target===o)o.remove()};
-o.innerHTML=`<div class="tbox" style="text-align:left"><h2 style="margin:0 0 14px">Innstillinger</h2><div class="srow"><b>Lyd</b><button class="x${S.mute?'':' on'}" style="min-width:70px" onclick="mute(this)">${S.mute?'Av':'På'}</button></div><div class="srow"><b>Barnemodus</b><button class="x${S.kid?' on':''}" style="min-width:70px" onclick="kidMode(this)">${S.kid?'På':'Av'}</button></div><div class="srow"><b>Hjelpebokstaver</b><button class="x${S.assist?' on':''}" style="min-width:70px" onclick="S.assist=!S.assist;save();settings()">${S.assist?'På':'Av'}</button></div><div class="srow"><b>Test lyden</b><button class="x" style="min-width:70px" onclick="testLyd(this)">Spill</button></div><b>Utseende</b><div class="mvs lk2" style="grid-template-columns:repeat(3,1fr);margin:8px 0 14px">${[['','Auto'],['light','Lys'],['dark','Mørk']].map(([v,t])=>`<button class="x${(S.look||'')===v?' on':''}" data-v="${v}" onclick="setLook('${v}')">${t}</button>`).join('')}</div><b>Temafarge</b><div class="sw" style="justify-content:flex-start;padding:10px 0 14px">${THEMES.map(c=>`<button class="swb${c===S.theme?' on':''}" style="background:${c}" onclick="setTheme('${c}',this)" aria-label="Velg farge"></button>`).join('')}</div><button class="btn" onclick="document.querySelector('.tut').remove()">Ferdig</button></div>`}
+o.innerHTML=`<div class="tbox dlg sdlg"><div class="dttl">Innstillinger</div><button class="dx" onclick="document.querySelector('.tut').remove()" aria-label="Lukk">${ic('x',18)}</button>
+<div class="srow2"><span class="sico">${ic('spk',28)}</span><b>Lyd</b>${tgl(!S.mute,'mute(this)')}</div>
+<div class="srow2"><span class="sico">${pet('dog',30)}</span><b>Barnemodus</b>${tgl(!!S.kid,'kidMode(this)')}</div>
+<div class="srow2"><span class="sico let">E</span><b>Hjelpebokstaver</b>${tgl(!!S.assist,'S.assist=!S.assist;save();settings()')}</div>
+<div class="srow2"><span class="sico">${ic('note',28)}</span><b>Test lyden</b><button class="sbtn" onclick="testLyd(this)">Spill</button></div>
+<div class="sblk"><b>Utseende</b><div class="seg lk2">${[['','Auto'],['light','Lys'],['dark','Mørk']].map(([v,t])=>`<button class="x${(S.look||'')===v?' on':''}" data-v="${v}" onclick="setLook('${v}')">${t}</button>`).join('')}</div></div>
+<div class="sblk"><b>Temafarge</b><div class="sw2">${THEMES.map(c=>`<button class="swb${c===S.theme?' on':''}" style="--c:${c}" onclick="setTheme('${c}',this)" aria-label="Velg farge"></button>`).join('')}</div></div>
+<button class="btn ok" onclick="document.querySelector('.tut').remove()">Ferdig</button></div>`}
 const R=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
 const PATH=[
 {n:'Under midtlinja: linjer',c:['t'],pool:{t:[30,32]},nw:[['t',30],['t',32]],tip:'Midtlinja i G-nøkkelen er den tredje linjen. Vi starter under den! De to linjene under midtlinja heter E (nederst) og G. G-nøkkelen krøller seg rundt G.',m:1,t:0},
@@ -755,7 +763,9 @@ if(i===0&&!o.dataset.on){TH=HP;o.dataset.on=1}o.onclick=null;
 const t=TUT[i];document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));HP=t.tab;TUTK=t.el==='#dqc'?'dq':null;home();TUTK=null;window.scrollTo(0,0);o.classList.toggle('nv',!!t.el);o.style.placeItems='';requestAnimationFrame(()=>{const e=document.querySelector('.hl'),bx=o.querySelector('.tbox');if(e&&bx&&e.getBoundingClientRect().bottom>innerHeight-bx.offsetHeight-16)o.style.placeItems='start center'});
 if(t.el){const e=document.querySelector(t.el);if(e){e.classList.add('hl');e.scrollIntoView({block:'start'})}}
 const last=i===TUT.length-1;
-o.innerHTML=`<div class="tbox">${t.el?`<div class="mx" style="--c:var(--pri);display:inline-block;margin-bottom:4px">Du er nå på siden «${['Hjem','Øv fritt','Melodier','Egg og dyr','Dueller'][t.tab]}»</div>`:''}<div class="tic">${ic(t.ic,64)}</div><h2>${t.h}</h2><p>${t.t}</p>${i>0?`<div class="dots">${TUT.slice(1).map((_,k)=>`<i class="${k+1===i?'on':''}"></i>`).join('')}</div>`:''}<button class="btn" onclick="${last?'tutEnd()':`tutor(${i+1})`}">${i===0?'Vis meg rundt':last?'Kom i gang':'Neste'}</button>${i===0?'<button class="btn g" onclick="tutEnd()">Nei takk</button>':last?'':'<button class="btn g" onclick="tutEnd()">Hopp over</button>'}${i>1?`<button class="x" style="margin-top:10px" onclick="tutor(${i-1})">‹ Tilbake</button>`:''}</div>`}
+const dots=i>0?`<div class="dots">${TUT.slice(1).map((_,k)=>`<i class="${k+1===i?'on':''}"></i>`).join('')}</div>`:'',back=i>1?`<button class="tbk" onclick="tutor(${i-1})">‹ Tilbake</button>`:'';
+o.innerHTML=t.el?`<div class="tbox dlg tsheet"><div class="tsh"><span class="tsi">${ic(t.ic,32)}</span><div><span class="tpg">Du er nå på siden «${['Hjem','Øv fritt','Melodier','Egg og dyr','Dueller'][t.tab]}»</span><h2>${t.h}</h2></div></div><p class="dtxt">${t.t}</p>${dots}<div class="tsb"><button class="btn g" onclick="tutEnd()">Hopp over</button><button class="btn ok" onclick="tutor(${i+1})">Neste</button></div>${back}</div>`
+:`<div class="tbox dlg peek"><span class="hpeek">${susi(110)}</span><h2>${t.h}</h2><p class="dtxt">${t.t}</p>${dots}<button class="btn ok" onclick="${last?'tutEnd()':`tutor(${i+1})`}">${i===0?'Vis meg rundt':last?'Kom i gang':'Neste'}</button>${i===0?'<button class="btn g" onclick="tutEnd()">Nei takk</button>':last?'':'<button class="btn g" onclick="tutEnd()">Hopp over</button>'}${back}</div>`}
 // Hjelp for siden du er på (? øverst). Der kan man også se hele omvisningen.
 const HELP=[{ic:'flame',h:'Hjem',t:'Her ser du streaken din, dagens utfordring og neste mål. Trykk på Læringsløype for å lære steg for steg. Fullfør en runde hver dag for å holde streaken i live!'},
 {ic:'bolt',h:'Øv fritt',t:'Velg et nivå og øv så mye du vil. Jo vanskeligere nivå, jo mer XP får du. Her finner du også akkorder og Plasser noten, der du setter noten på linja selv.'},
@@ -764,7 +774,7 @@ const HELP=[{ic:'flame',h:'Hjem',t:'Her ser du streaken din, dagens utfordring o
 {ic:'trophy',h:'Dueller',t:'Her kjemper dyret ditt mot datamotstandere. Riktig svar tar liv fra dem, og du får et gratis egg ved første seier over en motstander, og så ved 10., 20. seier og så videre.'}];
 function helpPage(){let o=document.querySelector('.tut');if(!o){o=document.createElement('div');o.className='tut';document.body.appendChild(o)}
 o.onclick=e=>{if(e.target===o)o.remove()};const t=HELP[HP];
-o.innerHTML=`<div class="tbox"><div class="tic">${ic(t.ic,64)}</div><h2>${t.h}</h2><p>${t.t}</p><button class="btn" onclick="this.closest('.tut').remove()">Skjønner</button><button class="btn g" onclick="tutor(0)">Vis hele omvisningen</button></div>`}
+o.innerHTML=`<div class="tbox dlg peek"><span class="hpeek">${susi(120)}</span><div class="dttl ico">${ic(t.ic,26)}${t.h}</div><p class="dtxt">${t.t}</p><button class="btn ok" onclick="this.closest('.tut').remove()">Skjønner</button><button class="btn g" onclick="tutor(0)">Vis hele omvisningen</button></div>`}
 function tutEnd(){S.tut=1;save();document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));const o=document.querySelector('.tut');if(o)o.remove();HP=TH;home();window.scrollTo(0,0)}
 function rng(c,l){if(l.r)return l.r[c];return l.c.length>1?(c==='t'?[26,40]:[16,30]):[l.lo,l.hi]}
 function tot(){const l=G.l;return l.c.reduce((s,k)=>s+pl(k,l).length,0)}
