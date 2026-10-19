@@ -282,10 +282,10 @@ return`<button id="go" class="btn go" onclick="${nx>=0?`intro(${nx})`:'setHP(1)'
 // Figuren er favorittdyret (eller det første dyret du fikk). Har du ingen dyr ennå, er det Susi.
 let TUTK=null;
 function homeMascot(s){const k=S.fav&&S.pets[S.fav]?S.fav:(ANIM.find(([x])=>S.pets[x])||[])[0];return{k,svg:k?petA(k,s):susi(s)}}
-function homeTop(ls){return`<div class="htop"><span class="hpl" id="hstk" title="Streak">${ic('flame',22)}<b>${ls}</b></span><span class="hpl">${ic('star',20)}<b>Nivå ${lvl()}</b></span><span style="flex:1"></span><button class="x hx" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x hx" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div>`}
+function homeTop(ls){return`<div class="htop"><span class="hpl" id="hstk" title="Streak">${ic('flame',22)}<b>${ls}</b></span><button class="hpl hxpb" onclick="wheelInfo()" aria-label="Nivå ${lvl()}, ${S.xp} XP">${ic('star',20)}<b>${S.xp}</b><small>XP</small><i class="hlv">${lvl()}</i></button><span style="flex:1"></span><button class="x hx" onclick="helpPage()" aria-label="Hjelp">?</button><button class="x hx" onclick="settings()" aria-label="Innstillinger">${ic('gear',20)}</button></div>`}
 function homeCard(){const lost=S.lost&&S.lostDay===day()?S.lost:liveStreak()===0&&S.streak>0?S.streak:0;
 const k=TUTK||(lost?'fix':EGGS.some(e=>!e.ch&&e.c&&unlocked(e)&&S.xp>=e.c)?'egg':!dq().done?'dq':'goal');
-if(k==='fix'&&lost)return fixCard();
+if(k==='fix'&&lost){const fc=fixCost(),ok=S.xp>=fc;return`<div class="card hcard"><span class="hci" style="filter:grayscale(1);opacity:.6">${ic('flame',36)}</span><b>Streaken på ${lost} ${lost===1?'dag':'dager'} ble brutt<small>${ok?'Vil du redde den for '+fc+' XP?':'Du trenger '+(fc-S.xp)+' XP til for å redde den'}</small></b><button class="btn hot" ${ok?'':'disabled'} onclick="fixStreak()">Redd · ${fc} XP</button></div>`}
 if(k==='egg')return`<div class="card hcard"><span class="hci">${ic('egg',40)}</span><b>Du har nok XP til et egg!</b><button class="btn" onclick="HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til eggene</button></div>`;
 if(k==='dq')return dqCard();
 return goalCard()}

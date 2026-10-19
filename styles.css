@@ -191,7 +191,7 @@ body.qk #app{animation:qk .4s}@keyframes qk{20%{transform:translate(-5px,3px)}40
 .hgo2{font-family:var(--fb);font-weight:900;font-size:15px;background:rgba(0,0,0,.18);border-radius:10px;padding:2px 10px;text-shadow:none}
 .hpath{display:flex;align-items:center;gap:8px;width:calc(100% - 40px);margin:14px auto 0;border:0;border-radius:14px;background:var(--glass);color:#fff;font:inherit;font-weight:900;font-size:13px;padding:8px 12px;cursor:pointer}
 .hpb2{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.3);overflow:hidden}.hpb2 i{display:block;height:100%;background:var(--gold)}
-.hcard{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.hcard>b{flex:1;font-size:16px}.hcard .btn{margin-top:4px}.hci{display:flex}
+.hcard{display:flex;align-items:center;gap:10px;padding:10px 12px}.hcard>b{flex:1;min-width:0;font-size:15px;line-height:1.2}.hcard .btn{width:auto;flex:none;margin:0;padding:10px 12px;font-size:16px;border-bottom-width:5px}.hci{display:flex;flex:none}.hci svg{width:36px;height:36px}
 /* Leksjonsintro: steg-prikker øverst, oransje bånd med navnet, Susi forklarer */
 .lhd{display:flex;align-items:center;gap:10px}.lhd .x{min-width:44px;font-family:var(--fd);font-weight:400;font-size:22px;padding:6px 12px}
 .ldots{flex:1;display:flex;gap:6px}.ldots i{flex:1;height:12px;border-radius:6px;background:var(--glass);box-shadow:inset 0 -3px 0 rgba(0,0,0,.12)}.ldots i.on{background:var(--gold)}
@@ -405,3 +405,14 @@ body.qk #app{animation:qk .4s}@keyframes qk{20%{transform:translate(-5px,3px)}40
 .kmhd .x{background:rgba(255,255,255,.18);border-bottom-color:rgba(0,0,0,.2);color:#fff}.kmn{display:inline-flex;align-items:center;gap:6px;background:var(--glass);color:#fff;border-radius:16px;padding:8px 14px;font-family:var(--fd);font-size:20px}
 /* Store stråler og innglidende steg skal ikke gi sideveis rulling på mobil */
 html,body{overflow-x:clip}
+/* Forsiden tilpasser seg skjermhøyden, så kortet under Spill! får plass over menyen på telefoner med kort skjerm.
+   XP står i toppen her (med nivået som gult merke), så XP-hjulet skjules på forsiden. */
+.hxpb{position:relative;border:0;cursor:pointer;font:inherit;font-family:var(--fd);font-size:18px}.hxpb small{font-family:var(--fb);font-size:11px;font-weight:900;opacity:.85}
+.hlv{position:absolute;right:-8px;top:-9px;min-width:22px;height:22px;border-radius:11px;background:#ffc93c;color:#2b2140;font:normal 900 12px var(--fb);display:grid;place-items:center;padding:0 5px;border:2px solid #fff}
+body:has(.hscene) #wheel{display:none}
+.hscene{height:clamp(150px,31vh,290px);height:clamp(150px,31dvh,290px)}
+.hmas svg{width:clamp(96px,18vh,170px);width:clamp(96px,18dvh,170px);height:auto}
+.hmas{margin-bottom:clamp(8px,2dvh,16px)}.hbub{font-size:clamp(15px,2.4dvh,17px);margin-bottom:clamp(12px,2.2dvh,20px)}
+.hgo{margin-top:clamp(8px,1.8dvh,16px);padding:clamp(10px,1.8dvh,16px) 10px}.hgo1{font-size:clamp(34px,6dvh,44px)}.hgo1 svg{width:clamp(26px,4.5dvh,34px);height:auto}
+.hpath{margin-top:clamp(8px,1.6dvh,14px)}
+.hcard>b small{display:block;font-family:var(--fb);font-size:12px;font-weight:800;color:var(--mut);margin-top:2px}
