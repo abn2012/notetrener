@@ -269,7 +269,7 @@ o.innerHTML=`<div class="tbox dlg xdlg"><div class="xtop"><span class="xrays"></
 ${$('.nav')?'<button class="btn hot" onclick="this.closest(\'.tut\').remove();HP=3;TAB=1;home();window.scrollTo(0,0)">Gå til egg og dyr</button>':''}<button class="btn g" onclick="this.closest('.tut').remove()">Lukk</button></div>`}
 function updWheel(){let w=$('#wheel');if(!w){w=document.createElement('button');w.id='wheel';w.className='wheel';w.onclick=wheelInfo;document.body.appendChild(w)}
 const pc=(S.tot%1000)/1000,C=2*Math.PI*27,n=String(S.xp),nav=!!$('.nav');
-const sb=$('.stickb');w.style.bottom=nav?($('.nav').offsetHeight+12)+'px':sb?(sb.offsetHeight+10)+'px':'calc(12px + env(safe-area-inset-bottom,0px))';w.style.pointerEvents=(G&&G.l&&G.l.t&&!nav)||DU?'none':'auto';w.setAttribute('aria-label','Du har '+S.xp+' XP');
+const sb=$('.stickb');w.style.bottom=nav?($('.nav').offsetHeight+12)+'px':sb?(sb.offsetHeight+10)+'px':'calc(12px + env(safe-area-inset-bottom,0px))';w.style.pointerEvents=(G&&G.l&&G.l.t&&!nav)||DU?'none':'auto';w.style.display=DU?'none':'';w.setAttribute('aria-label','Du har '+S.xp+' XP');
 w.innerHTML=`<svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="27" fill="none" stroke="var(--line)" stroke-width="6"/><circle cx="32" cy="32" r="27" fill="none" stroke="var(--pri)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${(C*pc).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span style="font-size:${n.length>4?11:n.length>3?14:17}px">${n}</span><small>XP</small></b><span class="wl">${lvl()}</span>`}
 // Rød prikk bare på Egg og dyr, når du har nok XP til å kjøpe noe eller har et egg som venter: [Hjem, Øv, Melodier, Dyr]
 const dots=()=>[false,false,false,EGGS.some(e=>S[e.k]>0||(e.c&&unlocked(e)&&S.xp>=e.c)),false];
