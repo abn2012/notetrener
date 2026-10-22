@@ -786,8 +786,11 @@ o.innerHTML=`<div class="tbox dlg peek"><span class="hpeek">${susi(120)}</span><
 function tutEnd(){S.tut=1;save();document.querySelectorAll('.hl').forEach(e=>e.classList.remove('hl'));const o=document.querySelector('.tut');if(o)o.remove();HP=TH;home();window.scrollTo(0,0)}
 function rng(c,l){if(l.r)return l.r[c];return l.c.length>1?(c==='t'?[26,40]:[16,30]):[l.lo,l.hi]}
 function tot(){const l=G.l;return l.c.reduce((s,k)=>s+pl(k,l).length,0)}
-function fan(){[28,32,35,39,42].forEach((n,i)=>setTimeout(()=>beep(n,true),i*120))}
-function party(big,msg){const o=document.createElement('div');o.className='ov';const C=['#ff4d6d','#ffb703','#2ed585','#4dabf7','#9b7bff','#ff8a1f'];let h='';
+function fan(){if(Date.now()-TADA<1500)return;[28,32,35,39,42].forEach((n,i)=>setTimeout(()=>beep(n,true),i*120))}
+// Liten gratulasjonsmelodi når du klarer noe: tre raske toner opp og en glad akkord til slutt
+let TADA=0;
+function tada(){if(S.mute||Date.now()-TADA<1500)return;TADA=Date.now();try{[[35,0,.32],[37,.12,.32],[39,.24,.32],[37,.36,.26],[39,.48,.3],[42,.66,.42],[39,.66,.24],[35,.66,.22]].forEach(([n,t,v])=>piano(hz(n),t,v))}catch(e){}}
+function party(big,msg){tada();const o=document.createElement('div');o.className='ov';const C=['#ff4d6d','#ffb703','#2ed585','#4dabf7','#9b7bff','#ff8a1f'];let h='';
 for(let i=0;i<(big?90:50);i++)h+=`<i class="cf" style="left:${Math.random()*100}%;background:${C[i%6]};animation-duration:${1.8+Math.random()*1.8}s;animation-delay:${Math.random()*.8}s"></i>`;
 for(let i=0;i<(big?40:16);i++)h+=`<span class="st" style="left:${Math.random()*100}%;animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.8}s">${ic(i%3?'star':'sparkle',18+Math.floor(Math.random()*20))}</span>`;
 if(big){const R=['#ef4565','#ff8a1f','#ffd23f','#2ed585','#4dabf7','#7c4dff','#c64dff'];let g='transparent 0 calc(var(--w)*.2)';R.forEach((c,k)=>{g+=`,${c} calc(var(--w)*${(.2+k*.04).toFixed(2)}) calc(var(--w)*${(.24+k*.04).toFixed(2)})`});g+=',transparent 0';h+=`<div class="rb" style="--g:radial-gradient(circle at 50% 100%,${g})"></div>`}
@@ -859,7 +862,7 @@ else{if(!G.p)G.hp--;RUN.combo=0;RUN.seen.clear();m.textContent=pm?(G.p?'Ikke hel
 if(!ok){if(G.p||pm)tone(G.cur.n);else beep(G.cur.n,false)}save();
 const g=G;setTimeout(()=>{if(G!==g)return;(G.hp<=0||G.q>=G.Q)?end():next()},ok?650:(G.p||pm?2200:1300))}
 function end(){window.scrollTo(0,0);const nmBad=G.nm?Object.values(G.nm).filter(e=>e.ok<2):[],win=G.p?G.ok>=Math.ceil(G.Q/2)&&!nmBad.length:G.hp>0,st=!win?0:G.ok>=G.Q?3:G.ok>=G.Q*.8?2:1;
-if(G.ok>=5||win)tick();addXp(st*5);if(win){dqAdd('rounds',1);if(!G.p&&G.hp===3)dqAdd('perfect',1)}const PM=[];if(G.p&&win){S.path[G.i]=Math.max(S.path[G.i]||0,st);G.bn=BONUS.filter(b=>!S.bn[b.k]&&b.L.every(k=>S.path[k]));G.bn.forEach(b=>{S.bn[b.k]=1;S.xp+=b.xp;S.tot+=b.xp;G.xp+=b.xp;PM.push(b.t+' +'+b.xp+' XP')});
+if(win)tada();if(G.ok>=5||win)tick();addXp(st*5);if(win){dqAdd('rounds',1);if(!G.p&&G.hp===3)dqAdd('perfect',1)}const PM=[];if(G.p&&win){S.path[G.i]=Math.max(S.path[G.i]||0,st);G.bn=BONUS.filter(b=>!S.bn[b.k]&&b.L.every(k=>S.path[k]));G.bn.forEach(b=>{S.bn[b.k]=1;S.xp+=b.xp;S.tot+=b.xp;G.xp+=b.xp;PM.push(b.t+' +'+b.xp+' XP')});
 if(!S.pathDone&&PATH.every((_,k)=>S.path[k])){S.pathDone=true;S.pets.ele=(S.pets.ele||0)+1;S.xp+=2000;S.tot+=2000;G.xp+=2000;G.done=1;PM.push('Hele løypa er klar! +2000 XP','')}}
 PM.forEach((m,j)=>setTimeout(()=>{party(0,m);fan()},400+j*2200));setTimeout(eggHint,1500+PM.length*2200);save();
 $('#app').innerHTML=`<div class="res${win?' win':''}"><div class="rowi rstars">${win?ic('star',72).repeat(st):ic(G.p?'note':'heartO',64)}</div><h1 class="center">${win?'Du klarte det!':'Prøv igjen!'}</h1></div>${G.nm&&!win&&nmBad.length?`<div class="msg" style="color:var(--hot)">Du må klare de nye notene to ganger hver for å komme videre.</div>`:''}${G.nm?`<div class="top">${Object.values(G.nm).map(e=>`<div class="pill" style="${e.ok>=2?'':'color:var(--bad)'}">${N[e.n%7]}<small>${e.ok}/${e.a} riktige</small></div>`).join('')}</div>`:''}
