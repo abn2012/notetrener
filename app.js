@@ -793,7 +793,6 @@ function tada(){if(S.mute||Date.now()-TADA<1500)return;TADA=Date.now();try{[[35,
 function party(big,msg){tada();const o=document.createElement('div');o.className='ov';const C=['#ff4d6d','#ffb703','#2ed585','#4dabf7','#9b7bff','#ff8a1f'];let h='';
 for(let i=0;i<(big?90:50);i++)h+=`<i class="cf" style="left:${Math.random()*100}%;background:${C[i%6]};animation-duration:${1.8+Math.random()*1.8}s;animation-delay:${Math.random()*.8}s"></i>`;
 for(let i=0;i<(big?40:16);i++)h+=`<span class="st" style="left:${Math.random()*100}%;animation-duration:${2+Math.random()*2}s;animation-delay:${Math.random()*.8}s">${ic(i%3?'star':'sparkle',18+Math.floor(Math.random()*20))}</span>`;
-if(big){const R=['#ef4565','#ff8a1f','#ffd23f','#2ed585','#4dabf7','#7c4dff','#c64dff'];let g='transparent 0 calc(var(--w)*.2)';R.forEach((c,k)=>{g+=`,${c} calc(var(--w)*${(.2+k*.04).toFixed(2)}) calc(var(--w)*${(.24+k*.04).toFixed(2)})`});g+=',transparent 0';h+=`<div class="rb" style="--g:radial-gradient(circle at 50% 100%,${g})"></div>`}
 h+=`<div class="ban">${msg}</div>`;o.innerHTML=h;document.body.appendChild(o);setTimeout(()=>o.remove(),5000)}
 function cheer(){if(RUN.combo===50||RUN.combo===100){S.leggs=(S.leggs||0)+1;save();party(1,RUN.combo+' på rad! Du fikk et legendeegg!');fan()}else if(!G.p&&RUN.seen.size>=tot()){party(1,'ALLE NOTENE!');fan();RUN.seen.clear()}else if(RUN.combo%10===0){party(0,RUN.combo+' på rad!');fan()}else if(RUN.combo%5===0)cheerPet()}
 const shuf=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
