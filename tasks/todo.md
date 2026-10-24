@@ -1,3 +1,23 @@
+# Lagring på serveren (gren `server-lagring`)
+
+Plan: framgangen lagres på en server (Postgres) i tillegg til telefonen, uten registrering. Barnet får en hemmelig kode av ord (f.eks. `tiger-fiolin-sol-42`) som er hele «innloggingen». Ingen navn, e-post eller passord. Fase 2 (senere): ledertavle, opt-in.
+
+- [x] Backend i `server/`: Bun, ingen avhengigheter. `POST/GET/PUT /api/save`, lagrer bare `sha256(kode)`, sperrer for mange feil koder
+- [x] nginx sender `/api/` videre til backend (samme adresse, ingen CORS). Appen starter selv om backend mangler
+- [x] `docker-compose.yml` (app + api) og `docker-compose.local.yml` (med egen Postgres for testing)
+- [x] GitHub Actions bygger også api-imaget
+- [x] `app.js`: lagring sendes til serveren 3 sek etter siste endring; henter nyere framgang ved oppstart; konflikt → høyest total-XP vinner
+- [x] Innstillinger: «Lagre på nettet», vis koden, kopier lenke, «Har du en kode?»
+- [x] Kodelenke (`#kode=…`) åpner framgangen på en ny enhet, og spør først hvis enheten har egen framgang
+- [x] Test med `docker compose` (ny kode, ny enhet, offline, to faner, feil koder)
+- [x] Oppdater `CLAUDE.md` (Coolify i stedet for GitHub Pages)
+## Gjennomgang
+- Testet med `docker compose` og egen Postgres. API: ny kode, kode med store bokstaver og mellomrom, gammel `rev` gir 409, for stor lagring gir 413, og etter 20 feil koder svarer serveren 429.
+- I nettleseren (to adskilte profiler): kode laget med eksisterende framgang (300 XP og katt beholdt), kodelenken åpnet framgangen på «ny enhet» og fjernet `#kode` fra adressen. Den nye enheten spilte, og den første hentet framgangen. Konflikt begge veier: høyest total-XP vant.
+- Feil kode gir melding, og en enhet med egen framgang blir spurt før den bytter. Med serveren stoppet virker appen som før, uten skriptfeil.
+- Gjenstår for Astrid/Yngve: Coolify må bruke Docker Compose (`docker-compose.yml`) med `DATABASE_URL`, slå av GitHub Pages, og bytte lenken i `README.md`.
+
+
 # Eventyr-designen (slått sammen med `main`)
 
 Plan: bygge Eventyr-designen fra canvaset inn i appen, skjerm for skjerm. Bare utseende og bevegelse endres: spillformer, regler, tekster og tall er de samme som i dag. Lagret framgang må virke som før. Grenen slås sammen med `main` først når alt henger sammen.

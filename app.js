@@ -158,7 +158,41 @@ function applyTheme(){const d=document.documentElement;d.style.removeProperty('-
 function setLook(v){S.look=v;save();applyTheme();document.querySelectorAll('.lk2 .x').forEach(x=>x.classList.toggle('on',x.dataset.v===v))}
 function setTheme(c,b){S.theme=c;save();applyTheme();document.querySelectorAll('.swb').forEach(x=>x.classList.toggle('on',x===b))}
 applyTheme();
-const save=()=>{try{localStorage.setItem('nt1',JSON.stringify(S))}catch(e){}try{updWheel()}catch(e){}};
+const save=()=>{try{localStorage.setItem('nt1',JSON.stringify(S))}catch(e){}try{updWheel()}catch(e){}try{syncSoon()}catch(e){}};
+// Lagring på nettet (server/). Framgangen bor fortsatt på telefonen, serveren har en kopi. Uten nett virker alt som før.
+// SY.k er den hemmelige koden (lagres i 'ntk', ikke i S). SY.rev er serverens versjon, null til vi har spurt serveren.
+const SY={k:(()=>{try{return localStorage.getItem('ntk')||''}catch(e){return''}})(),rev:null,sent:'',tm:0,go:0};
+const syncBusy=()=>!!(G||RUN||DU);
+const syncClean=c=>(c||'').toLowerCase().trim().split(/[^a-z0-9]+/).filter(Boolean).join('-');
+function syncApi(m,b,k=SY.k,ka){return fetch('api/save',{method:m,keepalive:!!ka,headers:{'content-type':'application/json',authorization:'Bearer '+k},body:b?JSON.stringify(b):undefined}).then(r=>r.json().catch(()=>({})).then(j=>(j.status=r.status,j)))}
+// Bytter til framgangen fra serveren: legger den i localStorage og laster appen på nytt, så oppryddingen øverst kjører på den.
+function syncAdopt(d){try{localStorage.setItem('nt1',JSON.stringify(d))}catch(e){}location.reload()}
+// Den med mest XP totalt (S.tot) vinner, siden S.tot bare kan øke.
+const syncNewer=d=>(d&&d.tot||0)>(S.tot||0);
+async function syncPull(){if(!SY.k||SY.go)return;SY.go=1;try{const r=await syncApi('GET');if(r.status!==200)return;
+if(syncNewer(r.data)){if(syncBusy())setTimeout(syncPull,5000);else syncAdopt(r.data);return}
+SY.rev=r.rev;setTimeout(syncPush)}catch(e){}finally{SY.go=0}}
+async function syncPush(ka){clearTimeout(SY.tm);if(!SY.k)return;if(SY.rev==null)return syncPull();if(SY.go){SY.tm=setTimeout(syncPush,3000);return}
+const d=JSON.stringify(S);if(d===SY.sent)return;SY.go=1;
+try{const r=await syncApi('PUT',{rev:SY.rev,data:S},SY.k,ka);
+if(r.status===200){SY.rev=r.rev;SY.sent=d}
+else if(r.status===409){if(syncNewer(r.data)){if(syncBusy())SY.tm=setTimeout(syncPush,10000);else syncAdopt(r.data)}else{SY.rev=r.rev;SY.tm=setTimeout(syncPush)}}}catch(e){}finally{SY.go=0}}
+function syncSoon(){if(SY.k){clearTimeout(SY.tm);SY.tm=setTimeout(syncPush,3000)}}
+// Når appen legges bort sendes siste endring med en gang. Når den åpnes igjen, kan en annen enhet ha spilt videre.
+document.addEventListener('visibilitychange',()=>{if(!SY.k)return;if(document.visibilityState==='hidden')syncPush(JSON.stringify(S).length<60000);else syncPull()});
+function syncBlk(msg=''){return`<div class="sblk sybox" id="syncb"><b>Lagre på nettet</b>${SY.k?`<p class="synote">Din hemmelige kode. Skriv den inn på en annen telefon eller et nettbrett for å fortsette der.</p><div class="sycode">${SY.k}</div><div class="syrow"><button class="sbtn" onclick="syncCopy()">Kopier lenke</button><button class="sbtn sygrey" onclick="syncOff()">Glem koden</button></div>`
+:`<p class="synote">Lag en hemmelig kode, så kan du fortsette på en annen telefon eller et nettbrett. Du trenger ikke navn eller e-post.</p><button class="sbtn" onclick="syncNew(this)">Lag kode</button><div class="syrow"><input id="sycin" placeholder="Har du en kode?" autocomplete="off" autocapitalize="off" spellcheck="false"><button class="sbtn" onclick="syncUse($('#sycin').value)">Bruk</button></div>`}${msg?`<p class="synote symsg">${msg}</p>`:''}</div>`}
+const syncShow=m=>{const e=$('#syncb');if(e)e.outerHTML=syncBlk(m)};
+const SYNC_ERR='Fikk ikke kontakt med serveren. Prøv igjen senere.';
+async function syncNew(b){b.disabled=true;try{const r=await fetch('api/save',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({data:S})}),j=await r.json().catch(()=>({}));
+if(r.status!==200||!j.code)return syncShow(r.status===429?'Du har laget mange koder nå. Prøv igjen senere.':SYNC_ERR);
+SY.k=j.code;SY.rev=j.rev;SY.sent=JSON.stringify(S);try{localStorage.setItem('ntk',SY.k)}catch(e){}syncShow('Koden er laget! Skriv den ned et trygt sted, eller be en voksen om å ta vare på den.')}catch(e){syncShow(SYNC_ERR)}}
+async function syncUse(c){c=syncClean(c);if(!c)return;try{const r=await syncApi('GET',null,c);
+if(r.status===404)return syncShow('Fant ikke koden. Sjekk at den er skrevet riktig.');if(r.status===429)return syncShow('For mange forsøk. Vent litt og prøv igjen.');if(r.status!==200)return syncShow(SYNC_ERR);
+if((S.tot||0)>0&&(r.data.tot||0)!==S.tot&&!confirm(`Denne enheten har egen framgang (${S.tot} XP). Vil du bytte til framgangen fra koden (${r.data.tot||0} XP)? Framgangen på denne enheten blir borte.`))return;
+try{localStorage.setItem('ntk',c)}catch(e){}syncAdopt(r.data)}catch(e){syncShow(SYNC_ERR)}}
+function syncOff(){if(!confirm('Glemme koden på denne enheten? Framgangen blir liggende både her og på nettet, men lagres ikke lenger på nettet.'))return;try{localStorage.removeItem('ntk')}catch(e){}SY.k='';SY.rev=null;SY.sent='';syncShow()}
+function syncCopy(){const u=location.origin+location.pathname+'#kode='+SY.k;navigator.clipboard.writeText(u).then(()=>syncShow('Lenken er kopiert! Åpne den på den andre enheten.'),()=>syncShow(u))}
 const addXp=n=>{n=Math.round(n*(G?G.l.m:1));S.xp+=n;S.tot+=n;if(G)G.xp+=n};
 const day=(d=new Date())=>d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
 function liveStreak(){const y=new Date();y.setDate(y.getDate()-1);return(S.last===day()||S.last===day(y))?S.streak:0}
@@ -638,7 +672,7 @@ o.innerHTML=`<div class="tbox dlg sdlg"><div class="dttl">Innstillinger</div><bu
 <div class="srow2"><span class="sico let">E</span><b>Hjelpebokstaver</b>${tgl(!!S.assist,'S.assist=!S.assist;save();settings()')}</div>
 <div class="srow2"><span class="sico">${ic('note',28)}</span><b>Test lyden</b><button class="sbtn" onclick="testLyd(this)">Spill</button></div>
 <div class="sblk"><b>Utseende</b><div class="seg lk2">${[['','Auto'],['light','Lys'],['dark','Mørk']].map(([v,t])=>`<button class="x${(S.look||'')===v?' on':''}" data-v="${v}" onclick="setLook('${v}')">${t}</button>`).join('')}</div></div>
-<div class="sblk"><b>Temafarge</b><div class="sw2">${THEMES.map(c=>`<button class="swb${c===S.theme?' on':''}" style="--c:${c}" onclick="setTheme('${c}',this)" aria-label="Velg farge"></button>`).join('')}</div></div>
+${syncBlk()}<div class="sblk"><b>Temafarge</b><div class="sw2">${THEMES.map(c=>`<button class="swb${c===S.theme?' on':''}" style="--c:${c}" onclick="setTheme('${c}',this)" aria-label="Velg farge"></button>`).join('')}</div></div>
 <button class="btn ok" onclick="document.querySelector('.tut').remove()">Ferdig</button></div>`}
 const R=(a,b)=>Array.from({length:b-a+1},(_,i)=>a+i);
 const PATH=[
@@ -871,5 +905,9 @@ ${G.p&&win&&PATH[G.i+1]?`<button class="btn" onclick="intro(${G.i+1})">Neste lek
 addEventListener('resize',()=>{try{updWheel()}catch(e){}});
 new MutationObserver(()=>{updWheel();if(document.querySelector('.nav'))setTimeout(()=>{eggHint();gm()},600)}).observe($('#app'),{childList:true});
 home();
+// En kodelenke (…#kode=tiger-fiolin-sol-42) åpner framgangen fra koden. Ellers hentes nyere framgang fra serveren.
+const linkCode=(location.hash.match(/kode=([^&]+)/)||[])[1];
+if(linkCode){history.replaceState(null,'',location.pathname+location.search);const c=syncClean(decodeURIComponent(linkCode));if(c&&c!==SY.k){settings();syncUse(c)}}
+syncPull();
 // Omvisningen starter av seg selv én gang for nye spillere (S.tut settes når den lukkes).
-if(!S.tut&&!(S.tot>0||Object.keys(S.pets).length||Object.keys(S.path).length))setTimeout(()=>tutor(0),400);
+if(!linkCode&&!S.tut&&!(S.tot>0||Object.keys(S.pets).length||Object.keys(S.path).length))setTimeout(()=>tutor(0),400);

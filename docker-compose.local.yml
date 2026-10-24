@@ -1,0 +1,27 @@
+# Til testing på egen maskin, med en egen Postgres:
+#   docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
+# Appen ligger da på http://localhost:8080
+services:
+  app:
+    ports:
+      - "8080:80"
+  api:
+    environment:
+      DATABASE_URL: postgres://notequest:notequest@db:5432/notequest
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: notequest
+      POSTGRES_PASSWORD: notequest
+      POSTGRES_DB: notequest
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "notequest"]
+      interval: 2s
+      retries: 15
+    volumes:
+      - db:/var/lib/postgresql/data
+volumes:
+  db:
