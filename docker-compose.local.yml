@@ -2,6 +2,9 @@
 #   docker compose -f docker-compose.yml -f docker-compose.local.yml up --build
 # Appen ligger da på http://localhost:8080
 services:
+  app:
+    ports:
+      - "8080:80"
   api:
     environment:
       DATABASE_URL: postgres://notequest:notequest@db:5432/notequest
