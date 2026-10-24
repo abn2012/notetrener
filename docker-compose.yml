@@ -1,0 +1,13 @@
+# Appen (nginx) og lagringsserveren (Bun). DATABASE_URL peker på Postgres, f.eks. den på Coolify-serveren.
+services:
+  app:
+    build: .
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+  api:
+    build: server
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+    restart: unless-stopped
