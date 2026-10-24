@@ -1,3 +1,17 @@
+# Lagring på serveren (gren `server-lagring`)
+
+Plan: framgangen lagres på en server (Postgres) i tillegg til telefonen, uten registrering. Barnet får en hemmelig kode av ord (f.eks. `tiger-fiolin-sol-42`) som er hele «innloggingen». Ingen navn, e-post eller passord. Fase 2 (senere): ledertavle, opt-in.
+
+- [ ] Backend i `server/`: Bun, ingen avhengigheter. `POST/GET/PUT /api/save`, lagrer bare `sha256(kode)`, sperrer for mange feil koder
+- [ ] nginx sender `/api/` videre til backend (samme adresse, ingen CORS). Appen starter selv om backend mangler
+- [ ] `docker-compose.yml` (app + api) og `docker-compose.local.yml` (med egen Postgres for testing)
+- [ ] GitHub Actions bygger også api-imaget
+- [ ] `app.js`: lagring sendes til serveren 3 sek etter siste endring; henter nyere framgang ved oppstart; konflikt → høyest total-XP vinner
+- [ ] Innstillinger: «Lagre på nettet», vis koden, kopier lenke, «Har du en kode?»
+- [ ] Kodelenke (`#kode=…`) åpner framgangen på en ny enhet, og spør først hvis enheten har egen framgang
+- [ ] Test med `docker compose` (ny kode, ny enhet, offline, to faner, feil koder)
+- [ ] Oppdater `CLAUDE.md` (Coolify i stedet for GitHub Pages)
+
 # Eventyr-designen (slått sammen med `main`)
 
 Plan: bygge Eventyr-designen fra canvaset inn i appen, skjerm for skjerm. Bare utseende og bevegelse endres: spillformer, regler, tekster og tall er de samme som i dag. Lagret framgang må virke som før. Grenen slås sammen med `main` først når alt henger sammen.
