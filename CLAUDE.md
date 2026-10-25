@@ -7,7 +7,11 @@ NoteQuest er en app for å lære å lese noter. Det er **Astrid sin første app 
 ## Oppbygning
 
 - Appen ligger i tre filer ved siden av hverandre:
-  - `index.html`: bare rammen. Den må hete `index.html` fordi nginx viser den som forsiden. Appen kjører på Coolify fra `docker-compose.yml`, og alt som pushes til `main` blir synlig der.
+  - `index.html`: bare rammen. Den må hete `index.html` fordi både GitHub Pages og nginx viser den som forsiden.
+- Appen finnes to steder:
+  - Astrids repo (`abn2012/notetrener`) publiseres med GitHub Pages fra `main`, på https://abn2012.github.io/notetrener/. Alt som pushes til `main` der blir synlig med en gang. Det er fint for å prøve ut utseende.
+  - Den ekte appen, https://notequest.no, kjører på Coolify fra `docker-compose.yml` i `yngvebn/notetrener`. Endringer kommer dit når de er hentet inn i det repoet.
+  - «Lagre på nettet» virker bare på notequest.no. På GitHub Pages finnes ingen server, så der sier appen bare at den ikke fikk kontakt.
   - `styles.css`: all CSS, også designsystemet (farger, knapper, kort og animasjoner).
   - `app.js`: all JavaScript. Det er et vanlig skript (ikke en modul), så funksjonene kan brukes fra `onclick` i HTML-en.
 - Før du lager en ny CSS-klasse, søk etter navnet i `styles.css` og `app.js`. To ulike ting med samme klassenavn arver hverandres stil (det skjedde med `.rib`, som både var båndet med leksjonsnavnet og båndene på medaljen). Gi nye deler et eget, beskrivende navn.
