@@ -416,3 +416,8 @@ body:has(.hscene) #wheel{display:none}
 .hgo{margin-top:clamp(8px,1.8dvh,16px);padding:clamp(10px,1.8dvh,16px) 10px}.hgo1{font-size:clamp(34px,6dvh,44px)}.hgo1 svg{width:clamp(26px,4.5dvh,34px);height:auto}
 .hpath{margin-top:clamp(8px,1.6dvh,14px)}
 .hcard>b small{display:block;font-family:var(--fb);font-size:12px;font-weight:800;color:var(--mut);margin-top:2px}
+/* Lagre på nettet (innstillinger) */
+.synote{color:var(--mut);font-size:14px;line-height:1.4;margin:6px 0 10px}.symsg{color:var(--ink);font-weight:800}
+.sycode{font-family:var(--fd);font-size:22px;text-align:center;background:var(--card);border:3px dashed var(--line);border-radius:16px;padding:10px;margin-bottom:10px;word-break:break-word;user-select:all}
+.syrow{display:flex;gap:8px;margin-top:10px}.syrow .sbtn{flex:1;max-width:none}.syrow input{flex:1;min-width:0;font:inherit;font-size:15px;font-weight:800;padding:10px 12px;border:3px solid var(--line);border-radius:16px;background:var(--card);color:var(--ink)}
+.sbtn.sygrey{background:var(--soft);border-bottom-color:var(--edge);color:var(--ink)}
