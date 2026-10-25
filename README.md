@@ -17,7 +17,7 @@ Du ser en note på notelinjene og trykker på bokstaven som passer: C, D, E, F, 
 
 ## Slik starter du appen
 
-Spill den på nett: **https://notequest.ybn.no/**
+Spill den på nett: **https://notequest.no/**
 
 Du kan også åpne `index.html` rett i en nettleser. Du trenger ikke installere noe, og appen virker både på mobil og på PC.
 
