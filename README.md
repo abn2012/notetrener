@@ -2,8 +2,6 @@
 
 En app som lærer deg å lese noter på en gøy måte.
 
-Dette er **Astrid sin første app laget med Claude Code**.
-
 ## Slik spiller du
 
 Du ser en note på notelinjene og trykker på bokstaven som passer: C, D, E, F, G, A eller H. Du hører tonen samtidig, og du kan trykke på noten for å høre den igjen.
